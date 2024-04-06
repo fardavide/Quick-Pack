@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		6BC255752BC1A4DC008C5577 /* QuickPackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */; };
-		6BC255792BC1A4DC008C5577 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255782BC1A4DC008C5577 /* Item.swift */; };
 		6BC2557B2BC1A4DD008C5577 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */; };
 		6BC2557F2BC1A4DD008C5577 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BC2557E2BC1A4DD008C5577 /* Preview Assets.xcassets */; };
 		6BC255892BC1A4DD008C5577 /* QuickPackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255882BC1A4DD008C5577 /* QuickPackTests.swift */; };
 		6BC255932BC1A4DD008C5577 /* QuickPackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255922BC1A4DD008C5577 /* QuickPackUITests.swift */; };
 		6BC255952BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */; };
+		6BC256142BC1CDE6008C5577 /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 6BC256132BC1CDE6008C5577 /* Core */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +36,6 @@
 /* Begin PBXFileReference section */
 		6BC255712BC1A4DC008C5577 /* Quick Pack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Quick Pack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackApp.swift; sourceTree = "<group>"; };
-		6BC255782BC1A4DC008C5577 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BC2557C2BC1A4DD008C5577 /* Quick_Pack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quick_Pack.entitlements; sourceTree = "<group>"; };
 		6BC2557E2BC1A4DD008C5577 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -45,7 +44,6 @@
 		6BC2558E2BC1A4DD008C5577 /* Quick PackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Quick PackUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BC255922BC1A4DD008C5577 /* QuickPackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITests.swift; sourceTree = "<group>"; };
 		6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		6BC255CF2BC1A903008C5577 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BC256142BC1CDE6008C5577 /* Core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,7 +75,6 @@
 		6BC255682BC1A4DC008C5577 = {
 			isa = PBXGroup;
 			children = (
-				6BC255CF2BC1A903008C5577 /* Core */,
 				6BC255732BC1A4DC008C5577 /* Quick Pack */,
 				6BC255872BC1A4DD008C5577 /* Quick PackTests */,
 				6BC255912BC1A4DD008C5577 /* Quick PackUITests */,
@@ -99,7 +97,6 @@
 			isa = PBXGroup;
 			children = (
 				6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */,
-				6BC255782BC1A4DC008C5577 /* Item.swift */,
 				6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */,
 				6BC2557C2BC1A4DD008C5577 /* Quick_Pack.entitlements */,
 				6BC2557D2BC1A4DD008C5577 /* Preview Content */,
@@ -157,6 +154,7 @@
 			);
 			name = "Quick Pack";
 			packageProductDependencies = (
+				6BC256132BC1CDE6008C5577 /* Core */,
 			);
 			productName = "Quick Pack";
 			productReference = 6BC255712BC1A4DC008C5577 /* Quick Pack.app */;
@@ -298,7 +296,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6BC255792BC1A4DC008C5577 /* Item.swift in Sources */,
 				6BC255752BC1A4DC008C5577 /* QuickPackApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -667,6 +664,13 @@
 			relativePath = Core;
 		};
 /* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6BC256132BC1CDE6008C5577 /* Core */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Core;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6BC255692BC1A4DC008C5577 /* Project object */;
 }

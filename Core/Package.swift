@@ -16,12 +16,19 @@ let package = Package(
     .library(
       name: "Core",
       targets: [
+        // MARK: - App Storage declaration
+        "AppStorage",
+        "RealAppStorage",
         // MARK: - Common declaration
-        "QpData",
+        "Presentation",
         "Provider",
         "QpStorage",
+        "QpUtils",
         // MARK: - Home declarations
         "HomePresentation",
+        // MARK: - Trip declarations
+        "TripData",
+        "TripDomain",
         // MARK: - TripList declarations
         "TripListPresentation"
       ]
@@ -34,18 +41,55 @@ let package = Package(
   ],
   targets: [
     
-    // MARK: - Common definitions
-    // MARK: Data
+    // MARK: - App Storage definition
+    // MARK: App Storage
     .target(
-      name: "QpData",
-      path: "Sources/Common/Data"
+      name: "AppStorage",
+      dependencies: [],
+      path: "Sources/AppStorage/Api"
     ),
     .testTarget(
-      name: "QpDataTests",
+      name: "AppStorageTests",
       dependencies: [
+        "AppStorage"
+      ],
+      path: "Tests/AppStorage/ApiTests"
+    ),
+    
+    // MARK: Real App Storage
+    .target(
+      name: "RealAppStorage",
+      dependencies: [
+        "AppStorage",
+        "Provider",
+        "TripData"
+      ],
+      path: "Sources/AppStorage/Real"
+    ),
+    .testTarget(
+      name: "RealppStorageTests",
+      dependencies: [
+        "RealAppStorage"
+      ],
+      path: "Tests/AppStorage/RealTests"
+    ),
+    
+    // MARK: - Common definitions
+    // MARK: Presentation
+    .target(
+      name: "Presentation",
+      dependencies: [
+        "QpUtils"
+      ],
+      path: "Sources/Common/Presentation"
+    ),
+    .testTarget(
+      name: "PresentationTests",
+      dependencies: [
+        "Presentation",
         .product(name: "Testing", package: "swift-testing")
       ],
-      path: "Tests/Common/DataTests"
+      path: "Tests/Common/PresentationTests"
     ),
     
     // MARK: Provider
@@ -65,9 +109,7 @@ let package = Package(
     // MARK: Storage
     .target(
       name: "QpStorage",
-      dependencies: [
-        "QpData"
-      ],
+      dependencies: [],
       path: "Sources/Common/Storage"
     ),
     .testTarget(
@@ -78,13 +120,29 @@ let package = Package(
       ],
       path: "Tests/Common/StorageTests"
     ),
+      
+    // MARK: Utils
+    .target(
+      name: "QpUtils",
+      dependencies: [],
+      path: "Sources/Common/Utils"
+    ),
+    .testTarget(
+      name: "UtilsTests",
+      dependencies: [
+        "QpUtils",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Common/UtilsTests"
+    ),
     
     // MARK: - Home definitions
     // MARK: Home Presentation
     .target(
       name: "HomePresentation",
       dependencies: [
-        "Provider"
+        "Provider",
+        "TripListPresentation"
       ],
       path: "Sources/Home/Presentation"
     ),
@@ -97,12 +155,48 @@ let package = Package(
       path: "Tests/Home/PresentationTests"
     ),
     
+    // MARK: - Trip definitions
+    // MARK: Trip Data
+    .target(
+      name: "TripData",
+      dependencies: [
+        "Provider"
+      ],
+      path: "Sources/Trip/Data"
+    ),
+    .testTarget(
+      name: "TripDataTests",
+      dependencies: [
+        "TripData",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Trip/DataTests"
+    ),
+    
+    // MARK: Trip Domain
+    .target(
+      name: "TripDomain",
+      dependencies: [
+        "Provider"
+      ],
+      path: "Sources/Trip/Domain"
+    ),
+    .testTarget(
+      name: "TripDomainTests",
+      dependencies: [
+        "TripDomain",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Trip/DomainTests"
+    ),
+    
     // MARK: - Trip List definitions
     // MARK: Trip List Presentation
     .target(
       name: "TripListPresentation",
       dependencies: [
-        "Provider"
+        "Provider",
+        "Presentation"
       ],
       path: "Sources/TripList/Presentation"
     ),

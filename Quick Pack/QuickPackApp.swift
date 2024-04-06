@@ -1,26 +1,27 @@
 import HomePresentation
+import Provider
 import SwiftUI
-import SwiftData
+import TripListPresentation
 
 @main
 struct QuickPackApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
-    var body: some Scene {
-        WindowGroup {
-            // ContentView()
-        }
-        .modelContainer(sharedModelContainer)
+  private let provider = Provider.start()
+  
+  init() {
+    QpModule().start(with: provider)
+  }
+  
+  var body: some Scene {
+    WindowGroup {
+      HomeView()
     }
+  }
+}
+
+private final class QpModule: Module {
+  
+  var dependencies: [Module.Type] = [
+    TripListPresentionModule.self,
+  ]
 }

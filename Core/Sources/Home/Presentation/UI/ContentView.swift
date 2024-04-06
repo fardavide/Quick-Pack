@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Quick Pack
-//
-//  Created by Davide Giuseppe Farella on 06/04/24.
-//
-
 import SwiftUI
 import SwiftData
 

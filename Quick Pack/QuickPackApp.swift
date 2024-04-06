@@ -1,3 +1,4 @@
+import HomePresentation
 import SwiftUI
 import SwiftData
 
@@ -18,7 +19,7 @@ struct QuickPackApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            // ContentView()
         }
         .modelContainer(sharedModelContainer)
     }

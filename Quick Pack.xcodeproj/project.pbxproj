@@ -3,18 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6BC255752BC1A4DC008C5577 /* Quick_PackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255742BC1A4DC008C5577 /* Quick_PackApp.swift */; };
+		6BC255752BC1A4DC008C5577 /* QuickPackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */; };
 		6BC255772BC1A4DC008C5577 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255762BC1A4DC008C5577 /* ContentView.swift */; };
 		6BC255792BC1A4DC008C5577 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255782BC1A4DC008C5577 /* Item.swift */; };
 		6BC2557B2BC1A4DD008C5577 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */; };
 		6BC2557F2BC1A4DD008C5577 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BC2557E2BC1A4DD008C5577 /* Preview Assets.xcassets */; };
-		6BC255892BC1A4DD008C5577 /* Quick_PackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255882BC1A4DD008C5577 /* Quick_PackTests.swift */; };
-		6BC255932BC1A4DD008C5577 /* Quick_PackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255922BC1A4DD008C5577 /* Quick_PackUITests.swift */; };
-		6BC255952BC1A4DD008C5577 /* Quick_PackUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255942BC1A4DD008C5577 /* Quick_PackUITestsLaunchTests.swift */; };
+		6BC255892BC1A4DD008C5577 /* QuickPackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255882BC1A4DD008C5577 /* QuickPackTests.swift */; };
+		6BC255932BC1A4DD008C5577 /* QuickPackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255922BC1A4DD008C5577 /* QuickPackUITests.swift */; };
+		6BC255952BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,17 +36,18 @@
 
 /* Begin PBXFileReference section */
 		6BC255712BC1A4DC008C5577 /* Quick Pack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Quick Pack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BC255742BC1A4DC008C5577 /* Quick_PackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quick_PackApp.swift; sourceTree = "<group>"; };
+		6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackApp.swift; sourceTree = "<group>"; };
 		6BC255762BC1A4DC008C5577 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6BC255782BC1A4DC008C5577 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BC2557C2BC1A4DD008C5577 /* Quick_Pack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quick_Pack.entitlements; sourceTree = "<group>"; };
 		6BC2557E2BC1A4DD008C5577 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6BC255842BC1A4DD008C5577 /* Quick PackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Quick PackTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BC255882BC1A4DD008C5577 /* Quick_PackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quick_PackTests.swift; sourceTree = "<group>"; };
+		6BC255882BC1A4DD008C5577 /* QuickPackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackTests.swift; sourceTree = "<group>"; };
 		6BC2558E2BC1A4DD008C5577 /* Quick PackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Quick PackUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BC255922BC1A4DD008C5577 /* Quick_PackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quick_PackUITests.swift; sourceTree = "<group>"; };
-		6BC255942BC1A4DD008C5577 /* Quick_PackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quick_PackUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		6BC255922BC1A4DD008C5577 /* QuickPackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITests.swift; sourceTree = "<group>"; };
+		6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		6BC255CF2BC1A903008C5577 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +78,7 @@
 		6BC255682BC1A4DC008C5577 = {
 			isa = PBXGroup;
 			children = (
+				6BC255CF2BC1A903008C5577 /* Core */,
 				6BC255732BC1A4DC008C5577 /* Quick Pack */,
 				6BC255872BC1A4DD008C5577 /* Quick PackTests */,
 				6BC255912BC1A4DD008C5577 /* Quick PackUITests */,
@@ -97,7 +99,7 @@
 		6BC255732BC1A4DC008C5577 /* Quick Pack */ = {
 			isa = PBXGroup;
 			children = (
-				6BC255742BC1A4DC008C5577 /* Quick_PackApp.swift */,
+				6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */,
 				6BC255762BC1A4DC008C5577 /* ContentView.swift */,
 				6BC255782BC1A4DC008C5577 /* Item.swift */,
 				6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */,
@@ -118,7 +120,7 @@
 		6BC255872BC1A4DD008C5577 /* Quick PackTests */ = {
 			isa = PBXGroup;
 			children = (
-				6BC255882BC1A4DD008C5577 /* Quick_PackTests.swift */,
+				6BC255882BC1A4DD008C5577 /* QuickPackTests.swift */,
 			);
 			path = "Quick PackTests";
 			sourceTree = "<group>";
@@ -126,8 +128,8 @@
 		6BC255912BC1A4DD008C5577 /* Quick PackUITests */ = {
 			isa = PBXGroup;
 			children = (
-				6BC255922BC1A4DD008C5577 /* Quick_PackUITests.swift */,
-				6BC255942BC1A4DD008C5577 /* Quick_PackUITestsLaunchTests.swift */,
+				6BC255922BC1A4DD008C5577 /* QuickPackUITests.swift */,
+				6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */,
 			);
 			path = "Quick PackUITests";
 			sourceTree = "<group>";
@@ -221,6 +223,9 @@
 				Base,
 			);
 			mainGroup = 6BC255682BC1A4DC008C5577;
+			packageReferences = (
+				6BC255D02BC1B07C008C5577 /* XCLocalSwiftPackageReference "Core" */,
+			);
 			productRefGroup = 6BC255722BC1A4DC008C5577 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -288,7 +293,7 @@
 			files = (
 				6BC255772BC1A4DC008C5577 /* ContentView.swift in Sources */,
 				6BC255792BC1A4DC008C5577 /* Item.swift in Sources */,
-				6BC255752BC1A4DC008C5577 /* Quick_PackApp.swift in Sources */,
+				6BC255752BC1A4DC008C5577 /* QuickPackApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,7 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6BC255892BC1A4DD008C5577 /* Quick_PackTests.swift in Sources */,
+				6BC255892BC1A4DD008C5577 /* QuickPackTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,8 +309,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6BC255932BC1A4DD008C5577 /* Quick_PackUITests.swift in Sources */,
-				6BC255952BC1A4DD008C5577 /* Quick_PackUITestsLaunchTests.swift in Sources */,
+				6BC255932BC1A4DD008C5577 /* QuickPackUITests.swift in Sources */,
+				6BC255952BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,7 +367,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -423,7 +428,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -649,6 +654,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		6BC255D02BC1B07C008C5577 /* XCLocalSwiftPackageReference "Core" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Core;
+		};
+/* End XCLocalSwiftPackageReference section */
 	};
 	rootObject = 6BC255692BC1A4DC008C5577 /* Project object */;
 }

@@ -1,18 +1,11 @@
-//
-//  Quick_PackApp.swift
-//  Quick Pack
-//
-//  Created by Davide Giuseppe Farella on 06/04/24.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
-struct Quick_PackApp: App {
+struct QuickPackApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Item.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

@@ -9,7 +9,8 @@ public extension ModelContext {
     do {
       return try .success(fetch(descriptor))
     } catch {
-      return .failure(.unknown(error))
+      print(error)
+      return .failure(.unknown)
     }
   }
   

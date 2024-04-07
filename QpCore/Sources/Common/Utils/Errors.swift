@@ -4,5 +4,5 @@ public struct GenericError: Error, Equatable {
 
 public enum DataError: Error, Equatable {
   case noData
-  case unknown(Error)
+  case unknown
 }

@@ -1,7 +1,7 @@
 import DateUtils
 import Foundation
 
-public struct TripDate: Codable {
+public struct TripDate: Codable, Equatable {
   public let value: Date
   public let precision: Precision
   

@@ -21,6 +21,7 @@ let package = Package(
         "RealAppStorage",
         // MARK: - Common declaration
         "DateUtils",
+        "Design",
         "Presentation",
         "Provider",
         "QpStorage",
@@ -36,9 +37,9 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-testing.git", from: "0.6.0")
+    .package(url: "https://github.com/apple/swift-testing.git", from: "0.6.0"),
     // .package(url: "https://github.com/kean/Nuke", .upToNextMajor(from: Version(12, 2, 0))),
-    // .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", .upToNextMajor(from: Version(4, 1, 1)))
+    .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", .upToNextMajor(from: Version(4, 1, 1)))
   ],
   targets: [
     
@@ -91,6 +92,24 @@ let package = Package(
         .product(name: "Testing", package: "swift-testing")
       ],
       path: "Tests/Common/DateUtilsTests"
+    ),
+    
+    // MARK: Design
+    .target(
+      name: "Design",
+      dependencies: [
+        "Presentation",
+        "SFSafeSymbols"
+      ],
+      path: "Sources/Common/Design"
+    ),
+    .testTarget(
+      name: "DesignTests",
+      dependencies: [
+        "Design",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Common/DesignTests"
     ),
     
     // MARK: Presentation
@@ -183,6 +202,7 @@ let package = Package(
         "AppStorage",
         "Provider",
         "QpStorage",
+        "QpUtils",
         "TripDomain"
       ],
       path: "Sources/Trip/Data"
@@ -201,7 +221,8 @@ let package = Package(
       name: "TripDomain",
       dependencies: [
         "DateUtils",
-        "Provider"
+        "Provider",
+        "QpUtils"
       ],
       path: "Sources/Trip/Domain"
     ),

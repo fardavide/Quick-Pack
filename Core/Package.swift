@@ -20,6 +20,7 @@ let package = Package(
         "AppStorage",
         "RealAppStorage",
         // MARK: - Common declaration
+        "DateUtils",
         "Presentation",
         "Provider",
         "QpStorage",
@@ -75,6 +76,21 @@ let package = Package(
     ),
     
     // MARK: - Common definitions
+    // MARK: Date Utils
+    .target(
+      name: "DateUtils",
+      dependencies: [],
+      path: "Sources/Common/DateUtils"
+    ),
+    .testTarget(
+      name: "DateUtilsTests",
+      dependencies: [
+        "DateUtils",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Common/DateUtilsTests"
+    ),
+    
     // MARK: Presentation
     .target(
       name: "Presentation",
@@ -160,7 +176,8 @@ let package = Package(
     .target(
       name: "TripData",
       dependencies: [
-        "Provider"
+        "Provider",
+        "TripDomain"
       ],
       path: "Sources/Trip/Data"
     ),
@@ -196,7 +213,8 @@ let package = Package(
       name: "TripListPresentation",
       dependencies: [
         "Provider",
-        "Presentation"
+        "Presentation",
+        "TripDomain"
       ],
       path: "Sources/TripList/Presentation"
     ),

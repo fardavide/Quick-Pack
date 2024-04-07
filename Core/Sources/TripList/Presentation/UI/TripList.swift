@@ -24,7 +24,7 @@ private struct TripListContent: View {
         // NavigationLink {
         Text(item.name)
         if let date = item.date {
-          Text(date, format: Date.FormatStyle(date: .numeric, time: .standard))
+          Text(date)
         }
         // } label: {
         // Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))

@@ -5,8 +5,7 @@ public final class TripListPresentionModule: Module {
   
   public func register(on provider: Provider) {
     provider
-      .register {
-        TripListViewModel()
-      }
+      .register { RealTripListItemUiModelMapper() as TripListItemUiModelMapper }
+      .register { TripListViewModel(mapper: provider.get()) }
   }
 }

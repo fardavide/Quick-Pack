@@ -4,10 +4,10 @@ import SwiftUI
 
 public struct ErrorView: View {
   
-  let title: LocalizedStringKey
-  let subtitle: LocalizedStringKey?
-  let image: SFSymbol
-  let retry: (() -> Void)?
+  private let title: LocalizedStringKey
+  private let subtitle: LocalizedStringKey?
+  private let image: SFSymbol
+  private let retry: (() -> Void)?
   
   public init(
     title: LocalizedStringKey,

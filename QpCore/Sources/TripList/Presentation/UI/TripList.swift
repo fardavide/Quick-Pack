@@ -1,3 +1,4 @@
+import Design
 import Provider
 import SwiftUI
 
@@ -7,11 +8,13 @@ public struct TripList: View {
   public init() {}
   
   public var body: some View {
-    switch viewModel.state.trips {
-    case let .content(items): TripListContent(items: items)
-    case .error: Text("error")
-    case .loading: Text("loading")
-    }
+    LceView(
+      lce: viewModel.state.trips,
+      errorMessage: "Cannot load trips",
+      content: { items in
+        TripListContent(items: items)
+      }
+    )
   }
 }
 

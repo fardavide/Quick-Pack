@@ -2,12 +2,6 @@ import Foundation
 import SwiftData
 import TripDomain
 
-public struct TripStorageModel {
-  let date: TripDate?
-  let id: String
-  let name: String
-}
-
 @Model
 public final class TripSwiftDataModel {
   var date: TripDate?
@@ -21,5 +15,17 @@ public final class TripSwiftDataModel {
     self.date = date
     self.id = UUID().uuidString
     self.name = name
+  }
+}
+
+extension [TripSwiftDataModel] {
+  func toDomainModels() -> [Trip] {
+    map { swiftDataModel in
+      Trip(
+        date: swiftDataModel.date,
+        id: swiftDataModel.id,
+        name: swiftDataModel.name
+      )
+    }
   }
 }

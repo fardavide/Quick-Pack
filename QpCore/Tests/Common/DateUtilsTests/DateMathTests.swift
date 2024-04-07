@@ -1,5 +1,7 @@
 import Testing
 
+import Foundation
+
 @testable import DateUtils
 
 final class DateMathTests {
@@ -12,7 +14,7 @@ final class DateMathTests {
     let result = date + 3.days()
     
     // then
-    #assert(result == Date.of(year: 2023, month: .nov, day: 1))
+    #expect(result == Date.of(year: 2023, month: .nov, day: 1))
   }
   
   @Test func minusDuration() {
@@ -23,7 +25,7 @@ final class DateMathTests {
     let result = date - 3.days()
     
     // then
-    #assert(result == Date.of(year: 2023, month: .oct, day: 26))
+    #expect(result == Date.of(year: 2023, month: .oct, day: 26))
   }
   
   @Test func positiveDistance() {
@@ -35,7 +37,7 @@ final class DateMathTests {
     let result = date % pastDate
     
     // then
-    #assert(result == 3.days())
+    #expect(result == 3.days())
   }
   
   @Test func negativeDistance() {
@@ -47,6 +49,6 @@ final class DateMathTests {
     let result = date % futureDate
     
     // then
-    #assert(result == -3.days())
+    #expect(result == -3.days())
   }
 }

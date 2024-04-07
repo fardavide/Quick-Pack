@@ -6,6 +6,12 @@ protocol TripListItemUiModelMapper {
   func toUiModel(trip: Trip) -> TripListItemUiModel
 }
 
+extension TripListItemUiModelMapper {
+  func toUiModels(trips: [Trip]) -> [TripListItemUiModel] {
+    trips.map(toUiModel)
+  }
+}
+
 final class RealTripListItemUiModelMapper: TripListItemUiModelMapper {
   
   func toUiModel(trip: Trip) -> TripListItemUiModel {

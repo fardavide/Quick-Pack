@@ -9,7 +9,7 @@ public protocol ViewModel<Action, State>: ObservableObject {
 }
 
 public extension ViewModel {
-  
+    
   func emit(block: @escaping () -> Void) {
     DispatchQueue.main.async(execute: block)
   }

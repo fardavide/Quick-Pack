@@ -10,7 +10,7 @@ final class ProviderTests {
     let result = provider.safeGet(Int.self)
     
     // then
-    #assert(result == Result.failure(ProviderError(key: "Int")))
+    #expect(result == Result.failure(ProviderError(key: "Int")))
   }
   
   @Test func whenRegistered_rightInstanceIsReturned() {
@@ -23,7 +23,7 @@ final class ProviderTests {
     let result = provider.get(Child.self)
     
     // then
-    #assert(result.value == "Hello test")
+    #expect(result.value == "Hello test")
   }
   
   @Test func whenRegisteredForParent_rightInstanceIsReturned() {
@@ -36,7 +36,7 @@ final class ProviderTests {
     let result = provider.get(Parent.self)
     
     // then
-    #assert(result.value == "Hello parent")
+    #expect(result.value == "Hello parent")
   }
 }
 

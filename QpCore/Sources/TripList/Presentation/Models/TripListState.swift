@@ -1,7 +1,7 @@
 import Presentation
 
 struct TripListState: Equatable {
-  let trips: GenericLce<[TripListItemUiModel]>
+  let trips: DataLce<[TripListItemUiModel]>
 }
 
 extension TripListState {
@@ -18,7 +18,7 @@ class TripListStateSamples {
     )
   )
   
-  let error = TripListState(trips: .error)
+  let error = TripListState(trips: .error(.noData))
   
   let loading = TripListState(trips: .loading)
 }

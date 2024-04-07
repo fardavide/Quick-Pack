@@ -46,7 +46,9 @@ let package = Package(
     // MARK: App Storage
     .target(
       name: "AppStorage",
-      dependencies: [],
+      dependencies: [
+        "QpUtils"
+      ],
       path: "Sources/AppStorage/Api"
     ),
     .testTarget(
@@ -125,7 +127,9 @@ let package = Package(
     // MARK: Storage
     .target(
       name: "QpStorage",
-      dependencies: [],
+      dependencies: [
+        "QpUtils"
+      ],
       path: "Sources/Common/Storage"
     ),
     .testTarget(
@@ -176,7 +180,9 @@ let package = Package(
     .target(
       name: "TripData",
       dependencies: [
+        "AppStorage",
         "Provider",
+        "QpStorage",
         "TripDomain"
       ],
       path: "Sources/Trip/Data"
@@ -194,6 +200,7 @@ let package = Package(
     .target(
       name: "TripDomain",
       dependencies: [
+        "DateUtils",
         "Provider"
       ],
       path: "Sources/Trip/Domain"
@@ -212,6 +219,7 @@ let package = Package(
     .target(
       name: "TripListPresentation",
       dependencies: [
+        "DateUtils",
         "Provider",
         "Presentation",
         "TripDomain"

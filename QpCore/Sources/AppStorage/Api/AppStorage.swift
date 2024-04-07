@@ -1,3 +1,6 @@
+import Combine
+import Foundation
+import QpUtils
 import SwiftData
 
 public protocol AppStorage {
@@ -16,5 +19,11 @@ public extension AppStorage {
       fatalError(error.localizedDescription)
     }
     return result
+  }
+  
+  func observe<T : Equatable>(_ f: @escaping (ModelContext) async -> Result<T, DataError>) -> any DataPublisher<T> {
+    Timer.publish(every: 1, on: .main, in: .default) { await withContext(f) }
+      .share()
+      .removeDuplicates()
   }
 }

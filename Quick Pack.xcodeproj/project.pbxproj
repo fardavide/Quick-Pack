@@ -45,6 +45,7 @@
 		6BC255922BC1A4DD008C5577 /* QuickPackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITests.swift; sourceTree = "<group>"; };
 		6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		6BC2561E2BC28127008C5577 /* QpCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = QpCore; sourceTree = "<group>"; };
+		6BC256212BC289E8008C5577 /* Quick-Pack-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Quick-Pack-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +99,7 @@
 		6BC255732BC1A4DC008C5577 /* Quick Pack */ = {
 			isa = PBXGroup;
 			children = (
+				6BC256212BC289E8008C5577 /* Quick-Pack-Info.plist */,
 				6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */,
 				6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */,
 				6BC2557C2BC1A4DD008C5577 /* Quick_Pack.entitlements */,
@@ -461,6 +463,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Quick-Pack-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Quick Pack";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -501,6 +504,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Quick-Pack-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Quick Pack";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

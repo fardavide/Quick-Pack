@@ -13,9 +13,9 @@ final class ModuleTests {
     module.start(with: provider)
     
     // then
-    #assert(getCount(type: ThirdTestModule.self) == 1)
-    #assert(getCount(type: SecondTestModule.self) == 1)
-    #assert(getCount(type: FirstTestModule.self) == 1)
+    #expect(getCount(type: ThirdTestModule.self) == 1)
+    #expect(getCount(type: SecondTestModule.self) == 1)
+    #expect(getCount(type: FirstTestModule.self) == 1)
   }
 }
 

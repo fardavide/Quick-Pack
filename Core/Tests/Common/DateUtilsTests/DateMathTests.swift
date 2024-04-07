@@ -50,4 +50,3 @@ final class DateMathTests {
     #assert(result == -3.days())
   }
 }
-

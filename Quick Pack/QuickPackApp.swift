@@ -22,6 +22,6 @@ struct QuickPackApp: App {
 private final class QpModule: Module {
   
   var dependencies: [Module.Type] = [
-    TripListPresentionModule.self,
+    TripListPresentionModule.self
   ]
 }

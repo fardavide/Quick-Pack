@@ -6,4 +6,3 @@ final class AllTests: XCTestCase {
     await XCTestScaffold.runAllTests(hostedBy: self)
   }
 }
-

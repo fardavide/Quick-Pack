@@ -28,13 +28,13 @@ private struct TripListContent: View {
         if !items.isEmpty {
           TripListItems(items: items)
         } else {
-          SpecialCaseView.zero(
+          SpecialCaseView.primary(
             title: "No trip found",
             subtitle: "Create your first trip",
             image: .backpack,
             actionText: "Create trip",
             action: {
-              
+              // TODO: create Trip
             }
           )
         }

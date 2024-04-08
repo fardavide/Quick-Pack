@@ -19,14 +19,6 @@ public struct SpecialCaseModel {
   public struct ImageColors {
     let primary: Color
     let secondary: Color
-    
-    init(
-      primary: Color,
-      secondary: Color
-    ) {
-      self.primary = primary
-      self.secondary = secondary
-    }
   }
 }
 

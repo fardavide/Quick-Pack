@@ -24,4 +24,14 @@ final class RealTripRepository: AppStorage, TripRepository {
   init(container: ModelContainer) {
     self.container = container
   }
+  
+  func saveTrip(_ trip: Trip) async {
+    await insertOrUpdate(
+      trip.toSwiftDataModel(),
+      fetchDescriptor: trip.id.fetchDescriptor
+    ) { model in
+      model.date = trip.date
+      model.name = trip.name
+    }
+  }
 }

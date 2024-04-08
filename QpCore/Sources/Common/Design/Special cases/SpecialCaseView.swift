@@ -56,7 +56,7 @@ struct SpecialCaseAction {
 }
 
 #Preview("Zero with subtitle and action") {
-  SpecialCaseView.zero(
+  SpecialCaseView.primary(
     title: "No trips",
     subtitle: "Create your first trip",
     image: .backpack,
@@ -66,7 +66,7 @@ struct SpecialCaseAction {
 }
 
 #Preview("Zero without subtitle and action") {
-  SpecialCaseView.zero(
+  SpecialCaseView.primary(
     title: "Special case title",
     image: .backpack
   )
@@ -82,7 +82,7 @@ struct SpecialCaseAction {
 }
 
 #Preview("Error without subtitle and action") {
-  SpecialCaseView.zero(
+  SpecialCaseView.primary(
     title: "Special case title",
     image: .backpack
   )

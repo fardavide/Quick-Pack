@@ -9,7 +9,7 @@ extension TripListState {
   static let samples = TripListStateSamples()
 }
 
-class TripListStateSamples {
+final class TripListStateSamples {
   let content = TripListState(
     trips: .content(
       [

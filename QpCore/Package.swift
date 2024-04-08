@@ -26,12 +26,14 @@ let package = Package(
         "Provider",
         "QpStorage",
         "QpUtils",
+        // MARK: - Edit Trip declarations
+        "EditTripPresentation",
         // MARK: - Home declarations
         "HomePresentation",
         // MARK: - Trip declarations
         "TripData",
         "TripDomain",
-        // MARK: - TripList declarations
+        // MARK: - Trip List declarations
         "TripListPresentation"
       ]
     )
@@ -66,6 +68,7 @@ let package = Package(
       dependencies: [
         "AppStorage",
         "Provider",
+        "QpStorage",
         "TripData"
       ],
       path: "Sources/AppStorage/Real"
@@ -175,11 +178,33 @@ let package = Package(
       path: "Tests/Common/UtilsTests"
     ),
     
+    // MARK: - Edit Trip definitions
+    // MARK: Edit Trip Presentation
+    .target(
+      name: "EditTripPresentation",
+      dependencies: [
+        "Design",
+        "Presentation",
+        "Provider",
+        "TripDomain"
+      ],
+      path: "Sources/EditTrip/Presentation"
+    ),
+    .testTarget(
+      name: "EditTripPresentationTests",
+      dependencies: [
+        "EditTripPresentation",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/EditTrip/PresentationTests"
+    ),
+    
     // MARK: - Home definitions
     // MARK: Home Presentation
     .target(
       name: "HomePresentation",
       dependencies: [
+        "EditTripPresentation",
         "Provider",
         "TripListPresentation"
       ],

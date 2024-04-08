@@ -3,7 +3,7 @@ import TripDomain
 
 struct TripListItemUiModel: Equatable, Identifiable {
   let date: String?
-  let id: String
+  let id: TripId
   let name: String
 }
 
@@ -15,7 +15,7 @@ class TripListItemUiModelSamples {
   
   let malaysia = TripListItemUiModel(
     date: "October 2024",
-    id: "malaysia",
+    id: TripId("malaysia"),
     name: "Malaysia"
   )
 }

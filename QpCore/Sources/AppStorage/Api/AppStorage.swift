@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import QpStorage
 import QpUtils
 import SwiftData
 
@@ -9,8 +10,30 @@ public protocol AppStorage {
 
 public extension AppStorage {
   
+  func observe<Model: Equatable>(
+    _ f: @escaping (ModelContext) async -> Result<Model, DataError>
+  ) -> any DataPublisher<Model> {
+    Timer.publish(every: 1, on: .main, in: .default) { await withContext(f) }
+      .share()
+      .removeDuplicates()
+  }
+  
+  func insertOrUpdate<Model: Equatable>(
+    _ model: Model,
+    fetchDescriptor: FetchDescriptor<Model>,
+    update: (Model) -> Void
+  ) async {
+    await withContext { context in
+      await context.fetchOne(fetchDescriptor)
+        .onSuccess(update)
+        .onFailure { _ in context.insert(model) }
+    }
+  }
+  
   @discardableResult
-  func withContext<T>(_ f: (ModelContext) async -> T) async -> T {
+  private func withContext<T>(
+    _ f: (ModelContext) async -> T
+  ) async -> T {
     let context = ModelContext(container)
     let result = await f(context)
     do {
@@ -19,11 +42,5 @@ public extension AppStorage {
       fatalError(error.localizedDescription)
     }
     return result
-  }
-  
-  func observe<T: Equatable>(_ f: @escaping (ModelContext) async -> Result<T, DataError>) -> any DataPublisher<T> {
-    Timer.publish(every: 1, on: .main, in: .default) { await withContext(f) }
-      .share()
-      .removeDuplicates()
   }
 }

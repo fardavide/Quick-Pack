@@ -5,15 +5,15 @@ import QpUtils
 import TripDomain
 
 final class TripListViewModel: ViewModel {
-  public typealias Action = TripListAction
-  public typealias State = TripListState
+  typealias Action = TripListAction
+  typealias State = TripListState
   
-  @Published public var state: State
+  @Published var state: State
   private var subscribers: [AnyCancellable] = []
   private let mapper: TripListItemUiModelMapper
   private let tripRepository: TripRepository
 
-  public init(
+  init(
     mapper: TripListItemUiModelMapper,
     tripRepository: TripRepository,
     initialState: TripListState = .initial
@@ -33,7 +33,7 @@ final class TripListViewModel: ViewModel {
       .store(in: &subscribers)
   }
   
-  public func send(_ action: TripListAction) {
+  func send(_ action: TripListAction) {
     
   }
 }

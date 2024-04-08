@@ -53,7 +53,7 @@ public extension SpecialCaseView {
     }
   }
   
-  static func zero(
+  static func primary(
     title: LocalizedStringKey,
     subtitle: LocalizedStringKey? = nil,
     image: SFSymbol,
@@ -72,7 +72,7 @@ public extension SpecialCaseView {
     )
   }
   
-  static func zero(
+  static func primary(
     title: LocalizedStringKey,
     subtitle: LocalizedStringKey? = nil,
     image: SFSymbol

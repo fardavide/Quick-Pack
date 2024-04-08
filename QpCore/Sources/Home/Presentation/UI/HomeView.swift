@@ -1,3 +1,4 @@
+import Design
 import SwiftUI
 import TripListPresentation
 
@@ -9,7 +10,10 @@ public struct HomeView: View {
     NavigationSplitView {
       TripList()
     } detail: {
-      Text("Select an item")
+      SpecialCaseView.primary(
+        title: "Select a trip",
+        image: .backpack
+      )
     }
   }
 }

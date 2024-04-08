@@ -18,6 +18,8 @@ class TripListStateSamples {
     )
   )
   
+  let empty = TripListState(trips: .content([]))
+  
   let error = TripListState(trips: .error(.noData))
   
   let loading = TripListState(trips: .loading)

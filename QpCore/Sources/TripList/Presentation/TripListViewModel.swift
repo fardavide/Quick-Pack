@@ -23,6 +23,8 @@ final class TripListViewModel: ViewModel {
     state = initialState
     
     tripRepository.trips
+      .eraseToAnyPublisher()
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] result in
         self?.state = TripListState(
           trips: result.toLce(transform: mapper.toUiModels)

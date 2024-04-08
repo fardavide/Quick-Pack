@@ -24,8 +24,9 @@ public extension Timer {
     in mode: RunLoop.Mode,
     options: RunLoop.SchedulerOptions? = nil,
     _ value: @escaping () async -> T
-  ) -> Publishers.FlatMap<Future<T, Never>, Timer.TimerPublisher> {
+  ) -> Publishers.FlatMap<Future<T, Never>, Publishers.Autoconnect<Timer.TimerPublisher>> {
     publish(every: interval, tolerance: tolerance, on: runLoop, in: mode, options: options)
+      .autoconnect()
       .flatMap { _ in
         Future { promise in
           Task {

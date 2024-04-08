@@ -27,9 +27,8 @@ public struct LceView<Content: Equatable>: View {
     case let .content(data): 
       content(data)
     case let .error(dataError):
-      let errorModel = dataError.toErrorModel(message: errorMessage)
-      ErrorView(errorModel, retry: retry)
-    case .loading: 
+      SpecialCaseView.error(dataError, message: errorMessage, retry: retry)
+    case .loading:
       Text("Loading placeholder")
     }
   }

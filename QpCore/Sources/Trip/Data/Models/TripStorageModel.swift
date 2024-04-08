@@ -1,12 +1,13 @@
 import Foundation
+import QpUtils
 import SwiftData
 import TripDomain
 
 @Model
 public final class TripSwiftDataModel {
   var date: TripDate?
-  public var id: String
-  var name: String
+  public var id: String?
+  var name: String?
   
   init(
     date: TripDate?,
@@ -20,11 +21,11 @@ public final class TripSwiftDataModel {
 
 extension [TripSwiftDataModel] {
   func toDomainModels() -> [Trip] {
-    map { swiftDataModel in
+    safeMap { swiftDataModel in
       Trip(
         date: swiftDataModel.date,
-        id: swiftDataModel.id,
-        name: swiftDataModel.name
+        id: swiftDataModel.id!,
+        name: swiftDataModel.name!
       )
     }
   }

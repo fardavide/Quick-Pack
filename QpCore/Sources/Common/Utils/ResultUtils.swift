@@ -53,7 +53,7 @@ public extension Result {
   /// Return value of `Success` or result of `handle`
   /// - Parameter handle: closure that calculates the value to retuns if `.failure`
   /// - Returns: value of `Success` or result of `handle`
-  @inlinable func or(handle: (Failure) -> Success) -> Success {
+  @inlinable func or(_ handle: (Failure) -> Success) -> Success {
     switch self {
     case let .success(success): success
     case let .failure(failure): handle(failure)

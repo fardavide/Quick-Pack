@@ -1,30 +1,25 @@
 import TripDomain
 
-struct EditTripState {
+public struct EditTripState {
   var date: TripDate?
-  let id: TripId?
+  var id: TripId
   var name: String
 }
 
-extension EditTripState {
-  var trip: Trip {
-    Trip(
+extension Trip {
+  func toEditTripState() -> EditTripState {
+    EditTripState(
       date: date,
-      id: id ?? .new(),
+      id: id,
       name: name
     )
   }
 }
 
 extension EditTripState {
-  static let initial = EditTripState(
-    date: nil,
-    id: nil,
-    name: ""
-  )
   static let samples = EditTripStateSamples()
 }
 
 final class EditTripStateSamples {
-  
+  let malaysia = Trip.samples.malaysia.toEditTripState()
 }

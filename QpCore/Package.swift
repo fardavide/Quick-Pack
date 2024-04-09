@@ -267,6 +267,7 @@ let package = Package(
       dependencies: [
         "DateUtils",
         "Design",
+        "EditTripPresentation",
         "Provider",
         "Presentation",
         "TripDomain"

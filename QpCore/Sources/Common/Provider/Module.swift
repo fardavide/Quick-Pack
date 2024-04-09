@@ -1,26 +1,24 @@
 import Foundation
 
-/*
- Defines how dependencies are registered to `Provider`
- Override `dependencies` to declare `Module`s to depend upon
- Override `register` to register additional dependencies on the `Module`
-
- Examples:
- ```swift
- class PresentationModule: Module {
-
- var dependencies = [
- DomainModule.self
- ]
-
- func register(on provider: Provider) {
- provider
- .register { MyViewModel() }
- .register { RealSomethingElse() as SomethingElse }
- }
- }
- ```
- */
+/// Defines how dependencies are registered to `Provider`
+/// Override `dependencies` to declare `Module`s to depend upon
+/// Override `register` to register additional dependencies on the `Module`
+///
+/// Examples:
+/// ```swift
+/// class PresentationModule: Module {
+///
+///   var dependencies = [
+///     DomainModule.self
+///   ]
+///
+///   func register(on provider: Provider) {
+///     provider
+///       .register { MyViewModel() }
+///       .register { RealSomethingElse() as SomethingElse }
+///   }
+/// }
+/// ```
 public protocol Module {
 
   var dependencies: [Module.Type] { get }

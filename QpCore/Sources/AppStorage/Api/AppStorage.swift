@@ -18,6 +18,15 @@ public extension AppStorage {
       .removeDuplicates()
   }
   
+  func delete<Model: Equatable>(
+    _ fetchDescriptor: FetchDescriptor<Model>
+  ) async {
+    await withContext { context in
+      await context.fetchOne(fetchDescriptor)
+        .onSuccess { model in context.delete(model) }
+    }
+  }
+  
   func insertOrUpdate<Model: Equatable>(
     _ model: Model,
     fetchDescriptor: FetchDescriptor<Model>,

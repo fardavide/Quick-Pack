@@ -17,6 +17,7 @@ final class RealTripListItemUiModelMapper: TripListItemUiModelMapper {
   func toUiModel(trip: Trip) -> TripListItemUiModel {
     TripListItemUiModel(
       date: mapDate(trip.date),
+      domainModel: trip,
       id: trip.id,
       name: trip.name
     )
@@ -37,5 +38,18 @@ private extension Date {
     let formatter = DateFormatter()
     formatter.dateFormat = dateFormat
     return formatter.string(from: self)
+  }
+}
+
+extension TripListItemUiModelMapper {
+  static var fake: TripListItemUiModelMapper {
+    FakeTripListItemUiModelMapper()
+  }
+}
+
+final class FakeTripListItemUiModelMapper: TripListItemUiModelMapper {
+  private let real = RealTripListItemUiModelMapper()
+  func toUiModel(trip: Trip) -> TripListItemUiModel {
+    real.toUiModel(trip: trip)
   }
 }

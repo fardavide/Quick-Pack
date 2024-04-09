@@ -3,7 +3,7 @@ import Testing
 @testable import Provider
 
 final class ProviderTests {
-  private let provider = Provider.test()
+  private let provider = getProvider()
   
   @Test func whenNotRegistered_errorWithType() {
     // when
@@ -38,6 +38,18 @@ final class ProviderTests {
     // then
     #expect(result.value == "Hello parent")
   }
+  
+  @Test func whenRegisteredFactory_rightInstanceIsCreated() {
+    // given
+    provider.register { ChildFactory() }
+    
+    // when
+    let factory: ChildFactory = provider.get()
+    let result = factory.create("Hello test")
+    
+    // then
+    #expect(result.value == "Hello test")
+  }
 }
 
 private protocol Parent {
@@ -46,4 +58,13 @@ private protocol Parent {
 
 private struct Child: Parent {
   let value: String
+}
+
+private class ChildFactory: ProviderFactory {
+  typealias Input = String
+  typealias Output = Child
+  
+  func create(_ input: String) -> Child {
+    Child(value: input)
+  }
 }

@@ -7,7 +7,7 @@ final class ModuleTests {
   @Test func onStart_modulesAreNotRegisteredMultipleTimes() {
     // given
     let module = ThirdTestModule()
-    let provider = Provider.test()
+    let provider = Provider.get()
     
     // when
     module.start(with: provider)

@@ -8,6 +8,7 @@ public final class TripListPresentionModule: Module {
       .register { RealTripListItemUiModelMapper() as TripListItemUiModelMapper }
       .register {
         TripListViewModel(
+          editTripViewModelFactory: provider.get(),
           mapper: provider.get(),
           tripRepository: provider.get()
         )

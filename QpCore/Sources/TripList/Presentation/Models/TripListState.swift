@@ -1,6 +1,6 @@
 import Presentation
 
-struct TripListState: Equatable {
+public struct TripListState: Equatable {
   let trips: DataLce<[TripListItemUiModel]>
 }
 

@@ -1,6 +1,8 @@
 import Design
+import EditTripPresentation
 import Provider
 import SwiftUI
+import TripDomain
 
 public struct TripList: View {
   @StateObject var viewModel: TripListViewModel = getProvider().get()
@@ -8,81 +10,101 @@ public struct TripList: View {
   public init() {}
   
   public var body: some View {
-    TripListContent(viewModel.state)
+    TripListContent(
+      state: viewModel.state,
+      send: viewModel.send,
+      edit: viewModel.edit
+    )
   }
 }
 
 private struct TripListContent: View {
-  
-  private let state: TripListState
-  
-  init(_ state: TripListState) {
-    self.state = state
-  }
+  let state: TripListState
+  let send: (TripListAction) -> Void
+  let edit: (Trip) -> EditTripViewModel
   
   public var body: some View {
-    LceView(
-      lce: state.trips,
-      errorMessage: "Cannot load trips",
-      content: { items in
-        if !items.isEmpty {
-          TripListItems(items: items)
-        } else {
-          SpecialCaseView.primary(
-            title: "No trip found",
-            subtitle: "Create your first trip",
-            image: .backpack,
-            actionText: "Create trip",
-            action: {
-              // TODO: create Trip
-            }
-          )
+    NavigationSplitView {
+      LceView(
+        lce: state.trips,
+        errorMessage: "Cannot load trips",
+        content: { items in
+          if !items.isEmpty {
+            TripListItems(
+              items: items,
+              send: send,
+              edit: edit
+            )
+          } else {
+            SpecialCaseView.primary(
+              title: "No trip found",
+              subtitle: "Create your first trip",
+              image: .backpack,
+              actionText: "Create trip",
+              action: { send(.newTrip) }
+            )
+          }
+        }
+      )
+      .navigationTitle("My Trips")
+      .toolbar {
+        Button { send(.newTrip) } label: {
+          Label("Add Item", systemImage: "plus")
         }
       }
-    )
+
+    } detail: {
+      SpecialCaseView.primary(
+        title: "Select or create a trip",
+        image: .backpack
+      )
+    }
   }
 }
 
 private struct TripListItems: View {
   let items: [TripListItemUiModel]
-  
+  let send: (TripListAction) -> Void
+  let edit: (Trip) -> EditTripViewModel
+
   var body: some View {
     List(items) { item in
-      HStack {
-        // NavigationLink {
-        Text(item.name)
-        Spacer()
-        if let date = item.date {
-          Text(date)
+      NavigationLink {
+        EditTrip(viewModel: edit(item.domainModel))
+      } label: {
+        HStack {
+          Text(item.name)
+          Spacer()
+          if let date = item.date {
+            Text(date)
+          }
         }
-        // label: {
-        // Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-        // }
+        .swipeActions(edge: .trailing) {
+          Button {
+            send(.deleteTrip(id: item.id))
+          } label: {
+            Label("Delete", systemSymbol: .trash)
+              .tint(.red)
+          }
+        }
       }
-      // .onDelete(perform: deleteItems)
-    }
-#if os(macOS)
-    .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-#endif
-    .toolbar {
-#if os(iOS)
-      ToolbarItem(placement: .navigationBarTrailing) {
-        EditButton()
-      }
-#endif
-      // ToolbarItem {
-      //   Button(action: addItem) {
-      //     Label("Add Item", systemImage: "plus")
-      //   }
-      // }
     }
   }
 }
 
 #Preview("With items") {
-  TripListContent(.samples.content)
+  return TripListContent(
+    state: .samples.content,
+    send: { _ in },
+    edit: { _ in .samples.content }
+  )
 }
 
 #Preview("Zero") {
-  TripListContent(.samples.empty)
+  getProvider().register { EditTripViewModel.samples.content }
+  return TripListContent(
+    state: .samples.empty,
+    send: { _ in },
+    edit: { _ in .samples.content }
+  )
 }

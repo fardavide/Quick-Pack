@@ -25,6 +25,10 @@ final class RealTripRepository: AppStorage, TripRepository {
     self.container = container
   }
   
+  func deleteTrip(tripId: TripId) async {
+    await delete(tripId.fetchDescriptor)
+  }
+  
   func saveTrip(_ trip: Trip) async {
     await insertOrUpdate(
       trip.toSwiftDataModel(),

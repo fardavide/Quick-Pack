@@ -15,3 +15,15 @@ public struct Trip: Equatable {
     self.name = name
   }
 }
+
+public extension Trip {
+  static let samples = TripSamples()
+}
+
+public final class TripSamples {
+  public let malaysia = Trip(
+    date: TripDate(year: 2024, month: .oct),
+    id: TripId("malaysia"),
+    name: "Malaysia"
+  )
+}

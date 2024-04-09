@@ -5,6 +5,10 @@ public final class EditTripPresentationModule: Module {
   
   public func register(on provider: Provider) {
     provider
-      .register { EditTripViewModel() }
+      .register {
+        EditTripViewModel.RealFactory(
+          tripRepository: provider.get()
+        ) as any EditTripViewModel.Factory
+      }
   }
 }

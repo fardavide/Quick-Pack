@@ -41,6 +41,20 @@ private struct EditTripContent: View {
         }
       }
     )
-    TextField("Name", text: textFieldBinding)
+    VStack {
+      Form {
+        TextField(text: textFieldBinding, prompt: Text("Required")) {
+          Text("Name")
+        }
+      }
+    }
+    .navigationTitle("Edit trip")
   }
+}
+
+#Preview {
+  EditTripContent(
+    .samples.malaysia,
+    onNameChange: { _ in }
+  )
 }

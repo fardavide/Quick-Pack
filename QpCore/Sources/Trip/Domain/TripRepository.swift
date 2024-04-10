@@ -11,6 +11,7 @@ public protocol TripRepository {
 
 public final class FakeTripRepository: TripRepository {
   public var trips: any DataPublisher<[Trip]>
+  public var saveTripInvocations: [Trip] = []
   
   public init(
     trips: [Trip] = []
@@ -18,6 +19,16 @@ public final class FakeTripRepository: TripRepository {
     self.trips = Just(.success(trips))
   }
   
+  public func lastSavedTrip() -> Trip? {
+    saveTripInvocations.last
+  }
+  
+  public func waitLastSavedTrip() async -> Trip {
+    await waitNotNil { lastSavedTrip() }
+  }
+  
   public func deleteTrip(tripId: TripId) async {}
-  public func saveTrip(_ trip: Trip) async {}
+  public func saveTrip(_ trip: Trip) async {
+    saveTripInvocations.append(trip)
+  }
 }

@@ -13,6 +13,11 @@ public struct TripDate: Codable, Equatable {
 }
 
 public extension TripDate {
+  
+  init(_ date: Date) {
+    value = date
+    precision = .exact
+  }
     
   init(year: Int, month: Month, day: Int) {
     value = Date.of(year: year, month: month, day: day)

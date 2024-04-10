@@ -1,4 +1,5 @@
 import Combine
+import Foundation
 import Presentation
 import Provider
 import TripDomain
@@ -20,16 +21,26 @@ public final class EditTripViewModel: ViewModel {
   
   public func send(_ action: EditTripAction) {
     switch action {
+    case let .updateDate(newDate): updateDate(newDate)
     case let .updateName(newName): updateName(newName)
     }
   }
   
+  private func updateDate(_ newDate: Date) {
+    state.date = TripDate(newDate)
+    saveTrip()
+  }
+  
   private func updateName(_ newName: String) {
     state.name = newName
+    saveTrip()
+  }
+  
+  private func saveTrip() {
     let trip = Trip(
       date: state.date,
       id: state.id,
-      name: newName
+      name: state.name
     )
     Task { await tripRepository.saveTrip(trip) }
   }

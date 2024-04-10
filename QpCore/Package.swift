@@ -30,9 +30,14 @@ let package = Package(
         "EditTripPresentation",
         // MARK: - Home declarations
         "HomePresentation",
+        // MARK: - Item declarations
+        "ItemData",
+        "ItemDomain",
         // MARK: - Trip declarations
         "TripData",
         "TripDomain",
+        // MARK: - Trip Item List declarations
+        "TripItemListPresentation",
         // MARK: - Trip List declarations
         "TripListPresentation"
       ]
@@ -199,6 +204,40 @@ let package = Package(
       path: "Tests/EditTrip/PresentationTests"
     ),
     
+    // MARK: - Item definition
+    // MARK: Item Data
+    .target(
+      name: "ItemData",
+      dependencies: [
+        "ItemDomain"
+      ],
+      path: "Sources/Item/Data"
+    ),
+    .testTarget(
+      name: "ItemDataTests",
+      dependencies: [
+        "ItemData",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Item/DataTests"
+    ),
+    
+    // MARK: Item Domain
+    .target(
+      name: "ItemDomain",
+      dependencies: [
+      ],
+      path: "Sources/Item/Domain"
+    ),
+    .testTarget(
+      name: "ItemDomainTests",
+      dependencies: [
+        "ItemDomain",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Item/DomainTests"
+    ),
+    
     // MARK: - Home definitions
     // MARK: Home Presentation
     .target(
@@ -281,6 +320,26 @@ let package = Package(
         .product(name: "Testing", package: "swift-testing")
       ],
       path: "Tests/TripList/PresentationTests"
+    ),
+    
+    // MARK: - Trip Item List definitions
+    // MARK: Trip Item List Presentation
+    .target(
+      name: "TripItemListPresentation",
+      dependencies: [
+        "Design",
+        "Provider",
+        "Presentation"
+      ],
+      path: "Sources/TripItemList/Presentation"
+    ),
+    .testTarget(
+      name: "TripItemListPresentationTests",
+      dependencies: [
+        "TripItemListPresentation",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/TripItemList/PresentationTests"
     )
   ]
 )

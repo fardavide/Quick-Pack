@@ -11,7 +11,7 @@ public protocol TripRepository {
 
 public final class FakeTripRepository: TripRepository {
   public var trips: any DataPublisher<[Trip]>
-  public var saveTripInvocations: [Trip] = []
+  private var saveTripInvocations: [Trip] = []
   
   public init(
     trips: [Trip] = []

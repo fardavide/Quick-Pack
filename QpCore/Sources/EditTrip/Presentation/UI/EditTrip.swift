@@ -13,29 +13,21 @@ public struct EditTrip: View {
   public var body: some View {
     EditTripContent(
       viewModel.state,
-      onNameChange: { newName in
-        viewModel.send(.updateName(newName: newName))
-      },
-      onDateChange: { newDate in
-        viewModel.send(.updateDate(newDate: newDate))
-      }
+      send: viewModel.send
     )
   }
 }
 
 private struct EditTripContent: View {
   private let state: EditTripState
-  private let onNameChange: (String) -> Void
-  private let onDateChange: (Date) -> Void
-    
+  private let send: (EditTripAction) -> Void
+  
   init(
     _ state: EditTripState,
-    onNameChange: @escaping (String) -> Void,
-    onDateChange: @escaping (Date) -> Void
+    send: @escaping (EditTripAction) -> Void
   ) {
     self.state = state
-    self.onNameChange = onNameChange
-    self.onDateChange = onDateChange
+    self.send = send
   }
   
   var body: some View {
@@ -43,7 +35,7 @@ private struct EditTripContent: View {
       get: { state.name },
       set: { newName in
         if newName != state.name {
-          onNameChange(newName)
+          send(.updateName(newName))
         }
       }
     )
@@ -51,26 +43,39 @@ private struct EditTripContent: View {
       get: { state.date?.value ?? .now },
       set: { newDate in
         if newDate != state.date?.value {
-          onDateChange(newDate)
+          send(.updateDate(newDate))
         }
       }
     )
-    VStack {
-      Form {
+    Form {
+      
+      Section {
         TextField(text: nameBinding, prompt: Text("Required")) {
           Text("Name")
         }
         DatePicker("Date", selection: dateBinding, displayedComponents: .date)
       }
+      
+      Section("Items") {
+        TripItemList(
+          items: state.items,
+          onNameChange: { itemId, newName in send(.updateItemName(itemId, newName)) },
+          onRemove: { itemId in send(.removeItem(itemId)) }
+        )
+      }
     }
     .navigationTitle("Edit trip")
+    .toolbar {
+      Button { send(.addNewItem) } label: {
+        Label("Add Item", systemImage: "plus")
+      }
+    }
   }
 }
 
 #Preview {
   EditTripContent(
     .samples.malaysia,
-    onNameChange: { _ in },
-    onDateChange: { _ in }
+    send: { _ in }
   )
 }

@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import ItemDomain
 import Presentation
 import Provider
 import TripDomain
@@ -21,13 +22,33 @@ public final class EditTripViewModel: ViewModel {
   
   public func send(_ action: EditTripAction) {
     switch action {
+    case .addNewItem: addNewItem()
+    case let .removeItem(itemId): removeItem(itemId)
     case let .updateDate(newDate): updateDate(newDate)
+    case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
     case let .updateName(newName): updateName(newName)
     }
   }
   
+  private func addNewItem() {
+    state.items.append(.new())
+    saveTrip()
+  }
+  
+  private func removeItem(_ itemId: ItemId) {
+    state.items.removeAll { $0.itemId == itemId }
+    saveTrip()
+  }
+  
   private func updateDate(_ newDate: Date) {
     state.date = TripDate(newDate)
+    saveTrip()
+  }
+  
+  func updateItemName(_ itemId: ItemId, _ newName: String) {
+    for i in state.items.indices where state.items[i].itemId == itemId {
+      state.items[i].name = newName
+    }
     saveTrip()
   }
   
@@ -37,12 +58,7 @@ public final class EditTripViewModel: ViewModel {
   }
   
   private func saveTrip() {
-    let trip = Trip(
-      date: state.date,
-      id: state.id,
-      name: state.name
-    )
-    Task { await tripRepository.saveTrip(trip) }
+    Task { await tripRepository.saveTrip(state.toTrip()) }
   }
   
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}

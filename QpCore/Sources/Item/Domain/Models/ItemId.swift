@@ -9,7 +9,14 @@ public struct ItemId: Equatable, Hashable {
 }
 
 public extension ItemId {
+  static let samples = ItemIdSamples()
   static func new() -> ItemId {
     ItemId(UUID().uuidString)
   }
+}
+
+public final class ItemIdSamples {
+  public let camera = ItemId("camera")
+  public let iPad = ItemId("iPad")
+  public let nintendoSwitch = ItemId("Switch")
 }

@@ -1,12 +1,14 @@
 import Foundation
+import ItemDomain
 import QpUtils
 import SwiftData
-import ItemDomain
+import TripDomain
 
 @Model
 public final class ItemSwiftDataModel: Equatable {
   public var id: String = UUID().uuidString
-  var name: String?
+  public var name: String?
+  var tripItems: [TripItemSwiftDataModel]?
   
   init(
     id: String,
@@ -17,7 +19,7 @@ public final class ItemSwiftDataModel: Equatable {
   }
 }
 
-extension Item {
+public extension Item {
   func toSwiftDataModel() -> ItemSwiftDataModel {
     ItemSwiftDataModel(
       id: id.value,
@@ -26,7 +28,7 @@ extension Item {
   }
 }
 
-extension ItemId {
+public extension ItemId {
   var fetchDescriptor: FetchDescriptor<ItemSwiftDataModel> {
     FetchDescriptor<ItemSwiftDataModel>(
       predicate: #Predicate { $0.id == value }
@@ -34,13 +36,17 @@ extension ItemId {
   }
 }
 
-extension [ItemSwiftDataModel] {
+public extension ItemSwiftDataModel {
+  func toDomainModel() -> Item {
+    Item(
+      id: ItemId(id),
+      name: name!
+    )
+  }
+}
+
+public extension [ItemSwiftDataModel] {
   func toDomainModels() -> [Item] {
-    safeMap { swiftDataModel in
-      Item(
-        id: ItemId(swiftDataModel.id),
-        name: swiftDataModel.name!
-      )
-    }
+    safeMap { $0.toDomainModel() }
   }
 }

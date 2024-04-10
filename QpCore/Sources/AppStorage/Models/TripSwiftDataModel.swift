@@ -5,32 +5,37 @@ import TripDomain
 
 @Model
 public final class TripSwiftDataModel: Equatable {
-  var date: TripDate?
+  public var date: TripDate?
   public var id: String = UUID().uuidString
-  var name: String?
+  @Relationship(deleteRule: .cascade, inverse: \TripItemSwiftDataModel.trip)
+  public var items: [TripItemSwiftDataModel]?
+  public var name: String?
   
   init(
     date: TripDate?,
     id: String,
+    items: [TripItemSwiftDataModel],
     name: String
   ) {
     self.date = date
     self.id = id
+    self.items = items
     self.name = name
   }
 }
 
-extension Trip {
+public extension Trip {
   func toSwiftDataModel() -> TripSwiftDataModel {
     TripSwiftDataModel(
       date: date,
       id: id.value,
+      items: items.map { $0.toSwiftDataModel() },
       name: name
     )
   }
 }
 
-extension TripId {
+public extension TripId {
   var fetchDescriptor: FetchDescriptor<TripSwiftDataModel> {
     FetchDescriptor<TripSwiftDataModel>(
       predicate: #Predicate { $0.id == value }
@@ -38,12 +43,13 @@ extension TripId {
   }
 }
 
-extension [TripSwiftDataModel] {
+public extension [TripSwiftDataModel] {
   func toDomainModels() -> [Trip] {
     safeMap { swiftDataModel in
       Trip(
         date: swiftDataModel.date,
         id: TripId(swiftDataModel.id),
+        items: swiftDataModel.items!.toDomainModels(),
         name: swiftDataModel.name!
       )
     }

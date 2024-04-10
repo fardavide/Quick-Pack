@@ -24,7 +24,7 @@ public final class FakeItemRepository: ItemRepository {
   }
   
   public func waitLastSavedItem() async -> Item {
-    await waitNotNil { lastSavedItem() }
+    await waitNonNil { lastSavedItem() }
   }
   
   public func deleteItem(itemId: ItemId) async {}

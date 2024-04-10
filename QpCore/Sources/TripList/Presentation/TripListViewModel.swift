@@ -50,20 +50,11 @@ public final class TripListViewModel: ViewModel {
   }
   
   private func deleteTrip(tripId: TripId) {
-    Task {
-      await tripRepository.deleteTrip(tripId: tripId)
-    }
+    Task { await tripRepository.deleteTrip(tripId: tripId) }
   }
   
   private func newTrip() {
-    Task {
-      let newTrip = Trip(
-        date: nil,
-        id: .new(),
-        name: "My Trip"
-      )
-      await tripRepository.saveTrip(newTrip)
-    }
+    Task { await tripRepository.saveTrip(.new()) }
   }
 }
 

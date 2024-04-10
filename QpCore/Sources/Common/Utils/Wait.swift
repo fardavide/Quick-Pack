@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 /// Wait till `condition` is satisfied (returns `true`)
@@ -21,9 +22,26 @@ public func waitFor(
 }
 
 /// Wait till `value` produces a non-nil value
-@inlinable public func waitNotNil<T>(_ value: () -> T?) async -> T {
+/// - Returns: non `nill` result of `value`
+@inlinable public func waitNonNil<T>(_ value: () -> T?) async -> T {
   await waitFor { value() != nil }
   return value()!
+}
+
+public extension Publisher {
+  
+  /// Wait till the `Publisher` emits its first value
+  /// - Returns: the value
+  func waitFirst() async -> Output {
+    var result: Output?
+    var cancellables: [AnyCancellable] = []
+    let cancellable = sink(
+      receiveCompletion: { _ in cancellables.forEach { c in c.cancel() } },
+      receiveValue: { value in result = value }
+    )
+    cancellables.append(cancellable)
+    return await waitNonNil { result }
+  }
 }
 
 private let defaultTimeout = Duration.seconds(3)

@@ -13,11 +13,15 @@ public struct Item: Equatable {
 
 public extension Item {
   static let samples = ItemSamples()
+  
+  static func new() -> Item {
+    Item(id: .new(), name: "")
+  }
 }
 
 public final class ItemSamples {
   public let camera = Item(
-    id: ItemId("camera"),
+    id: .samples.camera,
     name: "Camera"
   )
 }

@@ -1,5 +1,6 @@
 import AppStorage
 import Foundation
+import StorageModels
 import SwiftData
 import TripData
 

@@ -1,6 +1,10 @@
 import Foundation
+import ItemDomain
 
 public enum EditTripAction {
-  case updateDate(newDate: Date)
-  case updateName(newName: String)
+  case addNewItem
+  case removeItem(_ id: ItemId)
+  case updateDate(_ newDate: Date)
+  case updateItemName(_ id: ItemId, _ newName: String)
+  case updateName(_ newName: String)
 }

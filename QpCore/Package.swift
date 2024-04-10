@@ -18,6 +18,7 @@ let package = Package(
       targets: [
         // MARK: - App Storage declaration
         "AppStorage",
+        "StorageModels",
         "RealAppStorage",
         // MARK: - Common declaration
         "DateUtils",
@@ -36,8 +37,6 @@ let package = Package(
         // MARK: - Trip declarations
         "TripData",
         "TripDomain",
-        // MARK: - Trip Item List declarations
-        "TripItemListPresentation",
         // MARK: - Trip List declarations
         "TripListPresentation"
       ]
@@ -55,7 +54,7 @@ let package = Package(
     .target(
       name: "AppStorage",
       dependencies: [
-        "QpUtils"
+        "QpStorage"
       ],
       path: "Sources/AppStorage/Api"
     ),
@@ -67,6 +66,15 @@ let package = Package(
       path: "Tests/AppStorage/ApiTests"
     ),
     
+    // MARK: Models
+    .target(
+      name: "StorageModels",
+      dependencies: [
+        "AppStorage"
+      ],
+      path: "Sources/AppStorage/Models"
+    ),
+    
     // MARK: Real App Storage
     .target(
       name: "RealAppStorage",
@@ -74,7 +82,8 @@ let package = Package(
         "AppStorage",
         "Provider",
         "QpStorage",
-        "TripData"
+        "TripData",
+        "TripDomain"
       ],
       path: "Sources/AppStorage/Real"
     ),
@@ -209,7 +218,10 @@ let package = Package(
     .target(
       name: "ItemData",
       dependencies: [
-        "ItemDomain"
+        "AppStorage",
+        "ItemDomain",
+        "QpUtils",
+        "StorageModels"
       ],
       path: "Sources/Item/Data"
     ),
@@ -226,6 +238,7 @@ let package = Package(
     .target(
       name: "ItemDomain",
       dependencies: [
+        "QpUtils"
       ],
       path: "Sources/Item/Domain"
     ),
@@ -264,9 +277,11 @@ let package = Package(
       name: "TripData",
       dependencies: [
         "AppStorage",
+        "ItemData",
         "Provider",
         "QpStorage",
         "QpUtils",
+        "StorageModels",
         "TripDomain"
       ],
       path: "Sources/Trip/Data"
@@ -285,6 +300,7 @@ let package = Package(
       name: "TripDomain",
       dependencies: [
         "DateUtils",
+        "ItemDomain",
         "Provider",
         "QpUtils"
       ],
@@ -320,26 +336,6 @@ let package = Package(
         .product(name: "Testing", package: "swift-testing")
       ],
       path: "Tests/TripList/PresentationTests"
-    ),
-    
-    // MARK: - Trip Item List definitions
-    // MARK: Trip Item List Presentation
-    .target(
-      name: "TripItemListPresentation",
-      dependencies: [
-        "Design",
-        "Provider",
-        "Presentation"
-      ],
-      path: "Sources/TripItemList/Presentation"
-    ),
-    .testTarget(
-      name: "TripItemListPresentationTests",
-      dependencies: [
-        "TripItemListPresentation",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/TripItemList/PresentationTests"
     )
   ]
 )

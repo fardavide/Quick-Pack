@@ -52,6 +52,16 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
+  func updateItemsOrder(sortedItems: [TripItem]) async {
+    await transaction { context in
+      for (index, item) in sortedItems.withIndices() {
+        await updateInTransaction(context: context, item.id.fetchDescriptor) { model in
+          model.order = index
+        }
+      }
+    }
+  }
+  
   func removeItem(_ itemId: TripItemId, from tripId: TripId) async {
     await transaction { context in
       await updateInTransaction(context: context, tripId.fetchDescriptor) { model in

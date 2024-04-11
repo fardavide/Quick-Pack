@@ -6,6 +6,7 @@ public struct EditableTripItem: Equatable, Identifiable {
   let itemId: ItemId
   var isChecked: Bool
   var name: String
+  var order: Int
 }
 
 extension EditableTripItem {
@@ -15,7 +16,8 @@ extension EditableTripItem {
       id: .new(),
       itemId: .new(),
       isChecked: false,
-      name: ""
+      name: "",
+      order: 0
     )
   }
   
@@ -23,7 +25,8 @@ extension EditableTripItem {
     TripItem(
       id: id,
       item: toItem(),
-      isChecked: isChecked
+      isChecked: isChecked,
+      order: order
     )
   }
   
@@ -40,18 +43,21 @@ final class EditableTripItemSamples {
     id: .samples.camera,
     itemId: .samples.camera,
     isChecked: false,
-    name: "Camera"
+    name: "Camera",
+    order: 0
   )
   let iPad = EditableTripItem(
     id: .samples.iPad,
     itemId: .samples.iPad,
     isChecked: false,
-    name: "iPad"
+    name: "iPad",
+    order: 1
   )
   let nintendoSwitch = EditableTripItem(
     id: .samples.nintendoSwitch,
     itemId: .samples.nintendoSwitch,
     isChecked: true,
-    name: "Nintendo Switch"
+    name: "Nintendo Switch",
+    order: 2
   )
 }

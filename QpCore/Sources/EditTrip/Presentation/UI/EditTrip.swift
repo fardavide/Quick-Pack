@@ -56,21 +56,26 @@ private struct EditTripContent: View {
         DatePicker("Date", selection: dateBinding, displayedComponents: .date)
       }
       
-      Section("Items") {
+      Section {
         TripItemList(
           items: state.items,
           onNameChange: { itemId, newName in send(.updateItemName(itemId, newName)) },
           onCheckChange: { itemId, newIsChecked in send(.updateItemCheck(itemId, newIsChecked)) },
+          onOrderChange: { from, to in send(.reorderItems(from: from, to: to)) },
           onRemove: { itemId in send(.removeItem(itemId)) }
         )
+      } header: {
+        HStack {
+          Text("Items")
+          Spacer()
+          Button { send(.addNewItem) } label: {
+            Label("Add", systemSymbol: .plus)
+              .labelStyle(.iconOnly)
+          }
+        }
       }
     }
     .navigationTitle("Edit trip")
-    .toolbar {
-      Button { send(.addNewItem) } label: {
-        Label("Add Item", systemImage: "plus")
-      }
-    }
   }
 }
 

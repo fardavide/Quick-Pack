@@ -13,14 +13,16 @@ extension Trip {
     EditTripState(
       date: date,
       id: id,
-      items: items.map { tripItem in
-        EditableTripItem(
-          id: tripItem.id,
-          itemId: tripItem.item.id,
-          isChecked: tripItem.isChecked,
-          name: tripItem.item.name
-        )
-      },
+      items: items
+        .map { tripItem in
+          EditableTripItem(
+            id: tripItem.id,
+            itemId: tripItem.item.id,
+            isChecked: tripItem.isChecked,
+            name: tripItem.item.name,
+            order: tripItem.order
+          )
+        },
       name: name
     )
   }
@@ -40,7 +42,8 @@ extension EditTripState {
             id: editableTripItem.itemId,
             name: editableTripItem.name
           ),
-          isChecked: editableTripItem.isChecked
+          isChecked: editableTripItem.isChecked,
+          order: editableTripItem.order
         )
       },
       name: name

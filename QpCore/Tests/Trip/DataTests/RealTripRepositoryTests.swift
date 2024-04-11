@@ -30,7 +30,7 @@ final class RealTripRepositoryTests {
       name: initialTrip.name
     )
     await scenario.sut.saveTripMetadata(.samples.malaysia)
-
+    
     // when
     await scenario.sut.saveTripMetadata(updatedTrip)
     let savedTrips = await scenario.sut.trips.waitFirst()
@@ -63,13 +63,9 @@ final class RealTripRepositoryTests {
     // given
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
-    let tripItem = TripItem(
-      id: .samples.camera,
-      item: .samples.camera,
-      isChecked: false
-    )
+    let tripItem = TripItem.samples.camera
     await scenario.sut.saveTripMetadata(.samples.malaysia)
-
+    
     // when
     await scenario.sut.addItem(tripItem, to: trip.id)
     let savedTrips = await scenario.sut.trips.waitFirst()
@@ -82,11 +78,7 @@ final class RealTripRepositoryTests {
     // given
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
-    let tripItem = TripItem(
-      id: .samples.camera,
-      item: .samples.camera,
-      isChecked: false
-    )
+    let tripItem = TripItem.samples.camera
     
     await scenario.sut.saveTripMetadata(.samples.malaysia)
     await scenario.sut.addItem(tripItem, to: trip.id)
@@ -105,22 +97,52 @@ final class RealTripRepositoryTests {
     // given
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
-    let tripItem = TripItem(
-      id: .samples.camera,
-      item: .samples.camera,
-      isChecked: false
-    )
+    let tripItem = TripItem.samples.camera
     await scenario.sut.saveTripMetadata(.samples.malaysia)
     await scenario.sut.addItem(tripItem, to: trip.id)
     let initialTrips = await scenario.sut.trips.waitFirst()
     #expect(initialTrips.orNil()?.first?.items.first?.isChecked == false)
-
+    
     // when
     await scenario.sut.updateItemCheck(tripItem.id, isChecked: true)
     let savedTrips = await scenario.sut.trips.waitFirst()
     
     // then
     #expect(savedTrips.orNil()?.first?.items.first?.isChecked == true)
+  }
+  
+  @Test func updateTripItemsOrder() async {
+    // given
+    let scenario = Scenario()
+    let trip = Trip.samples.malaysia
+    let initialTripItems = [
+      TripItem.samples.camera.withOther(0),
+      TripItem.samples.iPad.withOther(1),
+      TripItem.samples.nintendoSwitch.withOther(2)
+    ]
+    let reorderedTripItems = [
+      TripItem.samples.iPad.withOther(1),
+      TripItem.samples.nintendoSwitch.withOther(2),
+      TripItem.samples.camera.withOther(0)
+    ]
+    let expectedTripItems = [
+      TripItem.samples.iPad.withOther(0),
+      TripItem.samples.nintendoSwitch.withOther(1),
+      TripItem.samples.camera.withOther(2)
+    ]
+    await scenario.sut.saveTripMetadata(.samples.malaysia)
+    for tripItem in initialTripItems {
+      await scenario.sut.addItem(tripItem, to: trip.id)
+    }
+    let initialTrips = await scenario.sut.trips.waitFirst()
+    #expect(initialTrips.orNil()?.first?.items == initialTripItems)
+    
+    // when
+    await scenario.sut.updateItemsOrder(sortedItems: reorderedTripItems)
+    let savedTrips = await scenario.sut.trips.waitFirst()
+    
+    // then
+    #expect(savedTrips.orNil()?.first?.items == expectedTripItems)
   }
 }
 

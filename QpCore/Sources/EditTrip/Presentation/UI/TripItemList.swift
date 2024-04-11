@@ -1,40 +1,49 @@
 import ItemDomain
 import SwiftUI
+import TripDomain
 
 struct TripItemList: View {
   let items: [EditableTripItem]
-  let onNameChange: (ItemId, String) -> Void
-  let onCheckChange: (ItemId, Bool) -> Void
-  let onRemove: (ItemId) -> Void
+  let onNameChange: (TripItemId, String) -> Void
+  let onCheckChange: (TripItemId, Bool) -> Void
+  let onOrderChange: (IndexSet, Int) -> Void
+  let onRemove: (TripItemId) -> Void
   
   public var body: some View {
-    List(items) { item in
-      let isCheckedBinding = Binding(
-        get: { item.isChecked },
-        set: { newIsChecked in
-          if newIsChecked != item.isChecked {
-            onCheckChange(item.itemId, newIsChecked)
+    List {
+      ForEach(items) { item in
+        let isCheckedBinding = Binding(
+          get: { item.isChecked },
+          set: { newIsChecked in
+            if newIsChecked != item.isChecked {
+              onCheckChange(item.id, newIsChecked)
+            }
+          }
+        )
+        let nameBinding = Binding(
+          get: { item.name },
+          set: { newName in
+            if newName != item.name {
+              onNameChange(item.id, newName)
+            }
+          }
+        )
+        HStack {
+          Toggle(isOn: isCheckedBinding) {
+            TextField("\(item.id)", text: nameBinding, prompt: Text("Item name"))
+          }
+          Spacer()
+          Image(systemSymbol: .line3Horizontal)
+        }
+        .toggleStyle(CheckboxToggleStyle())
+        .swipeActions(edge: .trailing) {
+          Button { onRemove(item.id) } label: {
+            Label("Remove item", systemSymbol: .xmark)
+              .tint(.accentColor)
           }
         }
-      )
-      let nameBinding = Binding(
-        get: { item.name },
-        set: { newName in
-          if newName != item.name {
-            onNameChange(item.itemId, newName)
-          }
-        }
-      )
-      Toggle(isOn: isCheckedBinding) {
-        TextField("\(item.id)", text: nameBinding, prompt: Text("Item name"))
       }
-      .toggleStyle(CheckboxToggleStyle())
-      .swipeActions(edge: .trailing) {
-        Button { onRemove(item.itemId) } label: {
-          Label("Remove item", systemSymbol: .xmark)
-            .tint(.accentColor)
-        }
-      }
+      .onMove(perform: onOrderChange)
     }
   }
 }
@@ -59,6 +68,7 @@ private struct CheckboxToggleStyle: ToggleStyle {
     ],
     onNameChange: { _, _ in },
     onCheckChange: { _, _ in },
+    onOrderChange: { _, _ in },
     onRemove: { _ in }
   )
 }

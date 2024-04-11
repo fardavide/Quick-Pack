@@ -27,6 +27,7 @@ public final class EditTripViewModel: ViewModel {
     switch action {
     case .addNewItem: addNewItem()
     case let .removeItem(itemId): removeItem(itemId)
+    case let .reorderItems(from, to): reorderItems(from, to)
     case let .updateDate(newDate): updateDate(newDate)
     case let .updateItemCheck(itemId, newIsChecked): updateItemCheck(itemId, newIsChecked)
     case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
@@ -36,15 +37,21 @@ public final class EditTripViewModel: ViewModel {
   
   private func addNewItem() {
     let editableItem = EditableTripItem.new()
-    state.items.append(editableItem)
+    state.items.insert(editableItem, at: 0)
     Task { await tripRepository.addItem(editableItem.toTripItem(), to: state.id) }
   }
   
-  private func removeItem(_ itemId: ItemId) {
-    state.items.removeAll { $0.itemId == itemId }
-    if let editableItem = findTripItem(itemId) {
-      Task { await tripRepository.addItem(editableItem.toTripItem(), to: state.id) }
-    }
+  private func reorderItems(
+    _ from: IndexSet,
+    _ to: Int
+  ) {
+    state.items.move(fromOffsets: from, toOffset: to)
+    Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
+  }
+  
+  private func removeItem(_ itemId: TripItemId) {
+    state.items.removeAll { $0.id == itemId }
+    Task { await tripRepository.removeItem(itemId, from: state.id) }
   }
   
   private func updateDate(_ newDate: Date) {
@@ -52,8 +59,8 @@ public final class EditTripViewModel: ViewModel {
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
-  func updateItemCheck(_ itemId: ItemId, _ newIsChecked: Bool) {
-    for i in state.items.indices where state.items[i].itemId == itemId {
+  func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
+    for i in state.items.indices where state.items[i].id == itemId {
       state.items[i].isChecked = newIsChecked
     }
     if let editableItem = findTripItem(itemId) {
@@ -61,8 +68,8 @@ public final class EditTripViewModel: ViewModel {
     }
   }
   
-  func updateItemName(_ itemId: ItemId, _ newName: String) {
-    for i in state.items.indices where state.items[i].itemId == itemId {
+  func updateItemName(_ itemId: TripItemId, _ newName: String) {
+    for i in state.items.indices where state.items[i].id == itemId {
       state.items[i].name = newName
     }
     if let editableItem = findTripItem(itemId) {
@@ -75,8 +82,8 @@ public final class EditTripViewModel: ViewModel {
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
-  private func findTripItem(_ id: ItemId) -> EditableTripItem? {
-    state.items.first(where: { $0.itemId == id })
+  private func findTripItem(_ id: TripItemId) -> EditableTripItem? {
+    state.items.first(where: { $0.id == id })
   }
   
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}

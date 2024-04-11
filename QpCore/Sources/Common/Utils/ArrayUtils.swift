@@ -14,4 +14,12 @@ public extension Array {
       }
     }
   }
+  
+  /// Wraps each element in an `IndexedValue` containing its index.
+  /// - Returns: An array of `IndexedValue` elements.
+  func withIndices() -> [IndexedValue<Element>] {
+    indices.map { IndexedValue(index: $0, value: self[$0]) }
+  }
 }
+
+public typealias IndexedValue<Value> = (index: Int, value: Value)

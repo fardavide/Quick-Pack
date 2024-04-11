@@ -24,4 +24,12 @@ public final class ItemSamples {
     id: .samples.camera,
     name: "Camera"
   )
+  public let iPad = Item(
+    id: .samples.iPad,
+    name: "iPad"
+  )
+  public let nintendoSwitch = Item(
+    id: .samples.nintendoSwitch,
+    name: "Nintendo Switch"
+  )
 }

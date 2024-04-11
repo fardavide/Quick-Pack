@@ -8,16 +8,19 @@ public final class TripItemSwiftDataModel: Equatable {
   @Relationship(deleteRule: .nullify, inverse: \ItemSwiftDataModel.tripItems)
   var item: ItemSwiftDataModel?
   public var isChecked: Bool = false
+  public var order: Int = 0
   var trip: TripSwiftDataModel?
   
   init(
     id: String,
     item: ItemSwiftDataModel?,
-    isChecked: Bool = false
+    isChecked: Bool,
+    order: Int
   ) {
     self.id = id
     self.item = item
     self.isChecked = isChecked
+    self.order = order
   }
 }
 
@@ -26,7 +29,8 @@ public extension TripItem {
     TripItemSwiftDataModel(
       id: item.id.value,
       item: item.toSwiftDataModel(),
-      isChecked: isChecked
+      isChecked: isChecked,
+      order: order
     )
   }
 }
@@ -45,8 +49,10 @@ extension [TripItemSwiftDataModel] {
       TripItem(
         id: TripItemId(swiftDataModel.id),
         item: swiftDataModel.item!.toDomainModel(),
-        isChecked: swiftDataModel.isChecked
+        isChecked: swiftDataModel.isChecked,
+        order: swiftDataModel.order
       )
     }
+    .sorted()
   }
 }

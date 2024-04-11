@@ -101,25 +101,27 @@ final class RealTripRepositoryTests {
     #expect(updatedTrips.orNil()?.first?.items == [])
   }
   
-//  @Test func updateTripItemCheck() async {
-//    // given
-//    let scenario = Scenario()
-//    let trip = Trip.samples.malaysia
-//    let tripItem = TripItem(
-//      id: .samples.camera,
-//      item: .samples.camera,
-//      isChecked: true
-//    )
-//    await scenario.sut.saveTripMetadata(.samples.malaysia)
-//    await scenario.sut.addItem(tripItem, to: trip.id)
-//    
-//    // when
-//    
-//    let savedTrips = await scenario.sut.trips.waitFirst()
-//    
-//    // then
-//    #expect(savedTrips.orNil()?.first?.items == item)
-//  }
+  @Test func updateTripItemCheck() async {
+    // given
+    let scenario = Scenario()
+    let trip = Trip.samples.malaysia
+    let tripItem = TripItem(
+      id: .samples.camera,
+      item: .samples.camera,
+      isChecked: false
+    )
+    await scenario.sut.saveTripMetadata(.samples.malaysia)
+    await scenario.sut.addItem(tripItem, to: trip.id)
+    let initialTrips = await scenario.sut.trips.waitFirst()
+    #expect(initialTrips.orNil()?.first?.items.first?.isChecked == false)
+
+    // when
+    await scenario.sut.updateItemCheck(tripItem.id, isChecked: true)
+    let savedTrips = await scenario.sut.trips.waitFirst()
+    
+    // then
+    #expect(savedTrips.orNil()?.first?.items.first?.isChecked == true)
+  }
 }
 
 private final class Scenario {

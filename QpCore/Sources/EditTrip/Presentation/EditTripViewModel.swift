@@ -28,6 +28,7 @@ public final class EditTripViewModel: ViewModel {
     case .addNewItem: addNewItem()
     case let .removeItem(itemId): removeItem(itemId)
     case let .updateDate(newDate): updateDate(newDate)
+    case let .updateItemCheck(itemId, newIsChecked): updateItemCheck(itemId, newIsChecked)
     case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
     case let .updateName(newName): updateName(newName)
     }
@@ -49,6 +50,15 @@ public final class EditTripViewModel: ViewModel {
   private func updateDate(_ newDate: Date) {
     state.date = TripDate(newDate)
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
+  }
+  
+  func updateItemCheck(_ itemId: ItemId, _ newIsChecked: Bool) {
+    for i in state.items.indices where state.items[i].itemId == itemId {
+      state.items[i].isChecked = newIsChecked
+    }
+    if let editableItem = findTripItem(itemId) {
+      Task { await tripRepository.updateItemCheck(editableItem.id, isChecked: newIsChecked) }
+    }
   }
   
   func updateItemName(_ itemId: ItemId, _ newName: String) {

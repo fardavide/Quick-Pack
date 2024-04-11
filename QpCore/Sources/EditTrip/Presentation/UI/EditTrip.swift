@@ -60,6 +60,7 @@ private struct EditTripContent: View {
         TripItemList(
           items: state.items,
           onNameChange: { itemId, newName in send(.updateItemName(itemId, newName)) },
+          onCheckChange: { itemId, newIsChecked in send(.updateItemCheck(itemId, newIsChecked)) },
           onRemove: { itemId in send(.removeItem(itemId)) }
         )
       }

@@ -46,6 +46,12 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
+  func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) async {
+    await update(itemId.fetchDescriptor) { model in
+      model.isChecked = isChecked
+    }
+  }
+  
   func removeItem(_ itemId: TripItemId, from tripId: TripId) async {
     await transaction { context in
       await updateInTransaction(context: context, tripId.fetchDescriptor) { model in

@@ -68,7 +68,7 @@ private struct TripListItems: View {
   let edit: (Trip) -> EditTripViewModel
 
   var body: some View {
-    List(items) { item in
+    List(items, id: \.id) { item in
       NavigationLink {
         EditTrip(viewModel: edit(item.domainModel))
       } label: {

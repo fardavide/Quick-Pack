@@ -41,7 +41,7 @@ final class RealTripRepository: AppStorage, TripRepository {
       await updateInTransaction(context: context, tripId.fetchDescriptor) { model in
         if model.items != nil {
           for item in model.items! {
-            item.order = item.order + 1
+            item.order += 1
           }
           model.items!.append(item.toSwiftDataModel())
         } else {

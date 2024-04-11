@@ -22,6 +22,8 @@ private struct EditTripContent: View {
   private let state: EditTripState
   private let send: (EditTripAction) -> Void
   
+  @FocusState private var isNameFocused: Bool
+  
   init(
     _ state: EditTripState,
     send: @escaping (EditTripAction) -> Void
@@ -53,6 +55,8 @@ private struct EditTripContent: View {
         TextField(text: nameBinding, prompt: Text("Required")) {
           Text("Name")
         }
+        .focused($isNameFocused)
+        .onAppear { isNameFocused = true }
         DatePicker("Date", selection: dateBinding, displayedComponents: .date)
       }
       

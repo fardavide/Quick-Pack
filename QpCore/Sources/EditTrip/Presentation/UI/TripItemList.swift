@@ -9,6 +9,8 @@ struct TripItemList: View {
   let onOrderChange: (IndexSet, Int) -> Void
   let onRemove: (TripItemId) -> Void
   
+  @FocusState private var focusedItemId: TripItemId?
+  
   public var body: some View {
     List {
       ForEach(items) { item in
@@ -31,6 +33,7 @@ struct TripItemList: View {
         HStack {
           Toggle(isOn: isCheckedBinding) {
             TextField("\(item.id)", text: nameBinding, prompt: Text("Item name"))
+              .focused($focusedItemId, equals: item.id)
           }
           Spacer()
           Image(systemSymbol: .line3Horizontal)
@@ -40,6 +43,11 @@ struct TripItemList: View {
           Button { onRemove(item.id) } label: {
             Label("Remove item", systemSymbol: .xmark)
               .tint(.accentColor)
+          }
+        }
+        .onAppear {
+          if nameBinding.wrappedValue.isEmpty {
+            focusedItemId = item.id
           }
         }
       }

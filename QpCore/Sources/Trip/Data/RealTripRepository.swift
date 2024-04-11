@@ -37,11 +37,16 @@ final class RealTripRepository: AppStorage, TripRepository {
   }
   
   func addItem(_ item: TripItem, to tripId: TripId) async {
-    await update(tripId.fetchDescriptor) { model in
-      if model.items != nil {
-        model.items!.append(item.toSwiftDataModel())
-      } else {
-        model.items = [item.toSwiftDataModel()]
+    await transaction { context in
+      await updateInTransaction(context: context, tripId.fetchDescriptor) { model in
+        if model.items != nil {
+          for item in model.items! {
+            item.order = item.order + 1
+          }
+          model.items!.append(item.toSwiftDataModel())
+        } else {
+          model.items = [item.toSwiftDataModel()]
+        }
       }
     }
   }

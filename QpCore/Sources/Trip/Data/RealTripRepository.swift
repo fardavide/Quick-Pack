@@ -26,29 +26,34 @@ final class RealTripRepository: AppStorage, TripRepository {
     self.container = container
   }
   
-  func saveTrip(_ trip: Trip) async {
+  func saveTripMetadata(_ trip: Trip) async {
     await insertOrUpdate(
       trip.toSwiftDataModel(),
       fetchDescriptor: trip.id.fetchDescriptor
     ) { model in
       model.date = trip.date
-      model.items = model.items
       model.name = trip.name
     }
   }
   
-  func saveItem(_ tripItem: TripItem) async {
-    await insertOrUpdate(
-      tripItem.item.toSwiftDataModel(),
-      fetchDescriptor: tripItem.item.id.fetchDescriptor
-    ) { model in
-      model.name = tripItem.item.name
+  func addItem(_ item: TripItem, to tripId: TripId) async {
+    await update(tripId.fetchDescriptor) { model in
+      if model.items != nil {
+        model.items!.append(item.toSwiftDataModel())
+      } else {
+        model.items = [item.toSwiftDataModel()]
+      }
     }
-    await insertOrUpdate(
-      tripItem.toSwiftDataModel(),
-      fetchDescriptor: tripItem.id.fetchDescriptor
-    ) { model in
-      model.isChecked = tripItem.isChecked
+  }
+  
+  func removeItem(_ itemId: TripItemId, from tripId: TripId) async {
+    await transaction { context in
+      await updateInTransaction(context: context, tripId.fetchDescriptor) { model in
+        if model.items != nil {
+          model.items!.removeAll { $0.id == itemId.value }
+        }
+      }
+      await deleteInTransaction(context: context, itemId.fetchDescriptor)
     }
   }
   

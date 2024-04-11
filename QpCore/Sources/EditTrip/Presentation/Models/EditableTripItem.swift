@@ -22,11 +22,15 @@ extension EditableTripItem {
   func toTripItem() -> TripItem {
     TripItem(
       id: id,
-      item: Item(
-        id: itemId,
-        name: name
-      ),
+      item: toItem(),
       isChecked: isChecked
+    )
+  }
+  
+  func toItem() -> Item {
+    Item(
+      id: itemId,
+      name: name
     )
   }
 }

@@ -5,8 +5,9 @@ public protocol TripRepository {
   
   var trips: any DataPublisher<[Trip]> { get }
   
-  func saveTrip(_ trip: Trip) async
-  func saveItem(_ tripItem: TripItem) async
+  func saveTripMetadata(_ trip: Trip) async
+  func addItem(_ item: TripItem, to tripId: TripId) async
+  func removeItem(_ itemId: TripItemId, from tripId: TripId) async
   func deleteTrip(tripId: TripId) async
 }
 
@@ -28,9 +29,10 @@ public final class FakeTripRepository: TripRepository {
     await waitNonNil { lastSavedTrip() }
   }
   
-  public func saveTrip(_ trip: Trip) async {
+  public func saveTripMetadata(_ trip: Trip) async {
     saveTripInvocations.append(trip)
   }
-  public func saveItem(_ tripItem: TripItem) async {}
+  public func addItem(_ item: TripItem, to tripId: TripId) async {}
+  public func removeItem(_ itemId: TripItemId, from tripId: TripId) async {}
   public func deleteTrip(tripId: TripId) async {}
 }

@@ -13,34 +13,41 @@ public extension AppStorage {
   func observe<Model: Equatable>(
     _ f: @escaping (ModelContext) async -> Result<Model, DataError>
   ) -> any DataPublisher<Model> {
-    Timer.publish(every: 1, on: .main, in: .default) { await withContext(f) }
+    Timer.publish(every: 1, on: .main, in: .default) { await transaction(f) }
       .share()
       .removeDuplicates()
   }
   
-  func delete<Model: Equatable>(
+  func deleteInTransaction<Model: Equatable>(
+    context: ModelContext,
     _ fetchDescriptor: FetchDescriptor<Model>
   ) async {
-    await withContext { context in
-      await context.fetchOne(fetchDescriptor)
-        .onSuccess { model in context.delete(model) }
-    }
+    await context.fetchOne(fetchDescriptor)
+      .onSuccess { model in context.delete(model) }
   }
   
-  func insertOrUpdate<Model: Equatable>(
+  func insertOrUpdateInTransaction<Model: Equatable>(
+    context: ModelContext,
     _ model: Model,
     fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
   ) async {
-    await withContext { context in
-      await context.fetchOne(fetchDescriptor)
-        .onSuccess(update)
-        .onFailure { _ in context.insert(model) }
-    }
+    await context.fetchOne(fetchDescriptor)
+      .onSuccess(update)
+      .onFailure { _ in context.insert(model) }
+  }
+  
+  func updateInTransaction<Model: Equatable>(
+    context: ModelContext,
+    _ fetchDescriptor: FetchDescriptor<Model>,
+    update: (Model) -> Void
+  ) async {
+    await context.fetchOne(fetchDescriptor)
+      .onSuccess(update)
   }
   
   @discardableResult
-  private func withContext<T>(
+  func transaction<T>(
     _ f: (ModelContext) async -> T
   ) async -> T {
     let context = ModelContext(container)
@@ -51,5 +58,40 @@ public extension AppStorage {
       fatalError(error.localizedDescription)
     }
     return result
+  }
+}
+
+public extension AppStorage {
+  
+  func delete<Model: Equatable>(
+    _ fetchDescriptor: FetchDescriptor<Model>
+  ) async {
+    await transaction { context in
+      await deleteInTransaction(context: context, fetchDescriptor)
+    }
+  }
+  
+  func insertOrUpdate<Model: Equatable>(
+    _ model: Model,
+    fetchDescriptor: FetchDescriptor<Model>,
+    update: (Model) -> Void
+  ) async {
+    await transaction { context in
+      await insertOrUpdateInTransaction(
+        context: context,
+        model,
+        fetchDescriptor: fetchDescriptor,
+        update: update
+      )
+    }
+  }
+  
+  func update<Model: Equatable>(
+    _ fetchDescriptor: FetchDescriptor<Model>,
+    update: (Model) -> Void
+  ) async {
+    await transaction { context in
+      await updateInTransaction(context: context, fetchDescriptor, update: update)
+    }
   }
 }

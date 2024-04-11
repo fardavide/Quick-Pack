@@ -10,12 +10,15 @@ public final class EditTripViewModel: ViewModel {
   public typealias State = EditTripState
   
   @Published public var state: State
+  private let itemRepository: ItemRepository
   private let tripRepository: TripRepository
 
   init(
     initialTrip: Trip,
+    itemRepository: ItemRepository,
     tripRepository: TripRepository
   ) {
+    self.itemRepository = itemRepository
     self.tripRepository = tripRepository
     state = initialTrip.toEditTripState()
   }
@@ -31,44 +34,58 @@ public final class EditTripViewModel: ViewModel {
   }
   
   private func addNewItem() {
-    state.items.append(.new())
-    saveTrip()
+    let editableItem = EditableTripItem.new()
+    state.items.append(editableItem)
+    Task { await tripRepository.addItem(editableItem.toTripItem(), to: state.id) }
   }
   
   private func removeItem(_ itemId: ItemId) {
     state.items.removeAll { $0.itemId == itemId }
-    saveTrip()
+    if let editableItem = findTripItem(itemId) {
+      Task { await tripRepository.addItem(editableItem.toTripItem(), to: state.id) }
+    }
   }
   
   private func updateDate(_ newDate: Date) {
     state.date = TripDate(newDate)
-    saveTrip()
+    Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
   func updateItemName(_ itemId: ItemId, _ newName: String) {
     for i in state.items.indices where state.items[i].itemId == itemId {
       state.items[i].name = newName
     }
-    saveTrip()
+    if let editableItem = findTripItem(itemId) {
+      Task { await itemRepository.saveItem(editableItem.toItem()) }
+    }
   }
   
   private func updateName(_ newName: String) {
     state.name = newName
-    saveTrip()
+    Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
-  private func saveTrip() {
-    Task { await tripRepository.saveTrip(state.toTrip()) }
+  private func findTripItem(_ id: ItemId) -> EditableTripItem? {
+    state.items.first(where: { $0.itemId == id })
   }
   
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}
   public final class RealFactory: Factory {
+    private let itemRepository: ItemRepository
     private let tripRepository: TripRepository
-    public init(tripRepository: TripRepository) {
+    public init(
+      itemRepository: ItemRepository,
+      tripRepository: TripRepository
+    ) {
+      self.itemRepository = itemRepository
       self.tripRepository = tripRepository
     }
     public func create(_ input: Trip) -> EditTripViewModel {
-      EditTripViewModel(initialTrip: input, tripRepository: tripRepository)
+      EditTripViewModel(
+        initialTrip: input,
+        itemRepository: itemRepository,
+        tripRepository: tripRepository
+      )
     }
   }
   public final class FakeFactory: Factory {
@@ -89,6 +106,7 @@ public extension EditTripViewModel {
 public final class EditTripViewModelSamples {
   public let content = EditTripViewModel(
     initialTrip: .samples.malaysia,
+    itemRepository: FakeItemRepository(),
     tripRepository: FakeTripRepository()
   )
 }

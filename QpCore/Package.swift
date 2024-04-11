@@ -70,7 +70,9 @@ let package = Package(
     .target(
       name: "StorageModels",
       dependencies: [
-        "AppStorage"
+        "AppStorage",
+        "ItemDomain",
+        "TripDomain"
       ],
       path: "Sources/AppStorage/Models"
     ),

@@ -29,8 +29,14 @@ public final class RealAppStorage: AppStorage {
         for: schema,
         configurations: configuration
       )
+      Task { await setUndo() }
     } catch {
       fatalError(error.localizedDescription)
     }
+  }
+  
+  @MainActor
+  private func setUndo() {
+    container.mainContext.undoManager = UndoManager()
   }
 }

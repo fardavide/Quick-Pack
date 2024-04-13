@@ -13,7 +13,7 @@ struct TripItemList: View {
   
   public var body: some View {
     List {
-      ForEach(items, id: \.id) { item in
+      ForEach(items) { item in
         let isCheckedBinding = Binding(
           get: { item.isChecked },
           set: { newIsChecked in

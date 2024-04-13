@@ -11,9 +11,9 @@ struct UndoRedoAwareModifier: ViewModifier {
   let undoHandler: UndoHandler
   
   #if os(iOS)
-  @State private var isShakeToUndoEnabled = false
-  #else
   @State private var isShakeToUndoEnabled = UIAccessibility.isShakeToUndoEnabled
+  #else
+  @State private var isShakeToUndoEnabled = false
   #endif
   @State private var handle: UndoHandle?
   

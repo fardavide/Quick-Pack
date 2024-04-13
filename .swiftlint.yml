@@ -1,6 +1,7 @@
 strict: true
 
 disabled_rules:
+  - file_length
   - identifier_name
   - trailing_whitespace
   

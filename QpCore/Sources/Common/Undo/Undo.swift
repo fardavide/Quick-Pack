@@ -10,14 +10,20 @@ public extension View {
 struct UndoRedoAwareModifier: ViewModifier {
   let undoHandler: UndoHandler
   
+  #if os(iOS)
+  @State private var isShakeToUndoEnabled = false
+  #else
   @State private var isShakeToUndoEnabled = UIAccessibility.isShakeToUndoEnabled
+  #endif
   @State private var handle: UndoHandle?
   
   func body(content: Content) -> some View {
     content
+    #if os(iOS)
       .onReceive(NotificationCenter.default.publisher(for: UIAccessibility.shakeToUndoDidChangeNotification)) { _ in
         isShakeToUndoEnabled = UIAccessibility.isShakeToUndoEnabled
       }
+    #endif
       .onShake {
         if isShakeToUndoEnabled {
           handle = undoHandler.requestUndoOrRedo()

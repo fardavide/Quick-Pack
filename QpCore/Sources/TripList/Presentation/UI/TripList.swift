@@ -89,6 +89,7 @@ private struct TripListItems: View {
         }
       }
     }
+    .animation(.default, value: items)
   }
 }
 

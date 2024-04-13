@@ -42,6 +42,7 @@ public final class TripListViewModel: ViewModel {
     switch action {
     case let .deleteTrip(id): deleteTrip(tripId: id)
     case .newTrip: newTrip()
+    case .undoOrRedo: undoOrRedo()
     }
   }
   
@@ -55,6 +56,10 @@ public final class TripListViewModel: ViewModel {
   
   private func newTrip() {
     Task { await tripRepository.saveTripMetadata(.new()) }
+  }
+  
+  private func undoOrRedo() {
+    Task { await tripRepository.undoOrRedo() }
   }
 }
 

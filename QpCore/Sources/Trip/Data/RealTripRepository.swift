@@ -9,7 +9,7 @@ import TripDomain
 
 final class RealTripRepository: AppStorage, TripRepository {
   
-  let container: ModelContainer
+  let context: ModelContext
   
   lazy var trips: any DataPublisher<[Trip]> = {
     observe { context in
@@ -22,8 +22,8 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }()
     
-  init(container: ModelContainer) {
-    self.container = container
+  init(context: ModelContext) {
+    self.context = context
   }
   
   func saveTripMetadata(_ trip: Trip) async {

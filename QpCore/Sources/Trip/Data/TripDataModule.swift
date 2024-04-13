@@ -6,6 +6,6 @@ public final class TripDataModule: Module {
   
   public func register(on provider: Provider) {
     provider
-      .register { RealTripRepository(container: provider.get()) as TripRepository }
+      .register { RealTripRepository(context: provider.get()) as TripRepository }
   }
 }

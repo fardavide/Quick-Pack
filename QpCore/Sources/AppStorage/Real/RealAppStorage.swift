@@ -15,7 +15,8 @@ public final class RealAppStorage: AppStorage {
     version: .init(0, 0, 1)
   )
   
-  public let container: ModelContainer
+  public let context: ModelContext
+  public let undoManager: UndoManager
   
   private init() {
     let configuration = ModelConfiguration(
@@ -25,18 +26,15 @@ public final class RealAppStorage: AppStorage {
     )
     
     do {
-      container = try ModelContainer(
+      let container = try ModelContainer(
         for: schema,
         configurations: configuration
       )
-      Task { await setUndo() }
+      context = ModelContext(container)
+      undoManager = UndoManager()
+      context.undoManager = undoManager
     } catch {
       fatalError(error.localizedDescription)
     }
-  }
-  
-  @MainActor
-  private func setUndo() {
-    container.mainContext.undoManager = UndoManager()
   }
 }

@@ -59,6 +59,7 @@ private struct TripListContent: View {
         image: .backpack
       )
     }
+    .onShake { send(.undoOrRedo) }
   }
 }
 

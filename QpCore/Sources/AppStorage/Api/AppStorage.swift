@@ -5,10 +5,14 @@ import QpUtils
 import SwiftData
 
 public protocol AppStorage {
-  var container: ModelContainer { get }
+  var context: ModelContext { get }
 }
 
 public extension AppStorage {
+  
+  private var undoManager: UndoManager {
+    context.undoManager!
+  }
   
   func observe<Model: Equatable>(
     _ f: @escaping (ModelContext) async -> Result<Model, DataError>
@@ -46,11 +50,24 @@ public extension AppStorage {
       .onSuccess(update)
   }
   
+  @MainActor
+  func undoOrRedo() async {
+    if undoManager.canRedo {
+      undoManager.redo()
+    } else if undoManager.canUndo {
+      undoManager.undo()
+    }
+    do {
+      try context.save()
+    } catch {
+      fatalError(error.localizedDescription)
+    }
+  }
+  
   @discardableResult
   func transaction<T>(
     _ f: (ModelContext) async -> T
   ) async -> T {
-    let context = ModelContext(container)
     let result = await f(context)
     do {
       try context.save()

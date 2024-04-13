@@ -6,6 +6,6 @@ public final class ItemDataModule: Module {
   
   public func register(on provider: Provider) {
     provider
-      .register { RealItemRepository(container: provider.get()) as ItemRepository }
+      .register { RealItemRepository(context: provider.get()) as ItemRepository }
   }
 }

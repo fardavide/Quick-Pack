@@ -7,6 +7,6 @@ public final class AppStorageModule: Module {
   public func register(on provider: Provider) {
     provider
       .register { RealAppStorage.instance as AppStorage }
-      .register { RealAppStorage.instance.container }
+      .register { RealAppStorage.instance.context }
   }
 }

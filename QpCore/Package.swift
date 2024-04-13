@@ -1,8 +1,30 @@
 // swift-tools-version: 5.10
-/// swiftlint:disable file_length
 
 import CompilerPluginSupport
 import PackageDescription
+
+private let AppStorage = "AppStorage"
+private let Common = "Common"
+private let EditTrip = "EditTrip"
+private let Home = "Home"
+private let Item = "Item"
+private let SfSafeSymbols = "SFSafeSymbols"
+private let Trip = "Trip"
+private let TripList = "TripList"
+
+private let Api = "Api"
+private let Data = "Data"
+private let DateUtils = "DateUtils"
+private let Design = "Design"
+private let Domain = "Domain"
+private let Models = "Models"
+private let Presentation = "Presentation"
+private let Provider = "Provider"
+private let Real = "Real"
+private let Storage = "QpStorage"
+private let StorageModels = "StorageModels"
+private let Undo = "Undo"
+private let Utils = "QpUtils"
 
 let package = Package(
   name: "Core",
@@ -17,29 +39,29 @@ let package = Package(
       name: "Core",
       targets: [
         // MARK: - App Storage declaration
-        "AppStorage",
-        "StorageModels",
-        "RealAppStorage",
+        AppStorage,
+        Real+AppStorage,
+        StorageModels,
         // MARK: - Common declaration
-        "DateUtils",
-        "Design",
-        "Presentation",
-        "Provider",
-        "QpStorage",
-        "QpUtils",
-        "Undo",
+        DateUtils,
+        Design,
+        Presentation,
+        Provider,
+        Storage,
+        Undo,
+        Utils,
         // MARK: - Edit Trip declarations
-        "EditTripPresentation",
+        EditTrip+Presentation,
         // MARK: - Home declarations
-        "HomePresentation",
+        Home+Presentation,
         // MARK: - Item declarations
-        "ItemData",
-        "ItemDomain",
+        Item+Data,
+        Item+Domain,
         // MARK: - Trip declarations
-        "TripData",
-        "TripDomain",
+        Trip+Data,
+        Trip+Domain,
         // MARK: - Trip List declarations
-        "TripListPresentation"
+        TripList+Presentation
       ]
     )
   ],
@@ -53,314 +75,243 @@ let package = Package(
     // MARK: - App Storage definition
     // MARK: App Storage
     .target(
-      name: "AppStorage",
+      name: AppStorage,
+      path: [AppStorage, Api],
       dependencies: [
-        "QpStorage",
-        "Undo"
-      ],
-      path: "Sources/AppStorage/Api"
+        Storage,
+        Undo
+      ]
     ),
     .testTarget(
-      name: "AppStorageTests",
-      dependencies: [
-        "AppStorage"
-      ],
-      path: "Tests/AppStorage/ApiTests"
+      name: AppStorage,
+      path: [AppStorage, Api]
     ),
     
     // MARK: Models
     .target(
-      name: "StorageModels",
+      name: StorageModels,
+      path: [AppStorage, Models],
       dependencies: [
-        "AppStorage",
-        "ItemDomain",
-        "TripDomain"
-      ],
-      path: "Sources/AppStorage/Models"
+        AppStorage,
+        Item+Domain,
+        Trip+Domain
+      ]
     ),
     
     // MARK: Real App Storage
     .target(
-      name: "RealAppStorage",
+      name: Real+AppStorage,
+      path: [AppStorage, Real],
       dependencies: [
-        "AppStorage",
-        "Provider",
-        "QpStorage",
-        "TripData",
-        "TripDomain"
-      ],
-      path: "Sources/AppStorage/Real"
+        AppStorage,
+        Provider,
+        Storage,
+        Trip+Data,
+        Trip+Domain
+      ]
     ),
     .testTarget(
-      name: "RealppStorageTests",
-      dependencies: [
-        "RealAppStorage"
-      ],
-      path: "Tests/AppStorage/RealTests"
+      name: Real+AppStorage,
+      path: [AppStorage, Real]
     ),
     
     // MARK: - Common definitions
     // MARK: Date Utils
     .target(
-      name: "DateUtils",
-      dependencies: [],
-      path: "Sources/Common/DateUtils"
+      path: [Common, DateUtils],
+      dependencies: []
     ),
-    .testTarget(
-      name: "DateUtilsTests",
-      dependencies: [
-        "DateUtils",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/DateUtilsTests"
-    ),
+    .testTarget(path: [Common, DateUtils]),
     
     // MARK: Design
     .target(
-      name: "Design",
+      path: [Common, Design],
       dependencies: [
-        "Presentation",
-        "SFSafeSymbols"
-      ],
-      path: "Sources/Common/Design"
+        Presentation,
+        SfSafeSymbols
+      ]
     ),
-    .testTarget(
-      name: "DesignTests",
-      dependencies: [
-        "Design",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/DesignTests"
-    ),
+    .testTarget(path: [Common, Design]),
     
     // MARK: Presentation
     .target(
-      name: "Presentation",
+      path: [Common, Presentation],
       dependencies: [
-        "QpUtils"
-      ],
-      path: "Sources/Common/Presentation"
+        Utils
+      ]
     ),
-    .testTarget(
-      name: "PresentationTests",
-      dependencies: [
-        "Presentation",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/PresentationTests"
-    ),
+    .testTarget(path: [Common, Presentation]),
     
     // MARK: Provider
     .target(
-      name: "Provider",
-      path: "Sources/Common/Provider"
+      path: [Common, Provider],
+      dependencies: []
     ),
-    .testTarget(
-      name: "ProviderTests",
-      dependencies: [
-        "Provider",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/ProviderTests"
-    ),
+    .testTarget(path: [Common, Provider]),
       
     // MARK: Storage
     .target(
-      name: "QpStorage",
+      path: [Common, Storage],
       dependencies: [
-        "QpUtils"
-      ],
-      path: "Sources/Common/Storage"
+        Utils
+      ]
     ),
-    .testTarget(
-      name: "StorageTests",
-      dependencies: [
-        "QpStorage",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/StorageTests"
-    ),
+    .testTarget(path: [Common, Storage]),
       
     // MARK: Utils
     .target(
-      name: "QpUtils",
-      dependencies: [],
-      path: "Sources/Common/Utils"
+      path: [Common, Utils],
+      dependencies: []
     ),
     .testTarget(
-      name: "UtilsTests",
-      dependencies: [
-        "QpUtils",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/UtilsTests"
+      path: [Common, Utils]
     ),
       
     // MARK: Undo
     .target(
-      name: "Undo",
+      path: [Common, Undo],
       dependencies: [
-        "Design",
-        "QpUtils"
-      ],
-      path: "Sources/Common/Undo"
+        Design,
+        Utils
+      ]
     ),
-    .testTarget(
-      name: "UndoTests",
-      dependencies: [
-        "Undo",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Common/UndoTests"
-    ),
+    .testTarget(path: [Common, Undo]),
     
     // MARK: - Edit Trip definitions
     // MARK: Edit Trip Presentation
     .target(
-      name: "EditTripPresentation",
+      path: [EditTrip, Presentation],
       dependencies: [
-        "Design",
-        "Presentation",
-        "Provider",
-        "TripDomain"
-      ],
-      path: "Sources/EditTrip/Presentation"
+        Design,
+        Presentation,
+        Provider,
+        Trip+Domain
+      ]
     ),
-    .testTarget(
-      name: "EditTripPresentationTests",
-      dependencies: [
-        "EditTripPresentation",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/EditTrip/PresentationTests"
-    ),
+    .testTarget(path: [EditTrip, Presentation]),
     
     // MARK: - Item definition
     // MARK: Item Data
     .target(
-      name: "ItemData",
+      path: [Item, Data],
       dependencies: [
-        "AppStorage",
-        "ItemDomain",
-        "QpUtils",
-        "StorageModels"
-      ],
-      path: "Sources/Item/Data"
+        AppStorage,
+        Item+Domain,
+        Utils,
+        StorageModels
+      ]
     ),
-    .testTarget(
-      name: "ItemDataTests",
-      dependencies: [
-        "ItemData",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Item/DataTests"
-    ),
+    .testTarget(path: [Item, Data]),
     
     // MARK: Item Domain
     .target(
-      name: "ItemDomain",
+      path: [Item, Domain],
       dependencies: [
-        "QpUtils"
-      ],
-      path: "Sources/Item/Domain"
+        Utils
+      ]
     ),
-    .testTarget(
-      name: "ItemDomainTests",
-      dependencies: [
-        "ItemDomain",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Item/DomainTests"
-    ),
+    .testTarget(path: [Item, Domain]),
     
     // MARK: - Home definitions
     // MARK: Home Presentation
     .target(
-      name: "HomePresentation",
+      path: [Home, Presentation],
       dependencies: [
-        "EditTripPresentation",
-        "Provider",
-        "TripListPresentation"
-      ],
-      path: "Sources/Home/Presentation"
+        EditTrip+Presentation,
+        Provider,
+        TripList+Presentation
+      ]
     ),
-    .testTarget(
-      name: "HomePresentationTests",
-      dependencies: [
-        "HomePresentation",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Home/PresentationTests"
-    ),
+    .testTarget(path: [Home, Presentation]),
     
     // MARK: - Trip definitions
     // MARK: Trip Data
     .target(
-      name: "TripData",
+      path: [Trip, Data],
       dependencies: [
-        "AppStorage",
-        "ItemData",
-        "Provider",
-        "QpStorage",
-        "QpUtils",
-        "StorageModels",
-        "TripDomain"
-      ],
-      path: "Sources/Trip/Data"
+        AppStorage,
+        Item+Data,
+        Provider,
+        Storage,
+        StorageModels,
+        Trip+Domain,
+        Utils
+      ]
     ),
-    .testTarget(
-      name: "TripDataTests",
-      dependencies: [
-        "TripData",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Trip/DataTests"
-    ),
+    .testTarget(path: [Trip, Data]),
     
     // MARK: Trip Domain
     .target(
-      name: "TripDomain",
+      path: [Trip, Domain],
       dependencies: [
-        "DateUtils",
-        "ItemDomain",
-        "Provider",
-        "QpUtils",
-        "Undo"
-      ],
-      path: "Sources/Trip/Domain"
+        DateUtils,
+        Item+Domain,
+        Provider,
+        Undo,
+        Utils
+      ]
     ),
-    .testTarget(
-      name: "TripDomainTests",
-      dependencies: [
-        "TripDomain",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/Trip/DomainTests"
-    ),
+    .testTarget(path: [Trip, Domain]),
     
     // MARK: - Trip List definitions
     // MARK: Trip List Presentation
     .target(
-      name: "TripListPresentation",
+      path: [TripList, Presentation],
       dependencies: [
-        "DateUtils",
-        "Design",
-        "EditTripPresentation",
-        "Provider",
-        "Presentation",
-        "TripDomain",
-        "Undo"
-      ],
-      path: "Sources/TripList/Presentation"
+        DateUtils,
+        Design,
+        EditTrip+Presentation,
+        Provider,
+        Presentation,
+        Trip+Domain,
+        Undo
+      ]
     ),
-    .testTarget(
-      name: "TripListPresentationTests",
-      dependencies: [
-        "TripListPresentation",
-        .product(name: "Testing", package: "swift-testing")
-      ],
-      path: "Tests/TripList/PresentationTests"
-    )
+    .testTarget(path: [TripList, Presentation])
   ]
 )
-/// swiftlint:enable file_length
+
+private extension Target {
+  
+  static func target(
+    name: String? = nil,
+    path: [String],
+    dependencies: [String]
+  ) -> Target {
+    let name = name ?? getName(from: path)
+    let stringPath = normalize(path)
+    return .target(
+      name: name,
+      dependencies: dependencies.map { Target.Dependency(stringLiteral: $0) },
+      path: "Sources/\(stringPath)"
+    )
+  }
+  
+  static func testTarget(
+    name: String? = nil,
+    path: [String]
+  ) -> Target {
+    let name = name ?? getName(from: path)
+    let stringPath = normalize(path)
+    return .testTarget(
+      name: "\(name)Tests",
+      dependencies: [
+        Target.Dependency(stringLiteral: name),
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/\(stringPath)Tests"
+    )
+  }
+  
+  private static func getName(from path: [String]) -> String {
+    path
+      .filter { $0 != Common }
+      .joined(separator: "")
+  }
+  
+  private static func normalize(_ path: [String]) -> String {
+    path
+      .map { $0.replacing("Qp", with: "") }
+      .joined(separator: "/")
+  }
+}

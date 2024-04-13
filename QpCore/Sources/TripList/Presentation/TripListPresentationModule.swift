@@ -9,6 +9,7 @@ public final class TripListPresentionModule: Module {
       .register {
         TripListViewModel(
           editTripViewModelFactory: provider.get(),
+          itemListViewModel: provider.get(),
           mapper: provider.get(),
           tripRepository: provider.get()
         )

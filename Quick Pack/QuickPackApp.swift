@@ -1,6 +1,7 @@
 import EditTripPresentation
 import HomePresentation
 import ItemData
+import ItemListPresentation
 import Provider
 import RealAppStorage
 import SwiftUI
@@ -29,6 +30,7 @@ final class QpModule: Module {
     AppStorageModule.self,
     EditTripPresentationModule.self,
     ItemDataModule.self,
+    ItemListPresentationModule.self,
     TripDataModule.self,
     TripListPresentionModule.self
   ]

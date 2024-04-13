@@ -1,7 +1,8 @@
 import Combine
 import QpUtils
+import Undo
 
-public protocol ItemRepository {
+public protocol ItemRepository: UndoHandler {
   
   var items: any DataPublisher<[Item]> { get }
   
@@ -30,5 +31,8 @@ public final class FakeItemRepository: ItemRepository {
   public func deleteItem(itemId: ItemId) async {}
   public func saveItem(_ item: Item) async {
     saveItemInvocations.append(item)
+  }
+  public func requestUndoOrRedo() -> UndoHandle? {
+    nil
   }
 }

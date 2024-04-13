@@ -51,8 +51,8 @@ struct TripItemList: View {
           }
         }
       }
+      .animation(.default, value: items)
     }
-    .animation(.default, value: items)
   }
 }
 

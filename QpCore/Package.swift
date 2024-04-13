@@ -8,6 +8,7 @@ private let Common = "Common"
 private let EditTrip = "EditTrip"
 private let Home = "Home"
 private let Item = "Item"
+private let ItemList = "ItemList"
 private let SfSafeSymbols = "SFSafeSymbols"
 private let Trip = "Trip"
 private let TripList = "TripList"
@@ -57,6 +58,8 @@ let package = Package(
         // MARK: - Item declarations
         Item+Data,
         Item+Domain,
+        // MARK: - Item List declarations
+        ItemList+Presentation,
         // MARK: - Trip declarations
         Trip+Data,
         Trip+Domain,
@@ -87,17 +90,6 @@ let package = Package(
       path: [AppStorage, Api]
     ),
     
-    // MARK: Models
-    .target(
-      name: StorageModels,
-      path: [AppStorage, Models],
-      dependencies: [
-        AppStorage,
-        Item+Domain,
-        Trip+Domain
-      ]
-    ),
-    
     // MARK: Real App Storage
     .target(
       name: Real+AppStorage,
@@ -113,6 +105,17 @@ let package = Package(
     .testTarget(
       name: Real+AppStorage,
       path: [AppStorage, Real]
+    ),
+    
+    // MARK: Models
+    .target(
+      name: StorageModels,
+      path: [AppStorage, Models],
+      dependencies: [
+        AppStorage,
+        Item+Domain,
+        Trip+Domain
+      ]
     ),
     
     // MARK: - Common definitions
@@ -157,16 +160,7 @@ let package = Package(
       ]
     ),
     .testTarget(path: [Common, Storage]),
-      
-    // MARK: Utils
-    .target(
-      path: [Common, Utils],
-      dependencies: []
-    ),
-    .testTarget(
-      path: [Common, Utils]
-    ),
-      
+    
     // MARK: Undo
     .target(
       path: [Common, Undo],
@@ -176,6 +170,13 @@ let package = Package(
       ]
     ),
     .testTarget(path: [Common, Undo]),
+      
+    // MARK: Utils
+    .target(
+      path: [Common, Utils],
+      dependencies: []
+    ),
+    .testTarget(path: [Common, Utils]),
     
     // MARK: - Edit Trip definitions
     // MARK: Edit Trip Presentation
@@ -190,7 +191,7 @@ let package = Package(
     ),
     .testTarget(path: [EditTrip, Presentation]),
     
-    // MARK: - Item definition
+    // MARK: - Item definitions
     // MARK: Item Data
     .target(
       path: [Item, Data],
@@ -207,10 +208,25 @@ let package = Package(
     .target(
       path: [Item, Domain],
       dependencies: [
+        Undo,
         Utils
       ]
     ),
     .testTarget(path: [Item, Domain]),
+    
+    // MARK: - Item List definitions
+    // MARK: Item List Presentation
+    .target(
+      path: [ItemList, Presentation],
+      dependencies: [
+        Design,
+        Item+Domain,
+        Presentation,
+        Provider,
+        Undo
+      ]
+    ),
+    .testTarget(path: [ItemList, Presentation]),
     
     // MARK: - Home definitions
     // MARK: Home Presentation
@@ -261,6 +277,7 @@ let package = Package(
         DateUtils,
         Design,
         EditTrip+Presentation,
+        ItemList+Presentation,
         Provider,
         Presentation,
         Trip+Domain,

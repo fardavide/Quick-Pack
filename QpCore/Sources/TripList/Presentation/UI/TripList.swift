@@ -1,5 +1,6 @@
 import Design
 import EditTripPresentation
+import ItemListPresentation
 import Provider
 import SwiftUI
 import TripDomain
@@ -14,6 +15,7 @@ public struct TripList: View {
     TripListContent(
       state: viewModel.state,
       undoHandler: viewModel.undoHandler,
+      itemListViewModel: viewModel.itemListViewModel,
       send: viewModel.send,
       edit: viewModel.edit
     )
@@ -23,36 +25,41 @@ public struct TripList: View {
 private struct TripListContent: View {
   let state: TripListState
   let undoHandler: UndoHandler
+  let itemListViewModel: ItemListViewModel
   let send: (TripListAction) -> Void
   let edit: (Trip) -> EditTripViewModel
+  
+  @State var showItemList: Bool = false
   
   public var body: some View {
     NavigationSplitView {
       LceView(
         lce: state.trips,
-        errorMessage: "Cannot load trips",
-        content: { items in
-          if !items.isEmpty {
-            TripListItems(
-              items: items,
-              send: send,
-              edit: edit
-            )
-          } else {
-            SpecialCaseView.primary(
-              title: "No trip found",
-              subtitle: "Create your first trip",
-              image: .backpack,
-              actionText: "Create trip",
-              action: { send(.newTrip) }
-            )
-          }
+        errorMessage: "Cannot load trips"
+      ) { items in
+        if !items.isEmpty {
+          TripListItems(
+            items: items,
+            send: send,
+            edit: edit
+          )
+        } else {
+          SpecialCaseView.primary(
+            title: "No trip found",
+            subtitle: "Create your first trip",
+            image: .backpack,
+            actionText: "Create trip",
+            action: { send(.newTrip) }
+          )
         }
-      )
+      }
       .navigationTitle("My Trips")
       .toolbar {
+        Button { showItemList = true } label: {
+          Label("Settings", systemSymbol: .gear)
+        }
         Button { send(.newTrip) } label: {
-          Label("Add Item", systemImage: "plus")
+          Label("Add Item", systemSymbol: .plus)
         }
       }
 
@@ -63,6 +70,9 @@ private struct TripListContent: View {
       )
     }
     .undoable(with: undoHandler)
+    .sheet(isPresented: $showItemList) {
+      ItemList(viewModel: itemListViewModel)
+    }
   }
 }
 
@@ -101,6 +111,7 @@ private struct TripListItems: View {
   return TripListContent(
     state: .samples.content,
     undoHandler: FakeUndoHandler(),
+    itemListViewModel: FakeItemListViewModel(),
     send: { _ in },
     edit: { _ in .samples.content }
   )
@@ -111,6 +122,7 @@ private struct TripListItems: View {
   return TripListContent(
     state: .samples.empty,
     undoHandler: FakeUndoHandler(),
+    itemListViewModel: FakeItemListViewModel(),
     send: { _ in },
     edit: { _ in .samples.content }
   )

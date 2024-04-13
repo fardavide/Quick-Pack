@@ -6,12 +6,12 @@ public protocol TripRepository: UndoHandler {
   
   var trips: any DataPublisher<[Trip]> { get }
   
-  func saveTripMetadata(_ trip: Trip) async
-  func addItem(_ item: TripItem, to tripId: TripId) async
-  func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) async
-  func updateItemsOrder(sortedItems: [TripItem]) async
-  func removeItem(_ itemId: TripItemId, from tripId: TripId) async
-  func deleteTrip(tripId: TripId) async
+  @MainActor func saveTripMetadata(_ trip: Trip)
+  @MainActor func addItem(_ item: TripItem, to tripId: TripId)
+  @MainActor func updateItemCheck(_ itemId: TripItemId, isChecked: Bool)
+  @MainActor func updateItemsOrder(sortedItems: [TripItem])
+  @MainActor func removeItem(_ itemId: TripItemId, from tripId: TripId)
+  @MainActor func deleteTrip(tripId: TripId)
 }
 
 public final class FakeTripRepository: TripRepository {
@@ -32,14 +32,14 @@ public final class FakeTripRepository: TripRepository {
     await waitNonNil { lastSavedTrip() }
   }
   
-  public func saveTripMetadata(_ trip: Trip) async {
+  public func saveTripMetadata(_ trip: Trip) {
     saveTripInvocations.append(trip)
   }
-  public func addItem(_ item: TripItem, to tripId: TripId) async {}
-  public func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) async {}
-  public func updateItemsOrder(sortedItems: [TripItem]) async {}
-  public func removeItem(_ itemId: TripItemId, from tripId: TripId) async {}
-  public func deleteTrip(tripId: TripId) async {}
+  public func addItem(_ item: TripItem, to tripId: TripId) {}
+  public func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) {}
+  public func updateItemsOrder(sortedItems: [TripItem]) {}
+  public func removeItem(_ itemId: TripItemId, from tripId: TripId) {}
+  public func deleteTrip(tripId: TripId) {}
   public func requestUndoOrRedo() -> UndoHandle? {
     nil
   }

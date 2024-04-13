@@ -7,40 +7,47 @@ import SwiftUI
 import Undo
 
 public protocol AppStorage: UndoHandler {
-  var context: ModelContext { get }
+  var container: ModelContainer { get }
 }
 
 public extension AppStorage {
   
-  private var undoManager: UndoManager {
-    context.undoManager!
+  @MainActor private var context: ModelContext {
+    container.mainContext
+  }
+  
+  @MainActor private var undoManager: UndoManager {
+    if context.undoManager == nil {
+      context.undoManager = UndoManager()
+    }
+    return context.undoManager!
   }
   
   func observe<Model: Equatable>(
-    _ f: @escaping (ModelContext) async -> Result<Model, DataError>
+    _ f: @escaping (ModelContext) -> Result<Model, DataError>
   ) -> any DataPublisher<Model> {
-    Timer.publish(every: 1, on: .main, in: .default) { await transaction(f) }
+    Timer.publish(every: 1, on: .main, in: .default) { f(ModelContext(container)) }
       .share()
       .removeDuplicates()
   }
   
-  func deleteInTransaction<Model: IdentifiableModel>(
+  @MainActor func deleteInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ fetchDescriptor: FetchDescriptor<Model>
-  ) async {
-    await context.fetchOne(fetchDescriptor).onSuccess { model in
+  ) {
+    context.fetchOne(fetchDescriptor).onSuccess { model in
       undoManager.setActionName("delete \(model.modelDescription)")
       context.delete(model)
     }
   }
   
-  func insertOrUpdateInTransaction<Model: IdentifiableModel>(
+  @MainActor func insertOrUpdateInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ model: Model,
     fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
-  ) async {
-    await context.fetchOne(fetchDescriptor)
+  ) {
+    context.fetchOne(fetchDescriptor)
       .onSuccess { model in
         undoManager.setActionName("update \(model.modelDescription)")
         update(model)
@@ -51,18 +58,18 @@ public extension AppStorage {
       }
   }
   
-  func updateInTransaction<Model: IdentifiableModel>(
+  @MainActor func updateInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
-  ) async {
-    await context.fetchOne(fetchDescriptor).onSuccess { model in
+  ) {
+    context.fetchOne(fetchDescriptor).onSuccess { model in
       undoManager.setActionName("update \(model.modelDescription)")
       update(model)
     }
   }
   
-  func requestUndoOrRedo() -> UndoHandle? {
+  @MainActor func requestUndoOrRedo() -> UndoHandle? {
     if undoManager.canRedo {
       UndoHandle(actionTitle: undoManager.redoMenuItemTitle) {
         undoManager.redo()
@@ -78,16 +85,17 @@ public extension AppStorage {
     }
   }
   
+  @MainActor
   @discardableResult
   func transaction<T>(
-    _ f: (ModelContext) async -> T
-  ) async -> T {
-    let result = await f(context)
+    _ f: (ModelContext) -> T
+  ) -> T {
+    let result = f(context)
     unsafeSave()
     return result
   }
   
-  private func unsafeSave() {
+  @MainActor private func unsafeSave() {
     do {
       try context.save()
     } catch {
@@ -98,21 +106,21 @@ public extension AppStorage {
 
 public extension AppStorage {
   
-  func delete<Model: IdentifiableModel>(
+  @MainActor func delete<Model: IdentifiableModel>(
     _ fetchDescriptor: FetchDescriptor<Model>
-  ) async {
-    await transaction { context in
-      await deleteInTransaction(context: context, fetchDescriptor)
+  ) {
+    transaction { context in
+      deleteInTransaction(context: context, fetchDescriptor)
     }
   }
   
-  func insertOrUpdate<Model: IdentifiableModel>(
+  @MainActor func insertOrUpdate<Model: IdentifiableModel>(
     _ model: Model,
     fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
-  ) async {
-    await transaction { context in
-      await insertOrUpdateInTransaction(
+  ) {
+    transaction { context in
+      insertOrUpdateInTransaction(
         context: context,
         model,
         fetchDescriptor: fetchDescriptor,
@@ -121,12 +129,12 @@ public extension AppStorage {
     }
   }
   
-  func update<Model: IdentifiableModel>(
+  @MainActor func update<Model: IdentifiableModel>(
     _ fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
-  ) async {
-    await transaction { context in
-      await updateInTransaction(context: context, fetchDescriptor, update: update)
+  ) {
+    transaction { context in
+      updateInTransaction(context: context, fetchDescriptor, update: update)
     }
   }
 }

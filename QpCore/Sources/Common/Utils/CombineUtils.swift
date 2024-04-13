@@ -17,20 +17,20 @@ public extension Timer {
   ///   - options: Scheduler options passed to the timer. Defaults to `nil`.
   ///   - value: A closure that returns a value `T`
   /// - Returns: A publisher that repeatedly emits a value `T` on the given interval.
-  static func publish<T>(
+  @inlinable static func publish<T>(
     every interval: TimeInterval,
     tolerance: TimeInterval? = nil,
     on runLoop: RunLoop,
     in mode: RunLoop.Mode,
     options: RunLoop.SchedulerOptions? = nil,
-    _ value: @escaping () async -> T
+    _ value: @escaping () -> T
   ) -> Publishers.FlatMap<Future<T, Never>, Publishers.Autoconnect<Timer.TimerPublisher>> {
     publish(every: interval, tolerance: tolerance, on: runLoop, in: mode, options: options)
       .autoconnect()
       .flatMap { _ in
         Future { promise in
           Task {
-            let output = await value()
+            let output = value()
             promise(.success(output))
           }
         }

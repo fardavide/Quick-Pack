@@ -6,7 +6,7 @@ import TripData
 
 public final class RealAppStorage: AppStorage {
   
-  static let instance = RealAppStorage()
+  @MainActor static let instance = RealAppStorage()
   
   private let schema = Schema(
     [
@@ -17,10 +17,9 @@ public final class RealAppStorage: AppStorage {
     version: .init(0, 0, 2)
   )
   
-  public let context: ModelContext
-  public let undoManager: UndoManager
+  public let container: ModelContainer
   
-  private init() {
+  @MainActor private init() {
     let configuration = ModelConfiguration(
       schema: schema,
       url: URL.documentsDirectory.appending(path: "/q-pack/data.store"),
@@ -28,13 +27,10 @@ public final class RealAppStorage: AppStorage {
     )
     
     do {
-      let container = try ModelContainer(
+      container = try ModelContainer(
         for: schema,
         configurations: configuration
       )
-      context = ModelContext(container)
-      undoManager = UndoManager()
-      context.undoManager = undoManager
     } catch {
       fatalError(error.localizedDescription)
     }

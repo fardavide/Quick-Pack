@@ -9,7 +9,7 @@ import TripDomain
 
 final class RealTripRepository: AppStorage, TripRepository {
   
-  let context: ModelContext
+  let container: ModelContainer
   
   lazy var trips: any DataPublisher<[Trip]> = {
     observe { context in
@@ -21,13 +21,13 @@ final class RealTripRepository: AppStorage, TripRepository {
       )
     }
   }()
-    
-  init(context: ModelContext) {
-    self.context = context
+  
+  init(container: ModelContainer) {
+    self.container = container
   }
   
-  func saveTripMetadata(_ trip: Trip) async {
-    await insertOrUpdate(
+  @MainActor func saveTripMetadata(_ trip: Trip) {
+    insertOrUpdate(
       trip.toSwiftDataModel(),
       fetchDescriptor: trip.id.fetchDescriptor
     ) { model in
@@ -36,9 +36,9 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
-  func addItem(_ item: TripItem, to tripId: TripId) async {
-    await transaction { context in
-      await updateInTransaction(context: context, tripId.fetchDescriptor) { model in
+  @MainActor func addItem(_ item: TripItem, to tripId: TripId) {
+    transaction { context in
+      updateInTransaction(context: context, tripId.fetchDescriptor) { model in
         if model.items != nil {
           for item in model.items! {
             item.order += 1
@@ -51,34 +51,34 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
-  func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) async {
-    await update(itemId.fetchDescriptor) { model in
+  @MainActor func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) {
+    update(itemId.fetchDescriptor) { model in
       model.isChecked = isChecked
     }
   }
   
-  func updateItemsOrder(sortedItems: [TripItem]) async {
-    await transaction { context in
+  @MainActor func updateItemsOrder(sortedItems: [TripItem]) {
+    transaction { context in
       for (index, item) in sortedItems.withIndices() {
-        await updateInTransaction(context: context, item.id.fetchDescriptor) { model in
+        updateInTransaction(context: context, item.id.fetchDescriptor) { model in
           model.order = index
         }
       }
     }
   }
   
-  func removeItem(_ itemId: TripItemId, from tripId: TripId) async {
-    await transaction { context in
-      await updateInTransaction(context: context, tripId.fetchDescriptor) { model in
+  @MainActor func removeItem(_ itemId: TripItemId, from tripId: TripId) {
+    transaction { context in
+      updateInTransaction(context: context, tripId.fetchDescriptor) { model in
         if model.items != nil {
           model.items!.removeAll { $0.id == itemId.value }
         }
       }
-      await deleteInTransaction(context: context, itemId.fetchDescriptor)
+      deleteInTransaction(context: context, itemId.fetchDescriptor)
     }
   }
   
-  func deleteTrip(tripId: TripId) async {
-    await delete(tripId.fetchDescriptor)
+  @MainActor func deleteTrip(tripId: TripId) {
+    delete(tripId.fetchDescriptor)
   }
 }

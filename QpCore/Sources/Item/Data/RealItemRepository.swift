@@ -10,7 +10,7 @@ import TripDomain
 
 final class RealItemRepository: AppStorage, ItemRepository {
   
-  let context: ModelContext
+  let container: ModelContainer
   
   lazy var items: any DataPublisher<[Item]> = {
     observe { context in
@@ -23,8 +23,8 @@ final class RealItemRepository: AppStorage, ItemRepository {
     }
   }()
   
-  init(context: ModelContext) {
-    self.context = context
+  init(container: ModelContainer) {
+    self.container = container
   }
   
   func deleteItem(itemId: ItemId) async {

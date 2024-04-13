@@ -33,6 +33,8 @@ public extension View {
   func onShake(perform action: @escaping () -> Void) -> some View {
     #if canImport(UIKit)
     modifier(DeviceShakeViewModifier(action: action))
+    #else
+    self
     #endif
   }
 }

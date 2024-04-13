@@ -3,8 +3,9 @@ import Foundation
 import QpStorage
 import QpUtils
 import SwiftData
+import Undo
 
-public protocol AppStorage {
+public protocol AppStorage: UndoHandler {
   var context: ModelContext { get }
 }
 
@@ -50,17 +51,19 @@ public extension AppStorage {
       .onSuccess(update)
   }
   
-  @MainActor
-  func undoOrRedo() async {
+  func requestUndoOrRedo() -> UndoHandle? {
     if undoManager.canRedo {
-      undoManager.redo()
+      UndoHandle(actionTitle: undoManager.redoMenuItemTitle) {
+        undoManager.redo()
+        unsafeSave()
+      }
     } else if undoManager.canUndo {
-      undoManager.undo()
-    }
-    do {
-      try context.save()
-    } catch {
-      fatalError(error.localizedDescription)
+      UndoHandle(actionTitle: undoManager.undoMenuItemTitle) {
+        undoManager.undo()
+        unsafeSave()
+      }
+    } else {
+      nil
     }
   }
   
@@ -69,12 +72,16 @@ public extension AppStorage {
     _ f: (ModelContext) async -> T
   ) async -> T {
     let result = await f(context)
+    unsafeSave()
+    return result
+  }
+  
+  private func unsafeSave() {
     do {
       try context.save()
     } catch {
       fatalError(error.localizedDescription)
     }
-    return result
   }
 }
 

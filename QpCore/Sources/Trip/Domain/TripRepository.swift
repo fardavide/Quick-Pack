@@ -1,7 +1,8 @@
 import Combine
 import QpUtils
+import Undo
 
-public protocol TripRepository {
+public protocol TripRepository: UndoHandler {
   
   var trips: any DataPublisher<[Trip]> { get }
   
@@ -11,7 +12,6 @@ public protocol TripRepository {
   func updateItemsOrder(sortedItems: [TripItem]) async
   func removeItem(_ itemId: TripItemId, from tripId: TripId) async
   func deleteTrip(tripId: TripId) async
-  func undoOrRedo() async
 }
 
 public final class FakeTripRepository: TripRepository {
@@ -40,5 +40,7 @@ public final class FakeTripRepository: TripRepository {
   public func updateItemsOrder(sortedItems: [TripItem]) async {}
   public func removeItem(_ itemId: TripItemId, from tripId: TripId) async {}
   public func deleteTrip(tripId: TripId) async {}
-  public func undoOrRedo() async {}
+  public func requestUndoOrRedo() -> UndoHandle? {
+    nil
+  }
 }

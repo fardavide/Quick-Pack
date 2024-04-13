@@ -51,8 +51,8 @@ struct TripItemList: View {
           }
         }
       }
-      .onMove(perform: onOrderChange)
     }
+    .animation(.default, value: items)
   }
 }
 

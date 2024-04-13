@@ -68,6 +68,7 @@ private struct EditTripContent: View {
           onOrderChange: { from, to in send(.reorderItems(from: from, to: to)) },
           onRemove: { itemId in send(.removeItem(itemId)) }
         )
+        .animation(.default, value: state.items)
       } header: {
         HStack {
           Text("Items")

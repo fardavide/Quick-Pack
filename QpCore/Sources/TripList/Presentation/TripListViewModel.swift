@@ -5,12 +5,14 @@ import Presentation
 import Provider
 import QpUtils
 import TripDomain
+import Undo
 
 public final class TripListViewModel: ViewModel {
   public typealias Action = TripListAction
   public typealias State = TripListState
   
   @Published public var state: State
+  public let undoHandler: UndoHandler
   private var subscribers: [AnyCancellable] = []
   private let editTripViewModelFactory: any EditTripViewModel.Factory
   private let mapper: TripListItemUiModelMapper
@@ -25,6 +27,7 @@ public final class TripListViewModel: ViewModel {
     self.editTripViewModelFactory = editTripViewModelFactory
     self.mapper = mapper
     self.tripRepository = tripRepository
+    self.undoHandler = tripRepository
     state = initialState
     
     tripRepository.trips
@@ -42,7 +45,6 @@ public final class TripListViewModel: ViewModel {
     switch action {
     case let .deleteTrip(id): deleteTrip(tripId: id)
     case .newTrip: newTrip()
-    case .undoOrRedo: undoOrRedo()
     }
   }
   
@@ -56,10 +58,6 @@ public final class TripListViewModel: ViewModel {
   
   private func newTrip() {
     Task { await tripRepository.saveTripMetadata(.new()) }
-  }
-  
-  private func undoOrRedo() {
-    Task { await tripRepository.undoOrRedo() }
   }
 }
 

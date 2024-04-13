@@ -27,6 +27,7 @@ let package = Package(
         "Provider",
         "QpStorage",
         "QpUtils",
+        "Undo",
         // MARK: - Edit Trip declarations
         "EditTripPresentation",
         // MARK: - Home declarations
@@ -54,7 +55,8 @@ let package = Package(
     .target(
       name: "AppStorage",
       dependencies: [
-        "QpStorage"
+        "QpStorage",
+        "Undo"
       ],
       path: "Sources/AppStorage/Api"
     ),
@@ -193,6 +195,24 @@ let package = Package(
       ],
       path: "Tests/Common/UtilsTests"
     ),
+      
+    // MARK: Undo
+    .target(
+      name: "Undo",
+      dependencies: [
+        "Design",
+        "QpUtils"
+      ],
+      path: "Sources/Common/Undo"
+    ),
+    .testTarget(
+      name: "UndoTests",
+      dependencies: [
+        "Undo",
+        .product(name: "Testing", package: "swift-testing")
+      ],
+      path: "Tests/Common/UndoTests"
+    ),
     
     // MARK: - Edit Trip definitions
     // MARK: Edit Trip Presentation
@@ -304,7 +324,8 @@ let package = Package(
         "DateUtils",
         "ItemDomain",
         "Provider",
-        "QpUtils"
+        "QpUtils",
+        "Undo"
       ],
       path: "Sources/Trip/Domain"
     ),
@@ -327,7 +348,8 @@ let package = Package(
         "EditTripPresentation",
         "Provider",
         "Presentation",
-        "TripDomain"
+        "TripDomain",
+        "Undo"
       ],
       path: "Sources/TripList/Presentation"
     ),

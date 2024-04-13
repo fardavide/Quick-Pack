@@ -3,6 +3,7 @@ import EditTripPresentation
 import Provider
 import SwiftUI
 import TripDomain
+import Undo
 
 public struct TripList: View {
   @StateObject var viewModel: TripListViewModel = getProvider().get()
@@ -12,6 +13,7 @@ public struct TripList: View {
   public var body: some View {
     TripListContent(
       state: viewModel.state,
+      undoHandler: viewModel.undoHandler,
       send: viewModel.send,
       edit: viewModel.edit
     )
@@ -20,6 +22,7 @@ public struct TripList: View {
 
 private struct TripListContent: View {
   let state: TripListState
+  let undoHandler: UndoHandler
   let send: (TripListAction) -> Void
   let edit: (Trip) -> EditTripViewModel
   
@@ -59,7 +62,7 @@ private struct TripListContent: View {
         image: .backpack
       )
     }
-    .onShake { send(.undoOrRedo) }
+    .undoable(with: undoHandler)
   }
 }
 
@@ -97,6 +100,7 @@ private struct TripListItems: View {
 #Preview("With items") {
   return TripListContent(
     state: .samples.content,
+    undoHandler: FakeUndoHandler(),
     send: { _ in },
     edit: { _ in .samples.content }
   )
@@ -106,6 +110,7 @@ private struct TripListItems: View {
   getProvider().register { EditTripViewModel.samples.content }
   return TripListContent(
     state: .samples.empty,
+    undoHandler: FakeUndoHandler(),
     send: { _ in },
     edit: { _ in .samples.content }
   )

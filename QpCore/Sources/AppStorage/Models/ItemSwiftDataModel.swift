@@ -1,15 +1,25 @@
 import Foundation
 import ItemDomain
+import QpStorage
 import QpUtils
 import SwiftData
+import SwiftUI
 import TripDomain
 
 @Model
-public final class ItemSwiftDataModel: Equatable {
+public final class ItemSwiftDataModel: IdentifiableModel {
   public var id: String = UUID().uuidString
   public var name: String?
   var tripItems: [TripItemSwiftDataModel]?
   
+  public var modelDescription: String {
+    if let name = name {
+      "item '\(name)'"
+    } else {
+      "item"
+    }
+  }
+    
   init(
     id: String,
     name: String

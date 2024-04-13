@@ -1,15 +1,28 @@
 import Foundation
+import QpStorage
 import SwiftData
+import SwiftUI
 import TripDomain
 
 @Model
-public final class TripItemSwiftDataModel: Equatable {
+public final class TripItemSwiftDataModel: IdentifiableModel {
   public var id: String = UUID().uuidString
   @Relationship(deleteRule: .nullify, inverse: \ItemSwiftDataModel.tripItems)
   var item: ItemSwiftDataModel?
   public var isChecked: Bool = false
   public var order: Int = 0
   var trip: TripSwiftDataModel?
+  
+  public var modelDescription: String {
+    var result = "trip item"
+    if let itemName = item?.name {
+      result += " '\(itemName)'"
+    }
+    if let tripName = trip?.name {
+      result += " for trip '\(tripName)'"
+    }
+    return result
+  }
   
   init(
     id: String,

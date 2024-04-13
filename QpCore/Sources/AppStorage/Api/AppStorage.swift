@@ -3,6 +3,7 @@ import Foundation
 import QpStorage
 import QpUtils
 import SwiftData
+import SwiftUI
 import Undo
 
 public protocol AppStorage: UndoHandler {
@@ -23,32 +24,42 @@ public extension AppStorage {
       .removeDuplicates()
   }
   
-  func deleteInTransaction<Model: Equatable>(
+  func deleteInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ fetchDescriptor: FetchDescriptor<Model>
   ) async {
-    await context.fetchOne(fetchDescriptor)
-      .onSuccess { model in context.delete(model) }
+    await context.fetchOne(fetchDescriptor).onSuccess { model in
+      undoManager.setActionName("delete \(model.modelDescription)")
+      context.delete(model)
+    }
   }
   
-  func insertOrUpdateInTransaction<Model: Equatable>(
+  func insertOrUpdateInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ model: Model,
     fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
   ) async {
     await context.fetchOne(fetchDescriptor)
-      .onSuccess(update)
-      .onFailure { _ in context.insert(model) }
+      .onSuccess { model in
+        undoManager.setActionName("update \(model.modelDescription)")
+        update(model)
+      }
+      .onFailure { _ in
+        undoManager.setActionName("create \(model.modelDescription)")
+        context.insert(model)
+      }
   }
   
-  func updateInTransaction<Model: Equatable>(
+  func updateInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
   ) async {
-    await context.fetchOne(fetchDescriptor)
-      .onSuccess(update)
+    await context.fetchOne(fetchDescriptor).onSuccess { model in
+      undoManager.setActionName("update \(model.modelDescription)")
+      update(model)
+    }
   }
   
   func requestUndoOrRedo() -> UndoHandle? {
@@ -87,7 +98,7 @@ public extension AppStorage {
 
 public extension AppStorage {
   
-  func delete<Model: Equatable>(
+  func delete<Model: IdentifiableModel>(
     _ fetchDescriptor: FetchDescriptor<Model>
   ) async {
     await transaction { context in
@@ -95,7 +106,7 @@ public extension AppStorage {
     }
   }
   
-  func insertOrUpdate<Model: Equatable>(
+  func insertOrUpdate<Model: IdentifiableModel>(
     _ model: Model,
     fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
@@ -110,7 +121,7 @@ public extension AppStorage {
     }
   }
   
-  func update<Model: Equatable>(
+  func update<Model: IdentifiableModel>(
     _ fetchDescriptor: FetchDescriptor<Model>,
     update: (Model) -> Void
   ) async {

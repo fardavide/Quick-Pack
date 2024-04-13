@@ -1,15 +1,25 @@
 import Foundation
+import QpStorage
 import QpUtils
 import SwiftData
+import SwiftUI
 import TripDomain
 
 @Model
-public final class TripSwiftDataModel: Equatable {
+public final class TripSwiftDataModel: IdentifiableModel {
   public var date: TripDate?
   public var id: String = UUID().uuidString
   @Relationship(deleteRule: .cascade, inverse: \TripItemSwiftDataModel.trip)
   public var items: [TripItemSwiftDataModel]?
   public var name: String?
+  
+  public var modelDescription: String {
+    if let name = name {
+      "trip '\(name)'"
+    } else {
+      "trip"
+    }
+  }
   
   init(
     date: TripDate?,

@@ -85,6 +85,7 @@ private struct TripListItems: View {
     List(items) { item in
       NavigationLink {
         EditTrip(viewModel: edit(item.domainModel))
+          .animation(nil, value: item.domainModel)
       } label: {
         HStack {
           Text(item.name)

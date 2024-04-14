@@ -23,6 +23,7 @@ private struct EditTripContent: View {
   private let send: (EditTripAction) -> Void
   
   @FocusState private var isNameFocused: Bool
+  @State private var searchQuery: String = ""
   
   init(
     _ state: EditTripState,
@@ -49,6 +50,14 @@ private struct EditTripContent: View {
         }
       }
     )
+    let searchBinding = Binding(
+      get: { searchQuery },
+      set: { newQuery in
+        if newQuery != searchQuery {
+          send(.searchItem(newQuery))
+        }
+      }
+    )
     Form {
       
       Section {
@@ -60,33 +69,39 @@ private struct EditTripContent: View {
         DatePicker("Date", selection: dateBinding, displayedComponents: .date)
       }
       
-      Section {
-        TripItemList(
-          items: state.items,
-          onNameChange: { itemId, newName in send(.updateItemName(itemId, newName)) },
-          onCheckChange: { itemId, newIsChecked in send(.updateItemCheck(itemId, newIsChecked)) },
-          onOrderChange: { from, to in send(.reorderItems(from: from, to: to)) },
-          onRemove: { itemId in send(.removeItem(itemId)) }
-        )
-        .animation(.default, value: state.items)
-      } header: {
+      Section("Add item") {
         HStack {
-          Text("Items")
-          Spacer()
-          Button { send(.addNewItem) } label: {
-            Label("Add", systemSymbol: .plus)
-              .labelStyle(.iconOnly)
-          }
+          Image(systemSymbol: .magnifyingglass)
+          TextField("Search Item", text: searchBinding)
         }
+        SearchItemResult(
+          items: state.searchItems,
+          send: send
+        )
+      }
+      
+      Section("Items") {
+        TripItemList(
+          items: state.tripItems,
+          send: send
+        )
+        .animation(.default, value: state.tripItems)
       }
     }
     .navigationTitle("Edit trip")
   }
 }
 
-#Preview {
+#Preview("No search") {
   EditTripContent(
-    .samples.malaysia,
+    .samples.noSearch,
+    send: { _ in }
+  )
+}
+
+#Preview("With search") {
+  EditTripContent(
+    .samples.withSearch,
     send: { _ in }
   )
 }

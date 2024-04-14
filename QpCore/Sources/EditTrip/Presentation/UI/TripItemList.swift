@@ -4,13 +4,8 @@ import TripDomain
 
 struct TripItemList: View {
   let items: [EditableTripItem]
-  let onNameChange: (TripItemId, String) -> Void
-  let onCheckChange: (TripItemId, Bool) -> Void
-  let onOrderChange: (IndexSet, Int) -> Void
-  let onRemove: (TripItemId) -> Void
-  
-  @FocusState private var focusedItemId: TripItemId?
-  
+  let send: (EditTripAction) -> Void
+    
   public var body: some View {
     List {
       ForEach(items) { item in
@@ -18,36 +13,22 @@ struct TripItemList: View {
           get: { item.isChecked },
           set: { newIsChecked in
             if newIsChecked != item.isChecked {
-              onCheckChange(item.id, newIsChecked)
-            }
-          }
-        )
-        let nameBinding = Binding(
-          get: { item.name },
-          set: { newName in
-            if newName != item.name {
-              onNameChange(item.id, newName)
+              send(.updateItemCheck(item.id, newIsChecked))
             }
           }
         )
         HStack {
           Toggle(isOn: isCheckedBinding) {
-            TextField("\(item.id)", text: nameBinding, prompt: Text("Item name"))
-              .focused($focusedItemId, equals: item.id)
+            Text(item.name).tint(.primary)
           }
           Spacer()
           Image(systemSymbol: .line3Horizontal)
         }
         .toggleStyle(CheckboxToggleStyle())
         .swipeActions(edge: .trailing) {
-          Button { onRemove(item.id) } label: {
+          Button { send(.removeItem(item.id)) } label: {
             Label("Remove item", systemSymbol: .xmark)
               .tint(.accentColor)
-          }
-        }
-        .onAppear {
-          if nameBinding.wrappedValue.isEmpty {
-            focusedItemId = item.id
           }
         }
       }
@@ -74,9 +55,6 @@ private struct CheckboxToggleStyle: ToggleStyle {
       .samples.iPad,
       .samples.nintendoSwitch
     ],
-    onNameChange: { _, _ in },
-    onCheckChange: { _, _ in },
-    onOrderChange: { _, _ in },
-    onRemove: { _ in }
+    send: { _ in }
   )
 }

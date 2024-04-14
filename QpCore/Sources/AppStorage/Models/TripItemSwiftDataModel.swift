@@ -63,7 +63,7 @@ extension [TripItemSwiftDataModel] {
     safeMap { swiftDataModel in
       TripItem(
         id: TripItemId(swiftDataModel.id),
-        item: try swiftDataModel.item.require().toDomainModel(),
+        item: try swiftDataModel.item.require("item").toDomainModel(),
         isChecked: swiftDataModel.isChecked,
         order: swiftDataModel.order
       )

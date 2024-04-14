@@ -36,7 +36,11 @@ public final class TripSamples {
   public let malaysia = Trip(
     date: TripDate(year: 2024, month: .oct),
     id: TripId("malaysia"),
-    items: [],
+    items: [
+      .samples.camera,
+      .samples.iPad,
+      .samples.nintendoSwitch
+    ],
     name: "Malaysia"
   )
 }

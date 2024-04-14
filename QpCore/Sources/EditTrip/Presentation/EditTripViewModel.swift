@@ -3,6 +3,7 @@ import Foundation
 import ItemDomain
 import Presentation
 import Provider
+import QpUtils
 import TripDomain
 
 public final class EditTripViewModel: ViewModel {
@@ -10,6 +11,7 @@ public final class EditTripViewModel: ViewModel {
   public typealias State = EditTripState
   
   @Published public var state: State
+  private var subscribers: [AnyCancellable] = []
   private let itemRepository: ItemRepository
   private let tripRepository: TripRepository
 
@@ -20,14 +22,32 @@ public final class EditTripViewModel: ViewModel {
   ) {
     self.itemRepository = itemRepository
     self.tripRepository = tripRepository
-    state = initialTrip.toEditTripState()
+    state = initialTrip.toInitialEditTripState()
+    
+    itemRepository.items
+      .eraseToAnyPublisher()
+      .combineLatest($state.map(\EditTripState.searchQuery).filter(\.isNotEmpty))
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] (result, searchQuery) in
+        guard self != nil else {
+          return
+        }
+        let newSearchItems = result.or(default: [])
+          .filter { item in
+            item.name.localizedCaseInsensitiveContains(searchQuery)
+          }
+        self!.state = self!.state.withSearchItems(newSearchItems)
+      }
+      .store(in: &subscribers)
   }
   
   public func send(_ action: EditTripAction) {
     switch action {
     case .addNewItem: addNewItem()
+    case let .deleteItem(itemId): deleteItem(itemId)
     case let .removeItem(itemId): removeItem(itemId)
     case let .reorderItems(from, to): reorderItems(from, to)
+    case let .searchItem(query): searchItem(query)
     case let .updateDate(newDate): updateDate(newDate)
     case let .updateItemCheck(itemId, newIsChecked): updateItemCheck(itemId, newIsChecked)
     case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
@@ -37,53 +57,62 @@ public final class EditTripViewModel: ViewModel {
   
   private func addNewItem() {
     let editableItem = EditableTripItem.new()
-    state.items.insert(editableItem, at: 0)
+    state = state.insertItem(editableItem)
     Task { await tripRepository.addItem(editableItem.toTripItem(), to: state.id) }
+  }
+  
+  private func deleteItem(_ id: ItemId) {
+    state = state.removeItem(id: id)
+    Task { await itemRepository.deleteItem(itemId: id) }
   }
   
   private func reorderItems(
     _ from: IndexSet,
     _ to: Int
   ) {
-    state.items.move(fromOffsets: from, toOffset: to)
+    state = state.moveItems(from: from, to: to)
     Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
   }
   
   private func removeItem(_ itemId: TripItemId) {
-    state.items.removeAll { $0.id == itemId }
+    state = state.removeItem(id: itemId)
     Task { await tripRepository.removeItem(itemId, from: state.id) }
   }
   
+  private func searchItem(_ query: String) {
+    state = state.withSearchQuery(query)
+  }
+  
   private func updateDate(_ newDate: Date) {
-    state.date = TripDate(newDate)
+    state = state.withDate(newDate)
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
   func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
-    for i in state.items.indices where state.items[i].id == itemId {
-      state.items[i].isChecked = newIsChecked
-    }
+    state = state.updateItemCheck(id: itemId, newIsChecked)
     if let editableItem = findTripItem(itemId) {
       Task { await tripRepository.updateItemCheck(editableItem.id, isChecked: newIsChecked) }
     }
   }
   
-  func updateItemName(_ itemId: TripItemId, _ newName: String) {
-    for i in state.items.indices where state.items[i].id == itemId {
-      state.items[i].name = newName
-    }
-    if let editableItem = findTripItem(itemId) {
+  func updateItemName(_ itemId: ItemId, _ newName: String) {
+    state = state.updateItemName(id: itemId, newName)
+    if let editableItem = findItem(itemId) {
       Task { await itemRepository.saveItem(editableItem.toItem()) }
     }
   }
   
   private func updateName(_ newName: String) {
-    state.name = newName
+    state = state.withName(newName)
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
+  private func findItem(_ id: ItemId) -> EditableTripItem? {
+    state.tripItems.first(where: { $0.itemId == id })
+  }
+  
   private func findTripItem(_ id: TripItemId) -> EditableTripItem? {
-    state.items.first(where: { $0.id == id })
+    state.tripItems.first(where: { $0.id == id })
   }
   
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}

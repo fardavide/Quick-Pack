@@ -10,28 +10,27 @@ struct SearchItemResult: View {
   
   var body: some View {
     List(items) { item in
-      HStack {
-        Text(item.name)
-      }
-      .contextMenu {
-        Button {
-          isEditingItem = true
-          newName = item.name
-        } label: {
-          Label("Rename", systemSymbol: .pencil)
-            .tint(.accentColor)
+      Text(item.name)
+        .onTapGesture { send(.addItem(item)) }
+        .contextMenu {
+          Button {
+            isEditingItem = true
+            newName = item.name
+          } label: {
+            Label("Rename", systemSymbol: .pencil)
+              .tint(.accentColor)
+          }
+          Button { send(.deleteItem(item.id)) } label: {
+            Label("Delete", systemSymbol: .trash)
+              .tint(.red)
+          }
         }
-        Button { send(.deleteItem(item.id)) } label: {
-          Label("Delete", systemSymbol: .trash)
-            .tint(.red)
+        .alert("Rename \(item.name)", isPresented: $isEditingItem) {
+          TextField("New name", text: $newName)
+          Button("OK") {
+            send(.updateItemName(item.id, newName))
+          }
         }
-      }
-      .alert("Rename \(item.name)", isPresented: $isEditingItem) {
-        TextField("New name", text: $newName)
-        Button("OK") {
-          send(.updateItemName(item.id, newName))
-        }
-      }
     }
     .animation(.default, value: items)
   }

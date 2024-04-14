@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol ViewModel<Action, State>: ObservableObject {
+public protocol ViewModel<Action, State> {
   associatedtype Action
   associatedtype State
   

@@ -7,7 +7,7 @@ import TripDomain
 import Undo
 
 public struct TripList: View {
-  @StateObject var viewModel: TripListViewModel = getProvider().get()
+  private let viewModel: TripListViewModel = getProvider().get()
   
   public init() {}
   
@@ -23,7 +23,7 @@ public struct TripList: View {
 }
 
 private struct TripListContent: View {
-  let state: TripListState
+  @ObservedObject var state: TripListState
   let undoHandler: UndoHandler
   let itemListViewModel: ItemListViewModel
   let send: (TripListAction) -> Void
@@ -85,7 +85,6 @@ private struct TripListItems: View {
     List(items) { item in
       NavigationLink {
         EditTrip(viewModel: edit(item.domainModel))
-          .animation(nil, value: item.domainModel)
       } label: {
         HStack {
           Text(item.name)

@@ -10,7 +10,7 @@ public final class EditTripViewModel: ViewModel {
   public typealias Action = EditTripAction
   public typealias State = EditTripState
   
-  @Published public var state: State
+  public let state: State
   private var subscribers: [AnyCancellable] = []
   private let itemRepository: ItemRepository
   private let tripRepository: TripRepository
@@ -26,24 +26,26 @@ public final class EditTripViewModel: ViewModel {
     
     itemRepository.items
       .eraseToAnyPublisher()
-      .combineLatest($state.map(\EditTripState.searchQuery).filter(\.isNotEmpty))
+      .combineLatest(
+        state.$tripItems,
+        state.$searchQuery.map { $0.ifEmpty(default: "__query__") }
+      )
+      .map { (result, tripItems, searchQuery) in
+        result.or(default: [])
+          .filter { item in !tripItems.contains { tripItem in tripItem.item.id == item.id } }
+          .filter { $0.name.localizedCaseInsensitiveContains(searchQuery)}
+      }
       .receive(on: DispatchQueue.main)
-      .sink { [weak self] (result, searchQuery) in
-        guard self != nil else {
-          return
-        }
-        let newSearchItems = result.or(default: [])
-          .filter { item in
-            item.name.localizedCaseInsensitiveContains(searchQuery)
-          }
-        self!.state = self!.state.withSearchItems(newSearchItems)
+      .sink { [weak self] searchResult in
+        self?.state.searchItems = searchResult
       }
       .store(in: &subscribers)
   }
   
   public func send(_ action: EditTripAction) {
     switch action {
-    case .addNewItem: addNewItem()
+    case let .addItem(item): addItem(item)
+    case let .addNewItem(name): addNewItem(name)
     case let .deleteItem(itemId): deleteItem(itemId)
     case let .removeItem(itemId): removeItem(itemId)
     case let .reorderItems(from, to): reorderItems(from, to)
@@ -55,14 +57,19 @@ public final class EditTripViewModel: ViewModel {
     }
   }
   
-  private func addNewItem() {
-    let editableItem = EditableTripItem.new()
-    state = state.insertItem(editableItem)
-    Task { await tripRepository.addItem(editableItem.toTripItem(), to: state.id) }
+  private func addItem(_ item: Item) {
+    let tripItem = TripItem(id: .new(), item: item, isChecked: false, order: 0)
+    Task { await tripRepository.addItem(tripItem, to: state.id) }
+  }
+  
+  private func addNewItem(_ name: String) {
+    let trimItem = TripItem.new(item: .new(name: name))
+    state.insertItem(trimItem)
+    Task { await tripRepository.addItem(trimItem, to: state.id) }
   }
   
   private func deleteItem(_ id: ItemId) {
-    state = state.removeItem(id: id)
+    state.removeItem(id: id)
     Task { await itemRepository.deleteItem(itemId: id) }
   }
   
@@ -70,48 +77,48 @@ public final class EditTripViewModel: ViewModel {
     _ from: IndexSet,
     _ to: Int
   ) {
-    state = state.moveItems(from: from, to: to)
+    state.moveItems(from: from, to: to)
     Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
   }
   
   private func removeItem(_ itemId: TripItemId) {
-    state = state.removeItem(id: itemId)
+    state.removeItem(id: itemId)
     Task { await tripRepository.removeItem(itemId, from: state.id) }
   }
   
   private func searchItem(_ query: String) {
-    state = state.withSearchQuery(query)
+    state.searchQuery = query
   }
   
   private func updateDate(_ newDate: Date) {
-    state = state.withDate(newDate)
+    state.date = TripDate(newDate)
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
   func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
-    state = state.updateItemCheck(id: itemId, newIsChecked)
+    state.updateItemCheck(id: itemId, newIsChecked)
     if let editableItem = findTripItem(itemId) {
       Task { await tripRepository.updateItemCheck(editableItem.id, isChecked: newIsChecked) }
     }
   }
   
   func updateItemName(_ itemId: ItemId, _ newName: String) {
-    state = state.updateItemName(id: itemId, newName)
-    if let editableItem = findItem(itemId) {
-      Task { await itemRepository.saveItem(editableItem.toItem()) }
+    state.updateItemName(id: itemId, newName)
+    if let tripItem = findItem(itemId) {
+      Task { await itemRepository.saveItem(tripItem.item) }
     }
   }
   
   private func updateName(_ newName: String) {
-    state = state.withName(newName)
+    state.name = newName
     Task { await tripRepository.saveTripMetadata(state.toTrip()) }
   }
   
-  private func findItem(_ id: ItemId) -> EditableTripItem? {
-    state.tripItems.first(where: { $0.itemId == id })
+  private func findItem(_ id: ItemId) -> TripItem? {
+    state.tripItems.first(where: { $0.item.id == id })
   }
   
-  private func findTripItem(_ id: TripItemId) -> EditableTripItem? {
+  private func findTripItem(_ id: TripItemId) -> TripItem? {
     state.tripItems.first(where: { $0.id == id })
   }
   

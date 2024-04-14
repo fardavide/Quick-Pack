@@ -12,7 +12,7 @@ public final class TripListViewModel: ViewModel {
   public typealias Action = TripListAction
   public typealias State = TripListState
   
-  @Published public var state: State
+  public let state: State
   public let undoHandler: UndoHandler
   public let itemListViewModel: ItemListViewModel
   private var subscribers: [AnyCancellable] = []
@@ -38,9 +38,7 @@ public final class TripListViewModel: ViewModel {
       .eraseToAnyPublisher()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] result in
-        self?.state = TripListState(
-          trips: result.toLce(transform: mapper.toUiModels)
-        )
+        self?.state.trips = result.toLce(transform: mapper.toUiModels)
       }
       .store(in: &subscribers)
   }

@@ -1,7 +1,12 @@
 import Presentation
+import SwiftUI
 
-public struct TripListState: Equatable {
-  let trips: DataLce<[TripListItemUiModel]>
+public final class TripListState: ObservableObject {
+  @Published var trips: DataLce<[TripListItemUiModel]>
+  
+  init(trips: DataLce<[TripListItemUiModel]>) {
+    self.trips = trips
+  }
 }
 
 extension TripListState {

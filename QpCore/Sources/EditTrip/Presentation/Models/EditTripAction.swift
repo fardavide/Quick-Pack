@@ -3,7 +3,8 @@ import ItemDomain
 import TripDomain
 
 public enum EditTripAction {
-  case addNewItem
+  case addItem(_ item: Item)
+  case addNewItem(name: String)
   case deleteItem(_ id: ItemId)
   case removeItem(_ id: TripItemId)
   case reorderItems(from: IndexSet, to: Int)

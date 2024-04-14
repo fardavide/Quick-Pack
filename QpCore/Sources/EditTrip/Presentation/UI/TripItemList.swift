@@ -3,30 +3,30 @@ import SwiftUI
 import TripDomain
 
 struct TripItemList: View {
-  let items: [EditableTripItem]
+  let items: [TripItem]
   let send: (EditTripAction) -> Void
     
   public var body: some View {
     List {
-      ForEach(items) { item in
+      ForEach(items) { tripItem in
         let isCheckedBinding = Binding(
-          get: { item.isChecked },
+          get: { tripItem.isChecked },
           set: { newIsChecked in
-            if newIsChecked != item.isChecked {
-              send(.updateItemCheck(item.id, newIsChecked))
+            if newIsChecked != tripItem.isChecked {
+              send(.updateItemCheck(tripItem.id, newIsChecked))
             }
           }
         )
         HStack {
           Toggle(isOn: isCheckedBinding) {
-            Text(item.name).tint(.primary)
+            Text(tripItem.item.name).tint(.primary)
           }
           Spacer()
           Image(systemSymbol: .line3Horizontal)
         }
         .toggleStyle(CheckboxToggleStyle())
         .swipeActions(edge: .trailing) {
-          Button { send(.removeItem(item.id)) } label: {
+          Button { send(.removeItem(tripItem.id)) } label: {
             Label("Remove item", systemSymbol: .xmark)
               .tint(.accentColor)
           }

@@ -1,6 +1,6 @@
 import ItemDomain
 
-public struct TripItem: Comparable, Equatable {
+public struct TripItem: Comparable, Equatable, Identifiable {
   public let id: TripItemId
   public let item: Item
   public let isChecked: Bool
@@ -31,13 +31,13 @@ public struct TripItem: Comparable, Equatable {
 
 public extension TripItem {
   static let samples = TripItemSamples()
-  
-  func withIsChecked(_ newIsChecked: Bool) -> TripItem {
-    TripItem(id: id, item: item, isChecked: newIsChecked, order: order)
-  }
-  
-  func withOther(_ newOrder: Int) -> TripItem {
-    TripItem(id: id, item: item, isChecked: isChecked, order: newOrder)
+  static func new(item: Item) -> TripItem {
+    TripItem(
+      id: .new(),
+      item: item,
+      isChecked: false,
+      order: 0
+    )
   }
 }
 

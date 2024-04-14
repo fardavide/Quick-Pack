@@ -1,5 +1,9 @@
 public extension Array {
   
+  var isNotEmpty: Bool {
+    !isEmpty
+  }
+  
   /// Similar to `compatMap`, but filtering transformations that thorws, instead of returning `nil`.
   /// Also logs exceptions
   @inlinable func safeMap<ElementOfResult>(

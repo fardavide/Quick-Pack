@@ -26,7 +26,7 @@ public final class TripItemSwiftDataModel: IdentifiableModel {
     return result
   }
   
-  init(
+  public init(
     id: String,
     item: ItemSwiftDataModel?,
     isChecked: Bool,

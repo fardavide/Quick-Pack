@@ -1,10 +1,11 @@
 import Design
 import Provider
+import QpUtils
 import SwiftUI
 import TripDomain
 
 public struct EditTrip: View {
-  @ObservedObject var viewModel: EditTripViewModel
+  let viewModel: EditTripViewModel
   
   public init(viewModel: EditTripViewModel) {
     self.viewModel = viewModel
@@ -19,12 +20,9 @@ public struct EditTrip: View {
 }
 
 private struct EditTripContent: View {
-  private let state: EditTripState
+  @ObservedObject private var state: EditTripState
   private let send: (EditTripAction) -> Void
-  
-  @FocusState private var isNameFocused: Bool
-  @State private var searchQuery: String = ""
-  
+    
   init(
     _ state: EditTripState,
     send: @escaping (EditTripAction) -> Void
@@ -51,9 +49,9 @@ private struct EditTripContent: View {
       }
     )
     let searchBinding = Binding(
-      get: { searchQuery },
+      get: { state.searchQuery },
       set: { newQuery in
-        if newQuery != searchQuery {
+        if newQuery != state.searchQuery {
           send(.searchItem(newQuery))
         }
       }
@@ -64,8 +62,6 @@ private struct EditTripContent: View {
         TextField(text: nameBinding, prompt: Text("Required")) {
           Text("Name")
         }
-        .focused($isNameFocused)
-        .onAppear { isNameFocused = true }
         DatePicker("Date", selection: dateBinding, displayedComponents: .date)
       }
       
@@ -74,10 +70,17 @@ private struct EditTripContent: View {
           Image(systemSymbol: .magnifyingglass)
           TextField("Search Item", text: searchBinding)
         }
-        SearchItemResult(
-          items: state.searchItems,
-          send: send
-        )
+        if state.searchItems.isNotEmpty {
+          SearchItemResult(
+            items: state.searchItems,
+            send: send
+          )
+        }
+        if state.searchQuery.isNotEmpty {
+          Button { send(.addNewItem(name: state.searchQuery)) } label: {
+            Text("Create '\(state.searchQuery)'")
+          }
+        }
       }
       
       Section("Items") {

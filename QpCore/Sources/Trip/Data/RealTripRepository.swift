@@ -36,16 +36,24 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
-  @MainActor func addItem(_ item: TripItem, to tripId: TripId) {
+  @MainActor func addItem(_ tripItem: TripItem, to tripId: TripId) {
     transaction { context in
+      let item = context.fetchOne(tripItem.item.id.fetchDescriptor)
+        .or(default: tripItem.item.toSwiftDataModel())
+      let tripItem = TripItemSwiftDataModel(
+        id: tripItem.id.value,
+        item: item,
+        isChecked: tripItem.isChecked,
+        order: tripItem.order
+      )
       updateInTransaction(context: context, tripId.fetchDescriptor) { model in
         if model.items != nil {
           for item in model.items! {
             item.order += 1
           }
-          model.items!.append(item.toSwiftDataModel())
+          model.items!.append(tripItem)
         } else {
-          model.items = [item.toSwiftDataModel()]
+          model.items = [tripItem]
         }
       }
     }

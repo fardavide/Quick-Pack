@@ -5,7 +5,7 @@ import Presentation
 import QpUtils
 import Undo
 
-public class ItemListViewModel: ViewModel {
+public class ItemListViewModel: ViewModel, ObservableObject {
   public typealias Action = ItemListAction
   public typealias State = ItemListState
   
@@ -45,14 +45,9 @@ public final class RealItemListViewModel: ItemListViewModel {
   
   public override func send(_ action: ItemListAction) {
     switch action {
-    case .addNew: addNewItem()
     case let .delete(id): deleteItem(id)
     case let .updateName(id, newName): updateItemName(id, newName)
     }
-  }
-  
-  private func addNewItem() {
-    Task { await itemRepository.saveItem(.new()) }
   }
   
   private func deleteItem(_ id: ItemId) {

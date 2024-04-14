@@ -14,8 +14,8 @@ public struct Item: Equatable, Identifiable {
 public extension Item {
   static let samples = ItemSamples()
   
-  static func new() -> Item {
-    Item(id: .new(), name: "")
+  static func new(name: String) -> Item {
+    Item(id: .new(), name: name)
   }
 }
 

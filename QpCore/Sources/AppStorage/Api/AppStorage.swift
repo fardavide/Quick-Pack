@@ -35,9 +35,17 @@ public extension AppStorage {
     context: ModelContext,
     _ fetchDescriptor: FetchDescriptor<Model>
   ) {
-    context.fetchOne(fetchDescriptor).onSuccess { model in
-      undoManager.setActionName("delete \(model.modelDescription)")
-      context.delete(model)
+    context.fetchAll(fetchDescriptor).onSuccess { models in
+      if models.count == 1 {
+        undoManager.setActionName("delete \(models.first!.modelDescription)")
+      } else {
+        undoManager.setActionName("delete \(models.count) \(Model.typeDescription)")
+      }
+      for model in models {
+        context.delete(model)
+      }
+    }.onFailure { error in
+      print(error)
     }
   }
   

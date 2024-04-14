@@ -25,6 +25,7 @@ final class RealItemRepository: AppStorage, ItemRepository {
   
   init(container: ModelContainer) {
     self.container = container
+    Task { await deleteEmptyItems() }
   }
   
   func deleteItem(itemId: ItemId) async {
@@ -38,5 +39,13 @@ final class RealItemRepository: AppStorage, ItemRepository {
     ) { model in
       model.name = item.name
     }
+  }
+  
+  private func deleteEmptyItems() async {
+    await delete(
+      FetchDescriptor<ItemSwiftDataModel>(
+        predicate: #Predicate { $0.name == "" }
+      )
+    )
   }
 }

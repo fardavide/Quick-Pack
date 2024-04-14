@@ -12,6 +12,8 @@ public final class ItemSwiftDataModel: IdentifiableModel {
   public var name: String?
   var tripItems: [TripItemSwiftDataModel]?
   
+  public static let typeDescription: String = "item"
+
   public var modelDescription: String {
     if let name = name {
       "item '\(name)'"

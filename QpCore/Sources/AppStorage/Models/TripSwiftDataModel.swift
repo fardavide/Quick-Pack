@@ -13,6 +13,8 @@ public final class TripSwiftDataModel: IdentifiableModel {
   public var items: [TripItemSwiftDataModel]?
   public var name: String?
   
+  public static let typeDescription: String = "trip"
+  
   public var modelDescription: String {
     if let name = name {
       "trip '\(name)'"

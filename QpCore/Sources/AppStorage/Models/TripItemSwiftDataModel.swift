@@ -13,6 +13,8 @@ public final class TripItemSwiftDataModel: IdentifiableModel {
   public var order: Int = 0
   var trip: TripSwiftDataModel?
   
+  public static let typeDescription: String = "trip item"
+
   public var modelDescription: String {
     var result = "trip item"
     if let itemName = item?.name {

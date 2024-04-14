@@ -6,12 +6,6 @@ struct TripListItemUiModel: Equatable, Identifiable {
   let domainModel: Trip
   let id: TripId
   let name: String
-  
-  static func == (lhs: TripListItemUiModel, rhs: TripListItemUiModel) -> Bool {
-    lhs.date == rhs.date &&
-    lhs.id == rhs.id &&
-    lhs.name == rhs.name
-  }
 }
 
 extension TripListItemUiModel {

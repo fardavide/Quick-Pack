@@ -49,17 +49,31 @@ private struct ItemListItems: View {
   let items: [Item]
   let send: (ItemListAction) -> Void
   
+  @State var isEditingItem: Bool = false
+  @State private var newName = ""
+  
   var body: some View {
     List(items) { item in
       HStack {
         Text(item.name)
       }
       .swipeActions(edge: .trailing) {
-        Button {
-          send(.delete(item.id))
+        Button { 
+          isEditingItem = true
+          newName = item.name
         } label: {
+          Label("Edit", systemSymbol: .pencil)
+            .tint(.accentColor)
+        }
+        Button { send(.delete(item.id)) } label: {
           Label("Delete", systemSymbol: .trash)
             .tint(.red)
+        }
+      }
+      .alert("Rename \(item.name)", isPresented: $isEditingItem) {
+        TextField("New name", text: $newName)
+        Button("OK") {
+          send(.updateName(item.id, newName))
         }
       }
     }

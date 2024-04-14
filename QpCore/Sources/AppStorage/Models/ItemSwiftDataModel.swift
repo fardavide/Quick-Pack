@@ -8,7 +8,7 @@ import TripDomain
 
 @Model
 public final class ItemSwiftDataModel: IdentifiableModel {
-  public var id: String = UUID().uuidString
+  public var id: String?
   public var name: String?
   var tripItems: [TripItemSwiftDataModel]?
   
@@ -49,16 +49,16 @@ public extension ItemId {
 }
 
 public extension ItemSwiftDataModel {
-  func toDomainModel() -> Item {
+  func toDomainModel() throws -> Item {
     Item(
-      id: ItemId(id),
-      name: name!
+      id: ItemId(try id.require()),
+      name: try name.require()
     )
   }
 }
 
 public extension [ItemSwiftDataModel] {
   func toDomainModels() -> [Item] {
-    safeMap { $0.toDomainModel() }
+    safeMap { try $0.toDomainModel() }
   }
 }

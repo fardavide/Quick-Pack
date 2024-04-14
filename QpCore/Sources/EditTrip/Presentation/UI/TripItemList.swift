@@ -54,6 +54,7 @@ struct TripItemList: View {
           }
         }
       }
+      .onMove { indices, newOffset in send(.reorderItems(from: indices, to: newOffset)) }
       .animation(.default, value: items)
     }
   }

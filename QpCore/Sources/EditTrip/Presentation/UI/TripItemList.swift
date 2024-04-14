@@ -6,6 +6,9 @@ struct TripItemList: View {
   let items: [TripItem]
   let send: (EditTripAction) -> Void
     
+  @State var isEditingItem: Bool = false
+  @State private var newName = ""
+  
   public var body: some View {
     List {
       ForEach(items) { tripItem in
@@ -25,6 +28,25 @@ struct TripItemList: View {
           Image(systemSymbol: .line3Horizontal)
         }
         .toggleStyle(CheckboxToggleStyle())
+        .contextMenu {
+          Button {
+            isEditingItem = true
+            newName = tripItem.item.name
+          } label: {
+            Label("Rename", systemSymbol: .pencil)
+              .tint(.accentColor)
+          }
+          Button { send(.deleteItem(tripItem.item.id)) } label: {
+            Label("Delete", systemSymbol: .trash)
+              .tint(.red)
+          }
+        }
+        .alert("Rename \(tripItem.item.name)", isPresented: $isEditingItem) {
+          TextField("New name", text: $newName)
+          Button("OK") {
+            send(.updateItemName(tripItem.item.id, newName))
+          }
+        }
         .swipeActions(edge: .trailing) {
           Button { send(.removeItem(tripItem.id)) } label: {
             Label("Remove item", systemSymbol: .xmark)

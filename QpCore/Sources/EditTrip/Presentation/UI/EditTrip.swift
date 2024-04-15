@@ -22,7 +22,9 @@ public struct EditTrip: View {
 private struct EditTripContent: View {
   @ObservedObject private var state: EditTripState
   private let send: (EditTripAction) -> Void
-    
+  
+  private let scrollTarget = "target"
+  
   init(
     _ state: EditTripState,
     send: @escaping (EditTripAction) -> Void
@@ -56,44 +58,50 @@ private struct EditTripContent: View {
         }
       }
     )
-    Form {
-      
-      Section {
-        TextField(text: nameBinding, prompt: Text("Required")) {
-          Text("Name")
+    ScrollViewReader { reader in
+      Form {
+        
+        Section {
+          TextField(text: nameBinding, prompt: Text("Required")) {
+            Text("Name")
+          }
+          DatePicker("Date", selection: dateBinding, displayedComponents: .date)
         }
-        DatePicker("Date", selection: dateBinding, displayedComponents: .date)
-      }
-      
-      Section("Add item") {
-        HStack {
-          Image(systemSymbol: .magnifyingglass)
-          TextField("Search Item", text: searchBinding) {
-            send(.addNewItem(name: state.searchQuery))
+        
+        Section("Add item") {
+          HStack {
+            Image(systemSymbol: .magnifyingglass)
+            TextField("Search Item", text: searchBinding)
+              .onChange(of: state.searchQuery) {
+                withAnimation { reader.scrollTo(scrollTarget) }
+              }
+              .onSubmit { send(.addNewItem(name: state.searchQuery)) }
+          }
+          if state.searchItems.isNotEmpty {
+            SearchItemResult(
+              items: state.searchItems,
+              send: send
+            )
+          }
+          if state.searchQuery.isNotEmpty {
+            Button { send(.addNewItem(name: state.searchQuery)) } label: {
+              Text("Create '\(state.searchQuery)'")
+            }
+            .id(scrollTarget)
           }
         }
-        if state.searchItems.isNotEmpty {
-          SearchItemResult(
-            items: state.searchItems,
+
+        Section("Items") {
+          TripItemList(
+            items: state.tripItems,
             send: send
           )
+          .animation(.default, value: state.tripItems)
         }
-        if state.searchQuery.isNotEmpty {
-          Button { send(.addNewItem(name: state.searchQuery)) } label: {
-            Text("Create '\(state.searchQuery)'")
-          }
-        }
-      }
-      
-      Section("Items") {
-        TripItemList(
-          items: state.tripItems,
-          send: send
-        )
-        .animation(.default, value: state.tripItems)
       }
     }
     .navigationTitle("Edit trip")
+    .scrollDismissesKeyboard(.interactively)
   }
 }
 

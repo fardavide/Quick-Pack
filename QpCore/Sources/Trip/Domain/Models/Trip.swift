@@ -21,7 +21,6 @@ public struct Trip: Equatable {
 
 public extension Trip {
   static let samples = TripSamples()
-  
   static func new() -> Trip {
     Trip(
       date: nil,
@@ -29,6 +28,10 @@ public extension Trip {
       items: [],
       name: "My Trip"
     )
+  }
+  
+  func withoutItems() -> Trip {
+    Trip(date: date, id: id, items: [], name: name)
   }
 }
 

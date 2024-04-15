@@ -38,8 +38,14 @@ final class RealTripRepository: AppStorage, TripRepository {
   
   @MainActor func addItem(_ tripItem: TripItem, to tripId: TripId) {
     transaction { context in
-      let item = context.fetchOne(tripItem.item.id.fetchDescriptor)
-        .or(default: tripItem.item.toSwiftDataModel())
+      let item = {
+        // Try to get item by ID from Storage
+        context.fetchOne(tripItem.item.id.fetchDescriptor).orNil()
+        // If none, try to get item by NAME from Storage
+        ?? context.fetchOne(tripItem.item.namFetchDescriptor).orNil()
+        // If none, create a new one
+        ?? tripItem.item.toSwiftDataModel()
+      }()
       let tripItem = TripItemSwiftDataModel(
         id: tripItem.id.value,
         item: item,

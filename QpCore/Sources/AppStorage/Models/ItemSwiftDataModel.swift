@@ -32,6 +32,12 @@ public final class ItemSwiftDataModel: IdentifiableModel {
 }
 
 public extension Item {
+  var namFetchDescriptor: FetchDescriptor<ItemSwiftDataModel> {
+    FetchDescriptor<ItemSwiftDataModel>(
+      predicate: #Predicate { $0.name == name }
+    )
+  }
+  
   func toSwiftDataModel() -> ItemSwiftDataModel {
     ItemSwiftDataModel(
       id: id.value,

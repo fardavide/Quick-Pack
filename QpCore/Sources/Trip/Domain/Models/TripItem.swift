@@ -39,6 +39,10 @@ public extension TripItem {
       order: 0
     )
   }
+  
+  func withOrder(_ newOrder: Int) -> TripItem {
+    TripItem(id: id, item: item, isChecked: isChecked, order: newOrder)
+  }
 }
 
 public final class TripItemSamples {

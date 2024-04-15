@@ -68,7 +68,9 @@ private struct EditTripContent: View {
       Section("Add item") {
         HStack {
           Image(systemSymbol: .magnifyingglass)
-          TextField("Search Item", text: searchBinding)
+          TextField("Search Item", text: searchBinding) {
+            send(.addNewItem(name: state.searchQuery))
+          }
         }
         if state.searchItems.isNotEmpty {
           SearchItemResult(

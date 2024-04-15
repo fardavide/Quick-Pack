@@ -5,23 +5,19 @@ import TripDomain
 public final class EditTripState: ObservableObject {
   @Published var date: TripDate?
   let id: TripId
-  @Published var searchItems: [Item]
-  @Published var searchQuery: String
+  @Published var searchItems: [Item] = []
+  @Published var searchQuery: String = ""
   @Published var tripItems: [TripItem]
   @Published var name: String
   
   init(
     date: TripDate?,
     id: TripId,
-    searchItems: [Item],
-    searchQuery: String,
     tripItems: [TripItem],
     name: String
   ) {
     self.date = date
     self.id = id
-    self.searchItems = searchItems
-    self.searchQuery = searchQuery
     self.tripItems = tripItems
     self.name = name
   }
@@ -32,8 +28,6 @@ extension Trip {
     EditTripState(
       date: date,
       id: id,
-      searchItems: [],
-      searchQuery: "",
       tripItems: items,
       name: name
     )

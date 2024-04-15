@@ -26,7 +26,7 @@ public extension AppStorage {
   func observe<Model: Equatable>(
     _ f: @escaping (ModelContext) -> Result<Model, DataError>
   ) -> any DataPublisher<Model> {
-    Timer.publish(every: 1, on: .main, in: .default) { f(ModelContext(container)) }
+    Timer.publish(every: 0.5, on: .main, in: .default) { f(ModelContext(container)) }
       .share()
       .removeDuplicates()
   }

@@ -64,7 +64,7 @@ private struct CheckboxToggleStyle: ToggleStyle {
   func makeBody(configuration: Configuration) -> some View {
     Button { configuration.isOn.toggle() } label: {
       HStack {
-        Image(systemSymbol: configuration.isOn ? .checkmarkSquare : .square)
+        Image(systemSymbol: configuration.isOn ? .checkmarkSquareFill : .square)
         configuration.label
       }
     }

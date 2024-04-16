@@ -100,7 +100,7 @@ extension EditTripState {
 final class EditTripStateSamples {
   let noSearch = Trip.samples.malaysia.toInitialEditTripState()
   var withSearch: EditTripState {
-    var state = noSearch
+    let state = noSearch
     state.searchQuery = "Cam"
     state.searchItems = [.samples.camera]
     return state

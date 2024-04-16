@@ -83,7 +83,7 @@ private struct EditTripContent: View {
               send: send
             )
           }
-          if state.searchQuery.isNotEmpty {
+          if state.searchQuery.isNotBlank {
             Button { send(.addNewItem(name: state.searchQuery)) } label: {
               Text("Create '\(state.searchQuery)'")
             }

@@ -25,7 +25,7 @@ final class RealItemRepository: AppStorage, ItemRepository {
   
   init(container: ModelContainer) {
     self.container = container
-    Task { await deleteInvalidItems() }
+    Task { await sanitiseItems() }
   }
   
   func deleteItem(itemId: ItemId) async {
@@ -41,11 +41,21 @@ final class RealItemRepository: AppStorage, ItemRepository {
     }
   }
   
-  private func deleteInvalidItems() async {
-    await delete(
-      FetchDescriptor<ItemSwiftDataModel>(
-        predicate: #Predicate { $0.name == "" }
+  @MainActor
+  private func sanitiseItems() {
+    transaction { context in
+      updateInTransaction(
+        context: context,
+        FetchDescriptor<ItemSwiftDataModel>()
+      ) { model in
+        model.name = model.name?.trimmingCharacters(in: .whitespaces)
+      }
+      deleteInTransaction(
+        context: context,
+        FetchDescriptor<ItemSwiftDataModel>(
+          predicate: #Predicate { $0.name == "" }
+        )
       )
-    )
+    }
   }
 }

@@ -7,7 +7,7 @@ public struct Item: Equatable, Identifiable {
     name: String
   ) {
     self.id = id
-    self.name = name
+    self.name = name.trimmingCharacters(in: .whitespaces)
   }
 }
 

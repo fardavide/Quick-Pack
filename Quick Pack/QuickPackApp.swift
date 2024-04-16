@@ -1,4 +1,3 @@
-import EditTripPresentation
 import HomePresentation
 import ItemData
 import Provider
@@ -28,7 +27,6 @@ final class QpModule: Module {
   
   var dependencies: [Module.Type] = [
     AppStorageModule.self,
-    EditTripPresentationModule.self,
     ItemDataModule.self,
     SettingsPresentationModule.self,
     TripDataModule.self,

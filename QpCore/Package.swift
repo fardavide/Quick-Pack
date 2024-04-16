@@ -307,6 +307,7 @@ let package = Package(
       dependencies: [
         DateUtils,
         Design,
+        EditTrip+Presentation,
         Provider,
         Presentation,
         Settings+Presentation,

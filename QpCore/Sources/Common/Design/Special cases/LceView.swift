@@ -3,14 +3,48 @@ import QpUtils
 import SFSafeSymbols
 import SwiftUI
 
-public struct LceView<Content: Equatable>: View {
+public struct LceView<Content, LceError: Error>: View where Content: Equatable, LceError: Equatable {
   
   private let content: (Content) -> AnyView
   private let errorMessage: LocalizedStringKey?
-  private let lce: DataLce<Content>
-  private let retry: (() -> Void)?
+  private let error: (LceError) -> AnyView
+  private let lce: Lce<Content, LceError>
   
-  public init(
+  public var body: some View {
+    switch lce {
+    case let .content(data): 
+      content(data)
+    case let .error(lceError):
+      error(lceError)
+    case .loading:
+      ProgressView()
+    }
+  }
+}
+
+public extension LceView where LceError == GenericError {
+  init(
+    lce: GenericLce<Content>,
+    errorMessage: LocalizedStringKey,
+    content: @escaping (Content) -> any View,
+    retry: (() -> Void)? = nil
+  ) {
+    self.content = { data in AnyView(content(data)) }
+    self.errorMessage = errorMessage
+    self.error = { _ in
+      AnyView(
+        SpecialCaseView.error(
+          title: errorMessage,
+          retry: retry
+        )
+      )
+    }
+    self.lce = lce
+  }
+}
+
+public extension LceView where LceError == DataError {
+  init(
     lce: DataLce<Content>,
     errorMessage: LocalizedStringKey? = nil,
     content: @escaping (Content) -> any View,
@@ -18,19 +52,10 @@ public struct LceView<Content: Equatable>: View {
   ) {
     self.content = { data in AnyView(content(data)) }
     self.errorMessage = errorMessage
-    self.lce = lce
-    self.retry = retry
-  }
-  
-  public var body: some View {
-    switch lce {
-    case let .content(data): 
-      content(data)
-    case let .error(dataError):
-      SpecialCaseView.error(dataError, message: errorMessage, retry: retry)
-    case .loading:
-      Text("Loading placeholder")
+    self.error = { dataError in
+      AnyView(SpecialCaseView.error(dataError, message: errorMessage, retry: retry))
     }
+    self.lce = lce
   }
 }
 

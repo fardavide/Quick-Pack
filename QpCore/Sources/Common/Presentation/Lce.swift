@@ -43,15 +43,20 @@ public extension Result where Success: Equatable {
     }
   }
   
-  /// Map Result to `Lce`
-  /// - Parameter error: closure that tranforms Result's `Failure` to Lce's Error
-  func toLce<E>(error: (Failure) -> E) -> Lce<Success, E> where E: Error, E: Equatable {
-    toLce(transform: { $0 }, error: error)
+  /// Map Result to `GenericLce`
+  /// - Parameter transform: closure that transforms the `Success` to `R`
+  func toGenericLce<R>(
+    _ transform: (Success) -> R
+  ) -> GenericLce<R> where R: Equatable {
+    toLce(
+      transform: transform,
+      error: { _ in GenericError() }
+    )
   }
   
   /// Maps Result to `GenericLce`
   func toLce() -> GenericLce<Success> {
-    toLce(error: { _ in GenericError() })
+    toGenericLce { $0 }
   }
 }
 
@@ -68,6 +73,23 @@ public extension Result where Success: Equatable, Failure == DataError {
   
   /// Maps Result `DataLce`
   func toLce() -> DataLce<Success> {
+    toLce(transform: { $0 })
+  }
+}
+
+public extension Result where Success: Equatable, Failure == GenericError {
+  
+  /// Maps Result `GenericLce`
+  /// - Parameter transform: closure that transforms the `Success` to `R`
+  func toLce<R>(transform: (Success) -> R) -> GenericLce<R> {
+    toLce(
+      transform: transform,
+      error: { $0 }
+    )
+  }
+  
+  /// Maps Result `GenericLce`
+  func toLce() -> GenericLce<Success> {
     toLce(transform: { $0 })
   }
 }

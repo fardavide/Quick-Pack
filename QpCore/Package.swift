@@ -3,12 +3,14 @@
 import CompilerPluginSupport
 import PackageDescription
 
+private let About = "About"
 private let AppStorage = "AppStorage"
 private let Common = "Common"
 private let EditTrip = "EditTrip"
 private let Home = "Home"
 private let Item = "Item"
 private let ItemList = "ItemList"
+private let Settings = "Settings"
 private let SfSafeSymbols = "SFSafeSymbols"
 private let Trip = "Trip"
 private let TripList = "TripList"
@@ -39,11 +41,13 @@ let package = Package(
     .library(
       name: "Core",
       targets: [
-        // MARK: - App Storage declaration
+        // MARK: - About declarations
+        About+Domain,
+        // MARK: - App Storage declarations
         AppStorage,
         Real+AppStorage,
         StorageModels,
-        // MARK: - Common declaration
+        // MARK: - Common declarations
         DateUtils,
         Design,
         Presentation,
@@ -60,6 +64,8 @@ let package = Package(
         Item+Domain,
         // MARK: - Item List declarations
         ItemList+Presentation,
+        // MARK: - Settings declarations
+        Settings+Presentation,
         // MARK: - Trip declarations
         Trip+Data,
         Trip+Domain,
@@ -74,6 +80,17 @@ let package = Package(
     .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", .upToNextMajor(from: Version(4, 1, 1)))
   ],
   targets: [
+    
+    // MARK: - About definition
+    // MARK: About Domain
+    .target(
+      path: [About, Domain],
+      dependencies: [
+        Provider,
+        Utils
+      ]
+    ),
+    .testTarget(path: [About, Domain]),
     
     // MARK: - App Storage definition
     // MARK: App Storage
@@ -240,6 +257,20 @@ let package = Package(
     ),
     .testTarget(path: [Home, Presentation]),
     
+    // MARK: - Settings definitions
+    // MARK: Settings Presentation
+      .target(
+        path: [Settings, Presentation],
+        dependencies: [
+          About+Domain,
+          Design,
+          ItemList+Presentation,
+          Provider,
+          Presentation
+        ]
+      ),
+    .testTarget(path: [Settings, Presentation]),
+    
     // MARK: - Trip definitions
     // MARK: Trip Data
     .target(
@@ -276,10 +307,9 @@ let package = Package(
       dependencies: [
         DateUtils,
         Design,
-        EditTrip+Presentation,
-        ItemList+Presentation,
         Provider,
         Presentation,
+        Settings+Presentation,
         Trip+Domain,
         Undo
       ]

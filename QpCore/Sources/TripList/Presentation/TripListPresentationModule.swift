@@ -1,7 +1,14 @@
+import EditTripPresentation
 import Provider
+import SettingsPresentation
 
 public final class TripListPresentionModule: Module {
   public init() {}
+  
+  public var dependencies: [any Module.Type] = [
+    EditTripPresentationModule.self,
+    SettingsPresentationModule.self
+  ]
   
   public func register(on provider: Provider) {
     provider
@@ -9,8 +16,8 @@ public final class TripListPresentionModule: Module {
       .register {
         TripListViewModel(
           editTripViewModelFactory: provider.get(),
-          itemListViewModel: provider.get(),
           mapper: provider.get(),
+          settingsViewModel: provider.get(),
           tripRepository: provider.get()
         )
       }

@@ -22,25 +22,22 @@ private struct ItemListContent: View {
   let send: (ItemListAction) -> Void
   
   var body: some View {
-    NavigationStack {
-      LceView(
-        lce: state.items,
-        errorMessage: "Cannot load items"
-      ) { items in
-        if !items.isEmpty {
-          ItemListItems(
-            items: items,
-            send: send
-          )
-        } else {
-          SpecialCaseView.primary(
-            title: "No item found",
-            subtitle: "Create your first item from a trip",
-            image: .macbookAndIphone
-          )
-        }
+    LceView(
+      lce: state.items,
+      errorMessage: "Cannot load items"
+    ) { items in
+      if !items.isEmpty {
+        ItemListItems(
+          items: items,
+          send: send
+        )
+      } else {
+        SpecialCaseView.primary(
+          title: "No item found",
+          subtitle: "Create your first item from a trip",
+          image: .macbookAndIphone
+        )
       }
-      .navigationTitle("My Items")
     }
   }
 }

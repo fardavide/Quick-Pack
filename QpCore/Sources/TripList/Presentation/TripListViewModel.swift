@@ -1,10 +1,10 @@
 import Combine
 import EditTripPresentation
 import Foundation
-import ItemListPresentation
 import Presentation
 import Provider
 import QpUtils
+import SettingsPresentation
 import TripDomain
 import Undo
 
@@ -14,7 +14,7 @@ public final class TripListViewModel: ViewModel {
   
   public let state: State
   public let undoHandler: UndoHandler
-  public let itemListViewModel: ItemListViewModel
+  public let settingsViewModel: SettingsViewModel
   private var subscribers: [AnyCancellable] = []
   private let editTripViewModelFactory: any EditTripViewModel.Factory
   private let mapper: TripListItemUiModelMapper
@@ -22,14 +22,14 @@ public final class TripListViewModel: ViewModel {
 
   init(
     editTripViewModelFactory: any EditTripViewModel.Factory,
-    itemListViewModel: ItemListViewModel,
     mapper: TripListItemUiModelMapper,
+    settingsViewModel: SettingsViewModel,
     tripRepository: TripRepository,
     initialState: TripListState = .initial
   ) {
     self.editTripViewModelFactory = editTripViewModelFactory
-    self.itemListViewModel = itemListViewModel
     self.mapper = mapper
+    self.settingsViewModel = settingsViewModel
     self.tripRepository = tripRepository
     undoHandler = tripRepository
     state = initialState
@@ -70,8 +70,8 @@ public extension TripListViewModel {
 public final class TripListViewModelSamples {
   public let content = TripListViewModel(
     editTripViewModelFactory: EditTripViewModel.FakeFactory(viewModel: .samples.content),
-    itemListViewModel: FakeItemListViewModel(),
     mapper: FakeTripListItemUiModelMapper(),
+    settingsViewModel: FakeSettingsViewModel(),
     tripRepository: FakeTripRepository(trips: [Trip.samples.malaysia]),
     initialState: .samples.content
   )

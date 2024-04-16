@@ -2,6 +2,7 @@ import Design
 import EditTripPresentation
 import ItemListPresentation
 import Provider
+import SettingsPresentation
 import SwiftUI
 import TripDomain
 import Undo
@@ -15,7 +16,7 @@ public struct TripList: View {
     TripListContent(
       state: viewModel.state,
       undoHandler: viewModel.undoHandler,
-      itemListViewModel: viewModel.itemListViewModel,
+      settingsViewModel: viewModel.settingsViewModel,
       send: viewModel.send,
       edit: viewModel.edit
     )
@@ -25,11 +26,11 @@ public struct TripList: View {
 private struct TripListContent: View {
   @ObservedObject var state: TripListState
   let undoHandler: UndoHandler
-  let itemListViewModel: ItemListViewModel
+  let settingsViewModel: SettingsViewModel
   let send: (TripListAction) -> Void
   let edit: (Trip) -> EditTripViewModel
   
-  @State var showItemList: Bool = false
+  @State var showSettings: Bool = false
   
   public var body: some View {
     NavigationSplitView {
@@ -55,7 +56,7 @@ private struct TripListContent: View {
       }
       .navigationTitle("My Trips")
       .toolbar {
-        Button { showItemList = true } label: {
+        Button { showSettings = true } label: {
           Label("Settings", systemSymbol: .gear)
         }
         Button { send(.newTrip) } label: {
@@ -70,8 +71,8 @@ private struct TripListContent: View {
       )
     }
     .undoable(with: undoHandler)
-    .sheet(isPresented: $showItemList) {
-      ItemList(viewModel: itemListViewModel)
+    .sheet(isPresented: $showSettings) {
+      SettingsView(viewModel: settingsViewModel)
     }
   }
 }
@@ -111,7 +112,7 @@ private struct TripListItems: View {
   return TripListContent(
     state: .samples.content,
     undoHandler: FakeUndoHandler(),
-    itemListViewModel: FakeItemListViewModel(),
+    settingsViewModel: FakeSettingsViewModel(),
     send: { _ in },
     edit: { _ in .samples.content }
   )
@@ -122,7 +123,7 @@ private struct TripListItems: View {
   return TripListContent(
     state: .samples.empty,
     undoHandler: FakeUndoHandler(),
-    itemListViewModel: FakeItemListViewModel(),
+    settingsViewModel: FakeSettingsViewModel(),
     send: { _ in },
     edit: { _ in .samples.content }
   )

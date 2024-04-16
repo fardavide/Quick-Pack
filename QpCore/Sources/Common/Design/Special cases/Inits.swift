@@ -7,7 +7,7 @@ public extension SpecialCaseView {
   static func error(
     title: LocalizedStringKey,
     subtitle: LocalizedStringKey? = nil,
-    image: SFSymbol,
+    image: SFSymbol = .exclamationmarkCircle,
     retry: (() -> Void)? = nil
   ) -> SpecialCaseView {
     let model = SpecialCaseModel(

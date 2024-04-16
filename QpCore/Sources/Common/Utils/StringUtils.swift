@@ -1,5 +1,14 @@
 public extension StringProtocol {
   
+  /// Example:
+  /// ```swift
+  /// "hello world".capitalizedFirst // "Hello world"
+  /// "gitHub".capitalizedFirst // "GitHub"
+  /// ```
+  var capitalizedFirst: String {
+    prefix(1).capitalized + dropFirst()
+  }
+  
   var isNotEmpty: Bool {
     !isEmpty
   }

@@ -1,4 +1,3 @@
-import EditTripPresentation
 import Provider
 import SettingsPresentation
 
@@ -6,7 +5,6 @@ public final class TripListPresentionModule: Module {
   public init() {}
   
   public var dependencies: [any Module.Type] = [
-    EditTripPresentationModule.self,
     SettingsPresentationModule.self
   ]
   

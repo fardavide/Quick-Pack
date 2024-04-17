@@ -6,13 +6,15 @@ import TripDomain
 
 final class TripListItemUiModelMapperTests {
   
-  private let mapper = RealTripListItemUiModelMapper()
+  private let mapper = RealTripListUiModelMapper()
   
   @Test func whenNoDate_mapsCorrectly() {
     // given
     let trip = Trip(
       date: nil,
-      id: "trip",
+      id: TripId("trip"),
+      isCompleted: false,
+      items: [],
       name: "Trip"
     )
     
@@ -27,7 +29,9 @@ final class TripListItemUiModelMapperTests {
     // given
     let trip = Trip(
       date: TripDate(year: 2024, month: .dec, day: 24),
-      id: "xmas",
+      id: TripId("xmas"),
+      isCompleted: false,
+      items: [],
       name: "Xmas holidays"
     )
     
@@ -42,7 +46,9 @@ final class TripListItemUiModelMapperTests {
     // given
     let trip = Trip(
       date: TripDate(year: 2024, month: .oct),
-      id: "malaysia",
+      id: TripId("malaysia"),
+      isCompleted: false,
+      items: [],
       name: "Malaysia"
     )
     
@@ -57,7 +63,9 @@ final class TripListItemUiModelMapperTests {
     // given
     let trip = Trip(
       date: TripDate(year: 2025),
-      id: "summer",
+      id: TripId("summer"),
+      isCompleted: false,
+      items: [],
       name: "Summer"
     )
     

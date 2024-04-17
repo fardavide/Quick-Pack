@@ -9,6 +9,7 @@ import TripDomain
 public final class TripSwiftDataModel: IdentifiableModel {
   public var date: TripDate?
   public var id: String = UUID().uuidString
+  public var isCompleted: Bool = false
   @Relationship(deleteRule: .cascade, inverse: \TripItemSwiftDataModel.trip)
   public var items: [TripItemSwiftDataModel]?
   public var name: String?
@@ -26,11 +27,13 @@ public final class TripSwiftDataModel: IdentifiableModel {
   init(
     date: TripDate?,
     id: String,
+    isCompleted: Bool,
     items: [TripItemSwiftDataModel],
     name: String
   ) {
     self.date = date
     self.id = id
+    self.isCompleted = isCompleted
     self.items = items
     self.name = name
   }
@@ -41,6 +44,7 @@ public extension Trip {
     TripSwiftDataModel(
       date: date,
       id: id.value,
+      isCompleted: isCompleted,
       items: items.map { $0.toSwiftDataModel() },
       name: name
     )
@@ -61,8 +65,9 @@ public extension [TripSwiftDataModel] {
       Trip(
         date: swiftDataModel.date,
         id: TripId(swiftDataModel.id),
-        items: swiftDataModel.items!.toDomainModels(),
-        name: swiftDataModel.name!
+        isCompleted: swiftDataModel.isCompleted,
+        items: try swiftDataModel.items.require("Trip items").toDomainModels(),
+        name: try swiftDataModel.name.require("Trip name")
       )
     }
   }

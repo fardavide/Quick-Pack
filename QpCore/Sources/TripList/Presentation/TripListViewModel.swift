@@ -17,12 +17,12 @@ public final class TripListViewModel: ViewModel {
   public let settingsViewModel: SettingsViewModel
   private var subscribers: [AnyCancellable] = []
   private let editTripViewModelFactory: any EditTripViewModel.Factory
-  private let mapper: TripListItemUiModelMapper
+  private let mapper: TripListUiModelMapper
   private let tripRepository: TripRepository
 
   init(
     editTripViewModelFactory: any EditTripViewModel.Factory,
-    mapper: TripListItemUiModelMapper,
+    mapper: TripListUiModelMapper,
     settingsViewModel: SettingsViewModel,
     tripRepository: TripRepository,
     initialState: TripListState = .initial
@@ -38,14 +38,16 @@ public final class TripListViewModel: ViewModel {
       .eraseToAnyPublisher()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] result in
-        self?.state.trips = result.toLce(transform: mapper.toUiModels)
+        self?.state.trips = result.toLce(transform: mapper.toUiModel)
       }
       .store(in: &subscribers)
   }
   
   public func send(_ action: TripListAction) {
     switch action {
-    case let .deleteTrip(id): deleteTrip(tripId: id)
+    case let .delete(id): deleteTrip(id)
+    case let .markCompleted(id): markCompleted(id)
+    case let .markNotCompleted(id): markNotCompleted(id)
     case .newTrip: newTrip()
     }
   }
@@ -54,8 +56,16 @@ public final class TripListViewModel: ViewModel {
     editTripViewModelFactory.create(trip)
   }
   
-  private func deleteTrip(tripId: TripId) {
+  private func deleteTrip(_ tripId: TripId) {
     Task { await tripRepository.deleteTrip(tripId: tripId) }
+  }
+  
+  private func markCompleted(_ tripId: TripId) {
+    Task { await tripRepository.markTripCompleted(tripId: tripId, isCompleted: true) }
+  }
+  
+  private func markNotCompleted(_ tripId: TripId) {
+    Task { await tripRepository.markTripCompleted(tripId: tripId, isCompleted: false) }
   }
   
   private func newTrip() {
@@ -70,7 +80,7 @@ public extension TripListViewModel {
 public final class TripListViewModelSamples {
   public let content = TripListViewModel(
     editTripViewModelFactory: EditTripViewModel.FakeFactory(viewModel: .samples.content),
-    mapper: FakeTripListItemUiModelMapper(),
+    mapper: FakeTripListUiModelMapper(),
     settingsViewModel: FakeSettingsViewModel(),
     tripRepository: FakeTripRepository(trips: [Trip.samples.malaysia]),
     initialState: .samples.content

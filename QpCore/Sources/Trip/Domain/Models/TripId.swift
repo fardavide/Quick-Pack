@@ -9,7 +9,14 @@ public struct TripId: Equatable, Hashable {
 }
 
 public extension TripId {
+  static let samples = TripIdSamples()
   static func new() -> TripId {
     TripId(UUID().uuidString)
   }
+}
+
+public final class TripIdSamples {
+  public let malaysia = TripId("malaysia")
+  public let tunisia = TripId("tunisia")
+  public let tuscany = TripId("tuscany")
 }

@@ -36,6 +36,12 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
+  @MainActor func markTripCompleted(tripId: TripId, isCompleted: Bool) {
+    update(tripId.fetchDescriptor) { model in
+      model.isCompleted = isCompleted
+    }
+  }
+  
   @MainActor func addItem(_ tripItem: TripItem, to tripId: TripId) {
     transaction { context in
       let item = {

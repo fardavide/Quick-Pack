@@ -37,10 +37,10 @@ private struct TripListContent: View {
       LceView(
         lce: state.trips,
         errorMessage: "Cannot load trips"
-      ) { items in
-        if !items.isEmpty {
-          TripListItems(
-            items: items,
+      ) { model in
+        if !model.isEmpty {
+          TripListForm(
+            model: model,
             send: send,
             edit: edit
           )
@@ -77,6 +77,31 @@ private struct TripListContent: View {
   }
 }
 
+private struct TripListForm: View {
+  let model: TripListUiModel
+  let send: (TripListAction) -> Void
+  let edit: (Trip) -> EditTripViewModel
+  
+  var body: some View {
+    Form {
+      Section("Upcoming") {
+        TripListItems(
+          items: model.upcoming,
+          send: send,
+          edit: edit
+        )
+      }
+      Section("Completed") {
+        TripListItems(
+          items: model.completed,
+          send: send,
+          edit: edit
+        )
+      }
+    }
+  }
+}
+
 private struct TripListItems: View {
   let items: [TripListItemUiModel]
   let send: (TripListAction) -> Void
@@ -95,9 +120,19 @@ private struct TripListItems: View {
           }
         }
         .swipeActions(edge: .trailing) {
-          Button {
-            send(.deleteTrip(id: item.id))
-          } label: {
+          if item.isCompleted {
+            Button { send(.markNotCompleted(id: item.id)) } label: {
+              Label("Mark not completed", systemSymbol: .checkmark)
+                .symbolVariant(.slash)
+                .tint(.accentColor)
+            }
+          } else {
+            Button { send(.markCompleted(id: item.id)) } label: {
+              Label("Mark completed", systemSymbol: .checkmark)
+                .tint(.accentColor)
+            }
+          }
+          Button { send(.delete(id: item.id)) } label: {
             Label("Delete", systemSymbol: .trash)
               .tint(.red)
           }

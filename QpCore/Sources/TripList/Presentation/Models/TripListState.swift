@@ -2,9 +2,9 @@ import Presentation
 import SwiftUI
 
 public final class TripListState: ObservableObject {
-  @Published var trips: DataLce<[TripListItemUiModel]>
+  @Published var trips: DataLce<TripListUiModel>
   
-  init(trips: DataLce<[TripListItemUiModel]>) {
+  init(trips: DataLce<TripListUiModel>) {
     self.trips = trips
   }
 }
@@ -17,13 +17,23 @@ extension TripListState {
 final class TripListStateSamples {
   let content = TripListState(
     trips: .content(
-      [
-        TripListItemUiModel.samples.malaysia
-      ]
+      TripListUiModel(
+        completed: [
+          .samples.tunisia
+        ],
+        upcoming: [
+          .samples.tuscany,
+          .samples.malaysia
+        ]
+      )
     )
   )
   
-  let empty = TripListState(trips: .content([]))
+  let empty = TripListState(
+    trips: .content(
+      TripListUiModel(completed: [], upcoming: [])
+    )
+  )
   
   let error = TripListState(trips: .error(.noData))
   

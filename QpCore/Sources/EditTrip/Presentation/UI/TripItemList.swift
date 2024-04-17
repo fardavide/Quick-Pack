@@ -65,6 +65,8 @@ private struct CheckboxToggleStyle: ToggleStyle {
     Button { configuration.isOn.toggle() } label: {
       HStack {
         Image(systemSymbol: configuration.isOn ? .checkmarkSquareFill : .square)
+          .font(.title2)
+          .symbolEffect(.bounce, value: configuration.isOn)
         configuration.label
       }
     }
@@ -76,7 +78,7 @@ private struct CheckboxToggleStyle: ToggleStyle {
     items: [
       .samples.camera,
       .samples.iPad,
-      .samples.nintendoSwitch
+      .samples.nintendoSwitch.withCheck()
     ],
     send: { _ in }
   )

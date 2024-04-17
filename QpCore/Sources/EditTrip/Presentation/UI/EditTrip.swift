@@ -5,7 +5,7 @@ import SwiftUI
 import TripDomain
 
 public struct EditTrip: View {
-  let viewModel: EditTripViewModel
+  private let viewModel: EditTripViewModel
   
   public init(viewModel: EditTripViewModel) {
     self.viewModel = viewModel
@@ -13,25 +13,17 @@ public struct EditTrip: View {
   
   public var body: some View {
     EditTripContent(
-      viewModel.state,
+      state: viewModel.state,
       send: viewModel.send
     )
   }
 }
 
 private struct EditTripContent: View {
-  @ObservedObject private var state: EditTripState
-  private let send: (EditTripAction) -> Void
+  @ObservedObject var state: EditTripState
+  let send: (EditTripAction) -> Void
   
   private let scrollTarget = "target"
-  
-  init(
-    _ state: EditTripState,
-    send: @escaping (EditTripAction) -> Void
-  ) {
-    self.state = state
-    self.send = send
-  }
   
   var body: some View {
     let nameBinding = Binding(
@@ -107,14 +99,14 @@ private struct EditTripContent: View {
 
 #Preview("No search") {
   EditTripContent(
-    .samples.noSearch,
+    state: .samples.noSearch,
     send: { _ in }
   )
 }
 
 #Preview("With search") {
   EditTripContent(
-    .samples.withSearch,
+    state: .samples.withSearch,
     send: { _ in }
   )
 }

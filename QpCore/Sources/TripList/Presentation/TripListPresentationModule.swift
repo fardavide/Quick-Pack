@@ -12,7 +12,7 @@ public final class TripListPresentionModule: Module {
   
   public func register(on provider: Provider) {
     provider
-      .register { RealTripListItemUiModelMapper() as TripListItemUiModelMapper }
+      .register { RealTripListUiModelMapper() as TripListUiModelMapper }
       .register {
         TripListViewModel(
           editTripViewModelFactory: provider.get(),

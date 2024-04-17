@@ -40,8 +40,12 @@ public extension TripItem {
     )
   }
   
-  func withOrder(_ newOrder: Int) -> TripItem {
-    TripItem(id: id, item: item, isChecked: isChecked, order: newOrder)
+  func withCheck(isChecked: Bool = true) -> TripItem {
+    TripItem(id: id, item: item, isChecked: isChecked, order: order)
+  }
+  
+  func withOrder(_ order: Int) -> TripItem {
+    TripItem(id: id, item: item, isChecked: isChecked, order: order)
   }
 }
 

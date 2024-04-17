@@ -77,6 +77,25 @@ public extension AppStorage {
     }
   }
   
+  @MainActor func updateAllInTransaction<Model: IdentifiableModel>(
+    context: ModelContext,
+    _ fetchDescriptor: FetchDescriptor<Model>,
+    update: (Model) -> Void
+  ) {
+    context.fetchAll(fetchDescriptor).onSuccess { models in
+      if models.count == 1 {
+        undoManager.setActionName("update \(models.first!.modelDescription)")
+      } else {
+        undoManager.setActionName("update \(models.count) \(Model.typeDescription)")
+      }
+      for model in models {
+        update(model)
+      }
+    }.onFailure { error in
+      print(error)
+    }
+  }
+  
   @MainActor func requestUndoOrRedo() -> UndoHandle? {
     if undoManager.canRedo {
       UndoHandle(actionTitle: undoManager.redoMenuItemTitle) {
@@ -143,6 +162,15 @@ public extension AppStorage {
   ) {
     transaction { context in
       updateInTransaction(context: context, fetchDescriptor, update: update)
+    }
+  }
+  
+  @MainActor func updateAll<Model: IdentifiableModel>(
+    _ fetchDescriptor: FetchDescriptor<Model>,
+    update: (Model) -> Void
+  ) {
+    transaction { context in
+      updateAllInTransaction(context: context, fetchDescriptor, update: update)
     }
   }
 }

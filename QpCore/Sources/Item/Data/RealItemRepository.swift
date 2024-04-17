@@ -44,7 +44,7 @@ final class RealItemRepository: AppStorage, ItemRepository {
   @MainActor
   private func sanitiseItems() {
     transaction { context in
-      updateInTransaction(
+      updateAllInTransaction(
         context: context,
         FetchDescriptor<ItemSwiftDataModel>()
       ) { model in

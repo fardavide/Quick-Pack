@@ -24,6 +24,7 @@ final class RealTripRepository: AppStorage, TripRepository {
   
   init(container: ModelContainer) {
     self.container = container
+    Task { await sanitiseItems() }
   }
   
   @MainActor func saveTripMetadata(_ trip: Trip) {
@@ -100,5 +101,16 @@ final class RealTripRepository: AppStorage, TripRepository {
   
   @MainActor func deleteTrip(tripId: TripId) {
     delete(tripId.fetchDescriptor)
+  }
+  
+  @MainActor func sanitiseItems() async {
+    let currentDate = Date.now
+    updateAll(
+      FetchDescriptor<TripSwiftDataModel>()
+    ) { model in
+      if model.date?.value != nil && model.date!.value < currentDate {
+        model.isCompleted = true
+      }
+    }
   }
 }

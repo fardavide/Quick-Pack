@@ -25,12 +25,12 @@ public extension TripDate {
   }
   
   init(year: Int, month: Month) {
-    value = Date.of(year: year, month: month, day: 1)
+    value = Date.of(year: year, month: month, day: 28)
     precision = .month
   }
   
   init(year: Int) {
-    value = Date.of(year: year, month: .jan, day: 1)
+    value = Date.of(year: year, month: .dec, day: 31)
     precision = .year
   }
 }

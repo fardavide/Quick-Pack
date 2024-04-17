@@ -99,6 +99,7 @@ private struct TripListForm: View {
         )
       }
     }
+    .animation(.default, value: model)
   }
 }
 

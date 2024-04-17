@@ -91,6 +91,9 @@ private struct EditTripContent: View {
           .animation(.default, value: state.tripItems)
         }
       }
+      .animation(.default, value: state.searchQuery)
+      .animation(.default, value: state.searchItems)
+      .animation(.default, value: state.tripItems)
     }
     .navigationTitle("Edit trip")
     .scrollDismissesKeyboard(.interactively)

@@ -10,7 +10,7 @@ public final class EditTripState: ObservableObject {
   @Published var searchItems: [Item] = []
   @Published var searchQuery: String = ""
   @Published var tripItems: [TripItem]
-
+  
   init(
     date: TripDate?,
     id: TripId,

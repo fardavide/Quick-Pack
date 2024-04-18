@@ -69,7 +69,7 @@ public final class TripListViewModel: ViewModel {
   }
   
   private func newTrip() {
-    Task { await tripRepository.saveTripMetadata(.new()) }
+    Task { await tripRepository.createTrip(.new()) }
   }
 }
 

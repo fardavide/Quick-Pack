@@ -12,7 +12,7 @@ final class RealTripRepositoryTests {
     let scenario = Scenario()
     
     // when
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    await scenario.sut.createTrip(.samples.malaysia.withoutItems())
     
     // then
     let savedTrip = await scenario.firstSavedTrip()
@@ -22,18 +22,11 @@ final class RealTripRepositoryTests {
   @Test func updateTripDate() async {
     // given
     let scenario = Scenario()
-    let initialTrip = Trip.samples.malaysia
-    let updatedTrip = Trip(
-      date: TripDate(year: 2025),
-      id: initialTrip.id,
-      isCompleted: false,
-      items: initialTrip.items,
-      name: initialTrip.name
-    )
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    let trip = Trip.samples.malaysia
+    await scenario.sut.createTrip(trip)
     
     // when
-    await scenario.sut.saveTripMetadata(updatedTrip)
+    await scenario.sut.updateTripDate(tripId: trip.id, date: TripDate(year: 2025))
     
     // then
     let savedTrip = await scenario.firstSavedTrip()
@@ -43,22 +36,29 @@ final class RealTripRepositoryTests {
   @Test func updateTripName() async {
     // given
     let scenario = Scenario()
-    let initialTrip = Trip.samples.malaysia
-    let updatedTrip = Trip(
-      date: initialTrip.date,
-      id: initialTrip.id,
-      isCompleted: false,
-      items: initialTrip.items,
-      name: "New name"
-    )
+    let trip = Trip.samples.malaysia
+    await scenario.sut.createTrip(trip)
     
     // when
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
-    await scenario.sut.saveTripMetadata(updatedTrip)
+    await scenario.sut.updateTripName(tripId: trip.id, name: "New name")
     
     // then
     let savedTrip = await scenario.firstSavedTrip()
     #expect(savedTrip?.name == "New name")
+  }
+  
+  @Test func whenPastTripIsMarkedAsNotCompleted_dateIsRemoved() async {
+    // given
+    let scenario = Scenario()
+    let trip = Trip.samples.tunisia
+    await scenario.sut.createTrip(trip.withoutItems())
+    
+    // when
+    await scenario.sut.markTripCompleted(tripId: trip.id, isCompleted: false)
+    
+    // then
+    let savedTrip = await scenario.firstSavedTrip()
+    #expect(savedTrip?.date == nil)
   }
   
   @Test func addTripItem() async {
@@ -66,7 +66,7 @@ final class RealTripRepositoryTests {
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
     let tripItem = TripItem.samples.camera
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    await scenario.sut.createTrip(trip.withoutItems())
     
     // when
     await scenario.sut.addItem(tripItem, to: trip.id)
@@ -83,7 +83,7 @@ final class RealTripRepositoryTests {
     let preexistingTripItem = TripItem.samples.camera
     let newTripItem = TripItem.new(item: .new(name: preexistingTripItem.item.name))
     // craete trip
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    await scenario.sut.createTrip(trip.withoutItems())
     // crate item
     await scenario.sut.addItem(preexistingTripItem, to: trip.id)
     await scenario.sut.removeItem(preexistingTripItem.id, from: trip.id)
@@ -102,7 +102,7 @@ final class RealTripRepositoryTests {
     let trip = Trip.samples.malaysia
     let tripItem = TripItem.samples.camera
     
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    await scenario.sut.createTrip(trip.withoutItems())
     await scenario.sut.addItem(tripItem, to: trip.id)
     let initialTrip = await scenario.firstSavedTrip()
     #expect(initialTrip?.items == [tripItem])
@@ -120,7 +120,7 @@ final class RealTripRepositoryTests {
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
     let tripItem = TripItem.samples.camera
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    await scenario.sut.createTrip(trip.withoutItems())
     await scenario.sut.addItem(tripItem, to: trip.id)
     let initialTrips = await scenario.sut.trips.waitFirst()
     #expect(initialTrips.orNil()?.first?.items.first?.isChecked == false)
@@ -152,7 +152,7 @@ final class RealTripRepositoryTests {
       TripItem.samples.nintendoSwitch.withOrder(1),
       TripItem.samples.camera.withOrder(2)
     ]
-    await scenario.sut.saveTripMetadata(.samples.malaysia.withoutItems())
+    await scenario.sut.createTrip(trip.withoutItems())
     for tripItem in initialTripItems.reversed() {
       await scenario.sut.addItem(tripItem.withOrder(0), to: trip.id)
     }
@@ -177,8 +177,8 @@ final class RealTripRepositoryTests {
       items: [],
       name: Trip.samples.tunisia.name
     )
-    await scenario.sut.saveTripMetadata(trip)
-    
+    await scenario.sut.createTrip(trip.withoutItems())
+
     // when
     await scenario.sut.sanitiseItems()
 

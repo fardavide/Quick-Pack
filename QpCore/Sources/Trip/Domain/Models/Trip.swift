@@ -43,6 +43,16 @@ public extension Trip {
       name: name
     )
   }
+  
+  func withIsCompleted(_ isCompleted: Bool) -> Trip {
+    Trip(
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      items: [],
+      name: name
+    )
+  }
 }
 
 public final class TripSamples {

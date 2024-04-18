@@ -93,7 +93,7 @@ public final class EditTripViewModel: ViewModel {
   
   private func updateDate(_ newDate: Date) {
     state.date = TripDate(newDate)
-    Task { await tripRepository.saveTripMetadata(state.toTrip()) }
+    Task { await tripRepository.updateTripDate(tripId: state.id, date: state.date) }
   }
   
   func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
@@ -112,7 +112,7 @@ public final class EditTripViewModel: ViewModel {
   
   private func updateName(_ newName: String) {
     state.name = newName
-    Task { await tripRepository.saveTripMetadata(state.toTrip()) }
+    Task { await tripRepository.updateTripName(tripId: state.id, name: state.name) }
   }
   
   private func findItem(_ id: ItemId) -> TripItem? {

@@ -27,20 +27,36 @@ final class RealTripRepository: AppStorage, TripRepository {
     Task { await sanitiseItems() }
   }
   
-  @MainActor func saveTripMetadata(_ trip: Trip) {
-    insertOrUpdate(
-      trip.toSwiftDataModel(),
-      fetchDescriptor: trip.id.fetchDescriptor
-    ) { model in
-      model.date = trip.date
-      model.name = trip.name
+  @MainActor func createTrip(_ trip: Trip) {
+    insertOrFail(trip.toSwiftDataModel(), fetchDescriptor: trip.id.fetchDescriptor)
+  }
+  
+  @MainActor func updateTripName(tripId: TripId, name: String) {
+    update(tripId.fetchDescriptor) { model in
+      model.name = name
+    }
+  }
+  
+  @MainActor func updateTripDate(tripId: TripId, date: TripDate?) {
+    update(tripId.fetchDescriptor) { model in
+      model.date = date
     }
   }
   
   @MainActor func markTripCompleted(tripId: TripId, isCompleted: Bool) {
     update(tripId.fetchDescriptor) { model in
       model.isCompleted = isCompleted
+      // If set not completed, remove the date if in the past
+      if let date = model.date?.value {
+        if !isCompleted && date < Date.now {
+          model.date = nil
+        }
+      }
     }
+  }
+  
+  @MainActor func deleteTrip(tripId: TripId) {
+    delete(tripId.fetchDescriptor)
   }
   
   @MainActor func addItem(_ tripItem: TripItem, to tripId: TripId) {
@@ -97,10 +113,6 @@ final class RealTripRepository: AppStorage, TripRepository {
       }
       deleteInTransaction(context: context, itemId.fetchDescriptor)
     }
-  }
-  
-  @MainActor func deleteTrip(tripId: TripId) {
-    delete(tripId.fetchDescriptor)
   }
   
   @MainActor func sanitiseItems() async {

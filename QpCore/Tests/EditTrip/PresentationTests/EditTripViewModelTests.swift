@@ -15,7 +15,7 @@ final class EditTripViewModelTests {
     scenario.sut.send(.updateName(newName: "New name"))
     
     // then
-    let savedTrip = await scenario.tripRepository.waitLastSavedTrip()
+    let savedTrip = await scenario.tripRepository.waitLastCreatedTrip()
     #expect(savedTrip.name == "New name")
   }
   
@@ -27,7 +27,7 @@ final class EditTripViewModelTests {
     scenario.sut.send(.updateDate(newDate: Date.of(year: 2024, month: .oct, day: 15)))
     
     // then
-    let savedTrip = await scenario.tripRepository.waitLastSavedTrip()
+    let savedTrip = await scenario.tripRepository.waitLastCreatedTrip()
     #expect(savedTrip.date?.value == Date.of(year: 2024, month: .oct, day: 15))
     #expect(savedTrip.date?.precision == .exact)
   }

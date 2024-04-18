@@ -49,6 +49,19 @@ public extension AppStorage {
     }
   }
   
+  @MainActor func insertOrFailInTransaction<Model: IdentifiableModel>(
+    context: ModelContext,
+    _ model: Model,
+    fetchDescriptor: FetchDescriptor<Model>
+  ) {
+    context.fetchOne(fetchDescriptor)
+      .onSuccess { savedModel in fatalError("\(model) already present as \(savedModel)") }
+      .onFailure { _ in
+        undoManager.setActionName("create \(model.modelDescription)")
+        context.insert(model)
+      }
+  }
+  
   @MainActor func insertOrUpdateInTransaction<Model: IdentifiableModel>(
     context: ModelContext,
     _ model: Model,
@@ -138,6 +151,15 @@ public extension AppStorage {
   ) {
     transaction { context in
       deleteInTransaction(context: context, fetchDescriptor)
+    }
+  }
+  
+  @MainActor func insertOrFail<Model: IdentifiableModel>(
+    _ model: Model,
+    fetchDescriptor: FetchDescriptor<Model>
+  ) {
+    transaction { context in
+      insertOrFailInTransaction(context: context, model, fetchDescriptor: fetchDescriptor)
     }
   }
   

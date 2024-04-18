@@ -66,7 +66,9 @@ struct TripDatePicker: View {
       .padding()
     }
     .onChange(of: tripDate) { _, tripDate in onChange(tripDate) }
-    .onChange(of: precision) { _, precision in tripDate = tripDate?.withPrecision(precision) }
+    .onChange(of: precision) { _, precision in
+      tripDate = (tripDate ?? TripDate(.now)).withPrecision(precision)
+    }
   }
   
   func exactPicker() -> some View {

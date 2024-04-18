@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Month: CaseIterable {
+public enum Month: CaseIterable, Identifiable {
   case jan
   case feb
   case mar
@@ -13,11 +13,22 @@ public enum Month: CaseIterable {
   case oct
   case nov
   case dec
+  
+  public var id: Month {
+    self
+  }
 }
 
 extension Month {
+  static func from(_ number: Int) -> Month {
+    if let result = allCases.first(where: { $0.ordinal() == number - 1 }) { 
+      result
+    } else {
+      fatalError("Cannot get month from \(number)")
+    }
+  }
   
   public func ordinal() -> Self.AllCases.Index {
-    return Self.allCases.firstIndex(of: self)!
+    Self.allCases.firstIndex(of: self)!
   }
 }

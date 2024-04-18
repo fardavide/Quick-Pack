@@ -41,6 +41,12 @@ public extension Date {
     return from(string, formatter: .iso8601)!
   }
   
+  func formatted(dateFormat: String) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = dateFormat
+    return formatter.string(from: self)
+  }
+  
   enum Formatter {
     /*
      Example: 2016-04-14T10:44:00+0000

@@ -34,14 +34,6 @@ private struct EditTripContent: View {
         }
       }
     )
-    let dateBinding = Binding(
-      get: { state.date?.value ?? .now },
-      set: { newDate in
-        if newDate != state.date?.value {
-          send(.updateDate(newDate))
-        }
-      }
-    )
     let searchBinding = Binding(
       get: { state.searchQuery },
       set: { newQuery in
@@ -57,7 +49,11 @@ private struct EditTripContent: View {
           TextField(text: nameBinding, prompt: Text("Required")) {
             Text("Name")
           }
-          DatePicker("Date", selection: dateBinding, displayedComponents: .date)
+          TripDatePicker(
+            "Date",
+            tripDate: state.date,
+            onChange: { send(.updateDate($0)) }
+          )
         }
         
         Section("Add item") {

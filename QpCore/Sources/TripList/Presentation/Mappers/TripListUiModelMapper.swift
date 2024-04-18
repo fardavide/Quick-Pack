@@ -18,29 +18,12 @@ final class RealTripListUiModelMapper: TripListUiModelMapper {
   
   func toUiModel(trip: Trip) -> TripListItemUiModel {
     TripListItemUiModel(
-      date: mapDate(trip.date),
+      date: trip.date?.longFormatted,
       domainModel: trip,
       id: trip.id,
       isCompleted: trip.isCompleted,
       name: trip.name
     )
-  }
-  
-  private func mapDate(_ tripDate: TripDate?) -> String? {
-    switch tripDate?.precision {
-    case nil: nil
-    case .exact: tripDate!.value.formatted(date: .long, time: .omitted)
-    case .month: tripDate!.value.formatted(dateFormat: "LLLL yyyy")
-    case .year: tripDate!.value.formatted(dateFormat: "yyyy")
-    }
-  }
-}
-
-private extension Date {
-  func formatted(dateFormat: String) -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = dateFormat
-    return formatter.string(from: self)
   }
 }
 

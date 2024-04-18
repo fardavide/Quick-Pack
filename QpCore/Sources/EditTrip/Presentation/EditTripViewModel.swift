@@ -42,6 +42,7 @@ public final class EditTripViewModel: ViewModel {
       .store(in: &subscribers)
   }
   
+  // swiftlint:disable cyclomatic_complexity
   public func send(_ action: EditTripAction) {
     switch action {
     case let .addItem(item): addItem(item)
@@ -56,7 +57,8 @@ public final class EditTripViewModel: ViewModel {
     case let .updateName(newName): updateName(newName)
     }
   }
-  
+  // swiftlint:enable cyclomatic_complexity
+
   private func addItem(_ item: Item) {
     let tripItem = TripItem(id: .new(), item: item, isChecked: false, order: 0)
     state.insertItem(tripItem)
@@ -91,8 +93,8 @@ public final class EditTripViewModel: ViewModel {
     state.searchQuery = query
   }
   
-  private func updateDate(_ newDate: Date) {
-    state.date = TripDate(newDate)
+  private func updateDate(_ newDate: TripDate?) {
+    state.date = newDate
     Task { await tripRepository.updateTripDate(tripId: state.id, date: state.date) }
   }
   

@@ -30,11 +30,7 @@ public final class EditTripViewModel: ViewModel {
         state.$tripItems,
         state.$searchQuery.map { $0.ifEmpty(default: "__query__") }
       )
-      .map { (result, tripItems, searchQuery) in
-        result.or(default: [])
-          .filter { item in !tripItems.contains { tripItem in tripItem.item.id == item.id } }
-          .filter { $0.name.localizedCaseInsensitiveContains(searchQuery)}
-      }
+      .map(filterResult)
       .receive(on: DispatchQueue.main)
       .sink { [weak self] searchResult in
         self?.state.searchItems = searchResult
@@ -123,10 +119,24 @@ public final class EditTripViewModel: ViewModel {
     state.tripItems.first(where: { $0.id == id })
   }
   
+  private func filterResult(
+    result: Result<[Item], DataError>,
+    tripItems: [TripItem],
+    searchQuery: String
+  ) -> [Item] {
+    let nonUsedItems = result.or(default: [])
+      .filter { item in !tripItems.contains { tripItem in tripItem.item.id == item.id } }
+    let result = nonUsedItems.partitioned { item in
+      !item.name.localizedCaseInsensitiveContains(searchQuery)
+    }[..<min(3, nonUsedItems.endIndex)]
+    return Array(result)
+  }
+  
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}
   public final class RealFactory: Factory {
     private let itemRepository: ItemRepository
     private let tripRepository: TripRepository
+    private var cache: [TripId: EditTripViewModel] = [:]
     public init(
       itemRepository: ItemRepository,
       tripRepository: TripRepository
@@ -135,11 +145,13 @@ public final class EditTripViewModel: ViewModel {
       self.tripRepository = tripRepository
     }
     public func create(_ input: Trip) -> EditTripViewModel {
-      EditTripViewModel(
-        initialTrip: input,
-        itemRepository: itemRepository,
-        tripRepository: tripRepository
-      )
+      cache.getOrSet(input.id) {
+        EditTripViewModel(
+          initialTrip: input,
+          itemRepository: itemRepository,
+          tripRepository: tripRepository
+        )
+      }
     }
   }
   public final class FakeFactory: Factory {

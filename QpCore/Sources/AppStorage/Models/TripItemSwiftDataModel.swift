@@ -68,6 +68,6 @@ extension [TripItemSwiftDataModel] {
         order: swiftDataModel.order
       )
     }
-    .sorted()
+    .sorted(by: <)
   }
 }

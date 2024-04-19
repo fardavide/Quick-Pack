@@ -28,11 +28,19 @@ public extension Collection {
 
 public extension Array {
   
-  /// Wraps each element in an `IndexedValue` containing its index.
-  /// - Returns: An array of `IndexedValue` elements.
-  func withIndices() -> [IndexedValue<Element>] {
-    indices.map { index in (index: index, value: self[index]) }
+  @inlinable func partitioned(
+    by belongsInSecondPartition: (Element) -> Bool
+  ) -> [Element] {
+    var result = self
+    result.partition(by: belongsInSecondPartition)
+    return result
+  }
+
+  /// Wraps each element in an `IndexedElement` containing its index.
+  /// - Returns: An array of `IndexedElement` elements.
+  func withIndices() -> [IndexedElement<Element>] {
+    indices.map { index in (index: index, element: self[index]) }
   }
 }
 
-public typealias IndexedValue<Value> = (index: Int, value: Value)
+public typealias IndexedElement<Element> = (index: Int, element: Element)

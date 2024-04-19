@@ -10,7 +10,7 @@ import TripDomain
 public final class ItemSwiftDataModel: IdentifiableModel {
   public var id: String?
   public var name: String?
-  var tripItems: [TripItemSwiftDataModel]?
+  public var tripItems: [TripItemSwiftDataModel]?
   
   public static let typeDescription: String = "item"
 
@@ -32,7 +32,8 @@ public final class ItemSwiftDataModel: IdentifiableModel {
 }
 
 public extension Item {
-  var namFetchDescriptor: FetchDescriptor<ItemSwiftDataModel> {
+  
+  var nameFetchDescriptor: FetchDescriptor<ItemSwiftDataModel> {
     FetchDescriptor<ItemSwiftDataModel>(
       predicate: #Predicate { $0.name == name }
     )
@@ -65,6 +66,7 @@ public extension ItemSwiftDataModel {
 
 public extension [ItemSwiftDataModel] {
   func toDomainModels() -> [Item] {
-    safeMap { try $0.toDomainModel() }
+    sorted { lhs, rhs in (lhs.tripItems?.count ?? 0) > (rhs.tripItems?.count ?? 0) }
+    .safeMap { try $0.toDomainModel() }
   }
 }

@@ -70,5 +70,6 @@ public extension [TripSwiftDataModel] {
         name: try swiftDataModel.name.require("Trip name")
       )
     }
+    .sorted(by: <)
   }
 }

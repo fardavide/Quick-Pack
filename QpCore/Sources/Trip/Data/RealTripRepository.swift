@@ -16,9 +16,7 @@ final class RealTripRepository: AppStorage, TripRepository {
       context.fetchAll(
         map: { $0.toDomainModels() },
         FetchDescriptor<TripSwiftDataModel>()
-      ).map { trips in
-        trips.sorted(by: <)
-      }
+      )
     }
   }()
   
@@ -65,7 +63,7 @@ final class RealTripRepository: AppStorage, TripRepository {
         // Try to get item by ID from Storage
         context.fetchOne(tripItem.item.id.fetchDescriptor).orNil()
         // If none, try to get item by NAME from Storage
-        ?? context.fetchOne(tripItem.item.namFetchDescriptor).orNil()
+        ?? context.fetchOne(tripItem.item.nameFetchDescriptor).orNil()
         // If none, create a new one
         ?? tripItem.item.toSwiftDataModel()
       }()

@@ -16,9 +16,7 @@ final class RealItemRepository: AppStorage, ItemRepository {
     observe { context in
       context.fetchAll(
         map: { $0.toDomainModels() },
-        FetchDescriptor<ItemSwiftDataModel>(
-          sortBy: [SortDescriptor(\.name)]
-        )
+        FetchDescriptor<ItemSwiftDataModel>()
       )
     }
   }()

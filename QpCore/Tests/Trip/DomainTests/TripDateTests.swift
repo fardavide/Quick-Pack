@@ -14,7 +14,6 @@ final class TripDateTests {
     #expect(TripDate(year: 2024, month: .dec, day: 24) > TripDate(year: 2023, month: .dec, day: 24))
     #expect(TripDate(year: 2023, month: .dec, day: 24) < TripDate(year: 2024, month: .dec, day: 24))
 
-   
     #expect(TripDate(year: 2024, month: .dec) > TripDate(year: 2024, month: .dec, day: 24))
     #expect(TripDate(year: 2024, month: .dec) > TripDate(year: 2024, month: .nov))
     

@@ -15,10 +15,10 @@ final class RealTripRepository: AppStorage, TripRepository {
     observe { context in
       context.fetchAll(
         map: { $0.toDomainModels() },
-        FetchDescriptor<TripSwiftDataModel>(
-          sortBy: [SortDescriptor(\.name)]
-        )
-      )
+        FetchDescriptor<TripSwiftDataModel>()
+      ).map { trips in
+        trips.sorted(by: <)
+      }
     }
   }()
   

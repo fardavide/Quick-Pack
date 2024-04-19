@@ -7,6 +7,25 @@ import TripDomain
 
 final class RealTripRepositoryTests {
   
+  @Test func tripsAreSortedByDate() async {
+    // given
+    let scenario = Scenario()
+    
+    // when
+    await scenario.sut.createTrip(.samples.malaysia)
+    await scenario.sut.createTrip(.samples.tunisia)
+    await scenario.sut.createTrip(.samples.tuscany)
+    
+    // then
+    let expected = [
+      Trip.samples.tunisia,
+      Trip.samples.tuscany,
+      Trip.samples.malaysia
+    ]
+    let savedTrips = await scenario.sut.trips.waitFirst()
+    #expect(savedTrips.orNil() == expected)
+  }
+  
   @Test func addTrip() async {
     // given
     let scenario = Scenario()

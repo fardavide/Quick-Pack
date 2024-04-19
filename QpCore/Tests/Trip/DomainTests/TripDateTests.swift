@@ -4,6 +4,24 @@ import Testing
 
 final class TripDateTests {
   
+  @Test func comparable() {
+    #expect(TripDate(year: 2024, month: .dec, day: 25) > TripDate(year: 2024, month: .dec, day: 24))
+    #expect(TripDate(year: 2024, month: .dec, day: 24) < TripDate(year: 2024, month: .dec, day: 25))
+    
+    #expect(TripDate(year: 2024, month: .dec, day: 24) > TripDate(year: 2024, month: .nov, day: 24))
+    #expect(TripDate(year: 2024, month: .nov, day: 24) < TripDate(year: 2024, month: .dec, day: 24))
+    
+    #expect(TripDate(year: 2024, month: .dec, day: 24) > TripDate(year: 2023, month: .dec, day: 24))
+    #expect(TripDate(year: 2023, month: .dec, day: 24) < TripDate(year: 2024, month: .dec, day: 24))
+
+   
+    #expect(TripDate(year: 2024, month: .dec) > TripDate(year: 2024, month: .dec, day: 24))
+    #expect(TripDate(year: 2024, month: .dec) > TripDate(year: 2024, month: .nov))
+    
+    #expect(TripDate(year: 2024) > TripDate(year: 2024, month: .nov, day: 24))
+    #expect(TripDate(year: 2024) > TripDate(year: 2024, month: .nov))
+  }
+  
   @Test func whenExactDate_longFormatted() {
     let date = TripDate(year: 2024, month: .dec, day: 24)
     #expect(date.longFormatted == "24 December 2024")

@@ -1,11 +1,33 @@
 import Foundation
 
-public struct Trip: Equatable {
+public struct Trip: Comparable, Equatable {
   public let date: TripDate?
   public let id: TripId
   public let isCompleted: Bool
   public let items: [TripItem]
   public let name: String
+  
+  public static func < (lhs: Trip, rhs: Trip) -> Bool {
+    switch (lhs.date, rhs.date) {
+    case (nil, nil):
+      // if dates are both nil, compare by name
+      lhs.name < rhs.name
+    case (nil, _):
+      // nil dates come first
+      true
+    case (_, nil):
+      // rhs with nil date should come first
+      false
+    case let (lhsDate?, rhsDate?):
+      if lhsDate == rhsDate {
+        // if dates are equal, compare by name
+        lhs.name < rhs.name
+      } else {
+        // otherwise, compare dates directly
+        lhsDate < rhsDate
+      }
+    }
+  }
   
   public init(
     date: TripDate?,
@@ -34,6 +56,26 @@ public extension Trip {
     )
   }
   
+  func withDate(_ date: TripDate?) -> Trip {
+    Trip(
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      items: items,
+      name: name
+    )
+  }
+  
+  func withName(_ name: String) -> Trip {
+    Trip(
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      items: items,
+      name: name
+    )
+  }
+  
   func withoutItems() -> Trip {
     Trip(
       date: date,
@@ -49,7 +91,7 @@ public extension Trip {
       date: date,
       id: id,
       isCompleted: isCompleted,
-      items: [],
+      items: items,
       name: name
     )
   }

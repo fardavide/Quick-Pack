@@ -1,9 +1,14 @@
 import DateUtils
 import Foundation
 
-public struct TripDate: Codable, Equatable, Hashable {
+public struct TripDate: Codable, Comparable, Equatable, Hashable {
+  
   public let value: Date
   public let precision: Precision
+  
+  public static func < (lhs: TripDate, rhs: TripDate) -> Bool {
+    lhs.value < rhs.value
+  }
   
   public enum Precision: CaseIterable, Codable, Identifiable {
     case exact

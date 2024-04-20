@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 public extension Result where Failure == GenericError {

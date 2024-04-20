@@ -5,7 +5,7 @@ import SwiftUI
 import TripDomain
 
 public struct EditTrip: View {
-  private let viewModel: EditTripViewModel
+  @ObservedObject private var viewModel: EditTripViewModel
   
   public init(viewModel: EditTripViewModel) {
     self.viewModel = viewModel
@@ -20,7 +20,7 @@ public struct EditTrip: View {
 }
 
 private struct EditTripContent: View {
-  @ObservedObject var state: EditTripState
+  let state: EditTripState
   let send: (EditTripAction) -> Void
   
   private let scrollTarget = "target"

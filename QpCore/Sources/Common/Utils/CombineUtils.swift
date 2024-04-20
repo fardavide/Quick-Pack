@@ -4,6 +4,13 @@ import Foundation
 public typealias SafePublisher<T> = Publisher<T, Never>
 public typealias DataPublisher<Data> = Publisher<Result<Data, DataError>, Never>
 
+public extension Publisher {
+  
+  func filterSuccess<T>() -> Publishers.CompactMap<Self, T> where Output == Result<T, DataError> {
+    compactMap { $0.orNil() }
+  }
+}
+
 public extension Timer {
   
   /// Returns a publisher that repeatedly emits a value `T` on the given interval.

@@ -6,11 +6,11 @@ import Provider
 import QpUtils
 import TripDomain
 
-public final class EditTripViewModel: ViewModel {
+public final class EditTripViewModel: ViewModel, ObservableObject {
   public typealias Action = EditTripAction
   public typealias State = EditTripState
   
-  public let state: State
+  @Published public var state: State
   private var subscribers: [AnyCancellable] = []
   private let itemRepository: ItemRepository
   private let tripRepository: TripRepository
@@ -24,16 +24,29 @@ public final class EditTripViewModel: ViewModel {
     self.tripRepository = tripRepository
     state = initialTrip.toInitialEditTripState()
     
+    tripRepository.trips
+      .eraseToAnyPublisher()
+      .filterSuccess()
+      .sink { [weak self] trips in
+        if let viewModel = self, let trip = trips.first(where: { $0.id == initialTrip.id }) {
+          viewModel.state = viewModel.state.update(with: trip)
+        }
+      }
+      .store(in: &subscribers)
+
     itemRepository.items
       .eraseToAnyPublisher()
       .combineLatest(
-        state.$categories.map { $0.flatMap(\.items) },
-        state.$searchQuery.map { $0.ifEmpty(default: "__query__") }
+        $state.map { $0.categories.flatMap(\.items) },
+        $state.map { $0.searchQuery.ifEmpty(default: "__query__") }
       )
       .map(filterResult)
+      .removeDuplicates()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] searchResult in
-        self?.state.searchItems = searchResult
+        if let viewModel = self {
+          viewModel.state = viewModel.state.withSearchItems(searchResult)
+        }
       }
       .store(in: &subscribers)
   }
@@ -55,18 +68,18 @@ public final class EditTripViewModel: ViewModel {
 
   private func addItem(_ item: Item) {
     let tripItem = TripItem(id: .new(), item: item, isChecked: false, order: 0)
-    state.insertItem(tripItem)
+    state = state.insertItem(tripItem)
     Task { await tripRepository.addItem(tripItem, to: state.id) }
   }
   
   private func addNewItem(_ name: String) {
     let tripItem = TripItem.new(item: .new(name: name))
-    state.insertItem(tripItem)
+    state = state.insertItem(tripItem)
     Task { await tripRepository.addItem(tripItem, to: state.id) }
   }
   
   private func deleteItem(_ id: ItemId) {
-    state.removeItem(itemId: id)
+    state = state.removeItem(itemId: id)
     Task { await itemRepository.deleteItem(itemId: id) }
   }
   
@@ -74,36 +87,36 @@ public final class EditTripViewModel: ViewModel {
     _ from: IndexSet,
     _ to: Int
   ) {
-    state.moveItems(from: from, to: to)
+    state = state.moveItems(from: from, to: to)
     // TODO: Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
   }
   
   private func removeItem(_ itemId: TripItemId) {
-    state.removeItem(tripItemId: itemId)
+    state = state.removeItem(tripItemId: itemId)
     Task { await tripRepository.removeItem(itemId: itemId, from: state.id) }
   }
   
   private func searchItem(_ query: String) {
-    state.searchQuery = query
+    state = state.withSearchQuery(query)
   }
   
   private func updateDate(_ newDate: TripDate?) {
-    state.date = newDate
+    state = state.withDate(newDate)
     Task { await tripRepository.updateTripDate(tripId: state.id, date: state.date) }
   }
   
   func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
-    state.updateItemCheck(tripItemId: itemId, newIsChecked)
+    state = state.updateItemCheck(tripItemId: itemId, newIsChecked)
     Task { await tripRepository.updateItemCheck(tripItemId: itemId, isChecked: newIsChecked) }
   }
   
   func updateItemName(_ itemId: ItemId, _ newName: String) {
-    state.updateItemName(itemId: itemId, newName)
+    state = state.updateItemName(itemId: itemId, newName)
     Task { await itemRepository.updateItemName(itemId: itemId, name: newName) }
   }
   
   private func updateName(_ newName: String) {
-    state.name = newName
+    state = state.withName(newName)
     Task { await tripRepository.updateTripName(tripId: state.id, name: state.name) }
   }
   

@@ -69,6 +69,9 @@ private struct ItemListItems: View {
       }
       .alert("Rename \(item.name)", isPresented: $isEditingItem) {
         TextField("New name", text: $newName)
+        Button("Cancel") {
+          isEditingItem = false
+        }
         Button("OK") {
           send(.updateName(item.id, newName))
         }

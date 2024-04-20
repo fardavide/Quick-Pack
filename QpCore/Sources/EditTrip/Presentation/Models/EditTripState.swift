@@ -2,27 +2,31 @@ import Foundation
 import ItemDomain
 import TripDomain
 
-public final class EditTripState: ObservableObject {
-  @Published var categories: [ItemCategoryUiModel]
-  @Published var date: TripDate?
+public struct EditTripState {
+  let categories: [ItemCategoryUiModel]
+  let date: TripDate?
   let id: TripId
   let isCompleted: Bool
-  @Published var name: String
-  @Published var searchItems: [Item] = []
-  @Published var searchQuery: String = ""
+  let name: String
+  let searchItems: [Item]
+  let searchQuery: String
   
   init(
     categories: [ItemCategoryUiModel],
     date: TripDate?,
     id: TripId,
     isCompleted: Bool,
-    name: String
+    name: String,
+    searchItems: [Item],
+    searchQuery: String
   ) {
     self.categories = categories
     self.date = date
     self.id = id
     self.isCompleted = isCompleted
     self.name = name
+    self.searchItems = searchItems
+    self.searchQuery = searchQuery
   }
 }
 
@@ -35,7 +39,9 @@ extension Trip {
       date: date,
       id: id,
       isCompleted: isCompleted,
-      name: name
+      name: name,
+      searchItems: [],
+      searchQuery: ""
     )
   }
 }
@@ -43,45 +49,138 @@ extension Trip {
 extension EditTripState {
   static let samples = EditTripStateSamples()
   
-  func insertItem(_ tripItem: TripItem) {
+  func insertItem(_ tripItem: TripItem) -> EditTripState {
     updateCategory(tripItem.item.category) { category in
       category.insertItem(tripItem)
     }
   }
   
-  func moveItems(from: IndexSet, to: Int) {
+  func moveItems(from: IndexSet, to: Int) -> EditTripState {
+    self
     // TODO: tripItems.move(fromOffsets: from, toOffset: to)
   }
   
-  func removeItem(itemId: ItemId) {
-    categories = categories.map { category in
-      category.removeItem(itemId: itemId)
-    }
+  func removeItem(itemId: ItemId) -> EditTripState {
+    EditTripState(
+      categories: categories.map { $0.removeItem(itemId: itemId) },
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
   }
   
-  func removeItem(tripItemId: TripItemId) {
-    categories = categories.map { category in
-      category.removeItem(tripItemId: tripItemId)
-    }
+  func removeItem(tripItemId: TripItemId) -> EditTripState {
+    EditTripState(
+      categories: categories.map { $0.removeItem(tripItemId: tripItemId) },
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
   }
   
-  func updateItemCheck(tripItemId: TripItemId, _ newIsChecked: Bool) {
-    categories = categories.map { category in
-      category.updateItemCheck(tripItemId: tripItemId, newIsChecked)
-    }
+  func update(with trip: Trip) -> EditTripState {
+    let delta = trip.toInitialEditTripState()
+    return EditTripState(
+      categories: delta.categories,
+      date: delta.date,
+      id: id,
+      isCompleted: delta.isCompleted,
+      name: delta.name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
   }
   
-  func updateItemName(itemId: ItemId, _ newName: String) {
-    categories = categories.map { category in
-      category.updateItemName(itemId: itemId, newName)
-    }
+  func updateItemCheck(tripItemId: TripItemId, _ newIsChecked: Bool) -> EditTripState {
+    EditTripState(
+      categories: categories.map { $0.updateItemCheck(tripItemId: tripItemId, newIsChecked) },
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
   }
   
-  private func updateCategory(for tripItem: TripItem, _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel) {
+  func updateItemName(itemId: ItemId, _ newName: String) -> EditTripState {
+    EditTripState(
+      categories: categories.map { $0.updateItemName(itemId: itemId, newName) },
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withDate(_ date: TripDate?) -> EditTripState {
+    EditTripState(
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withName(_ name: String) -> EditTripState {
+    EditTripState(
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withSearchItems(_ searchItems: [Item]) -> EditTripState {
+    EditTripState(
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withSearchQuery(_ searchQuery: String) -> EditTripState {
+    EditTripState(
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  private func updateCategory(
+    for tripItem: TripItem,
+    _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel
+  ) -> EditTripState {
     updateCategory(tripItem.item.category, f)
   }
   
-  private func updateCategory(_ category: ItemCategory?, _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel) {
+  private func updateCategory(
+    _ category: ItemCategory?,
+    _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel
+  ) -> EditTripState {
+    var categories = categories
     var found = false
     for i in categories.indices where categories[i].id == category?.id {
       found = true
@@ -99,15 +198,23 @@ extension EditTripState {
       )
       categories.insert(f(baseCategory), at: 0)
     }
+    return EditTripState(
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
   }
 }
 
 final class EditTripStateSamples {
   let noSearch = Trip.samples.malaysia.toInitialEditTripState()
   var withSearch: EditTripState {
-    let state = noSearch
-    state.searchQuery = "Cam"
-    state.searchItems = [.samples.camera]
-    return state
+    noSearch
+      .withSearchItems([.samples.camera])
+      .withSearchQuery("Cam")
   }
 }

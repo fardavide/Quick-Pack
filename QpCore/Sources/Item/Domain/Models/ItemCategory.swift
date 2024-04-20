@@ -1,4 +1,4 @@
-public struct Category: Equatable, Identifiable {
+public struct ItemCategory: Equatable, Identifiable {
   public let id: CategoryId
   public let name: String
   
@@ -11,24 +11,24 @@ public struct Category: Equatable, Identifiable {
   }
 }
 
-public extension Category {
+public extension ItemCategory {
   static let samples = CategorySamples()
   
-  static func new(name: String) -> Category {
-    Category(id: .new(), name: name)
+  static func new(name: String) -> ItemCategory {
+    ItemCategory(id: .new(), name: name)
   }
 }
 
 public final class CategorySamples {
-  public let clothes = Category(
+  public let clothes = ItemCategory(
     id: .samples.clothes,
     name: "Clothes"
   )
-  public let misc = Category(
+  public let misc = ItemCategory(
     id: .samples.misc,
     name: "Misc"
   )
-  public let tech = Category(
+  public let tech = ItemCategory(
     id: .samples.tech,
     name: "Tech"
   )

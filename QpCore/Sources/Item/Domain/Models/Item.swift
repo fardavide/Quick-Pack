@@ -1,10 +1,10 @@
 public struct Item: Equatable, Identifiable {
-  public let category: Category?
+  public let category: ItemCategory?
   public let id: ItemId
   public let name: String
   
   public init(
-    category: Category?,
+    category: ItemCategory?,
     id: ItemId,
     name: String
   ) {

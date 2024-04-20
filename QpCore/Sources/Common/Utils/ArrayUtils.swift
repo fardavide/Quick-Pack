@@ -32,7 +32,7 @@ public extension Array {
     by belongsInSecondPartition: (Element) -> Bool
   ) -> [Element] {
     var result = self
-    result.partition(by: belongsInSecondPartition)
+    let _ = result.partition(by: belongsInSecondPartition)
     return result
   }
 

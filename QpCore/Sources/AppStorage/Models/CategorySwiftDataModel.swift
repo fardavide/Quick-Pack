@@ -1,6 +1,7 @@
 import ItemDomain
 import QpStorage
 import SwiftData
+import SwiftUI
 
 @Model
 public class CategorySwiftDataModel: IdentifiableModel {
@@ -27,7 +28,13 @@ public class CategorySwiftDataModel: IdentifiableModel {
   }
 }
 
-public extension Category {
+public extension ItemCategory {
+  
+  var nameFetchDescriptor: FetchDescriptor<CategorySwiftDataModel> {
+    FetchDescriptor<CategorySwiftDataModel>(
+      predicate: #Predicate { $0.name == name }
+    )
+  }
   
   func toSwiftDataModel() -> CategorySwiftDataModel {
     CategorySwiftDataModel(
@@ -37,9 +44,17 @@ public extension Category {
   }
 }
 
+public extension CategoryId {
+  var fetchDescriptor: FetchDescriptor<CategorySwiftDataModel> {
+    FetchDescriptor<CategorySwiftDataModel>(
+      predicate: #Predicate { $0.id == value }
+    )
+  }
+}
+
 public extension CategorySwiftDataModel {
-  func toDomainModel() throws -> Category {
-    Category(
+  func toDomainModel() throws -> ItemCategory {
+    ItemCategory(
       id: CategoryId(try id.require("id")),
       name: try name.require("name")
     )

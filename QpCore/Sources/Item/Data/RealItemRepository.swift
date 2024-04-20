@@ -33,6 +33,22 @@ final class RealItemRepository: AppStorage, ItemRepository {
     )
   }
   
+  @MainActor func updateItemCategory(itemId: ItemId, category: ItemCategory) {
+    transaction { context in
+      let category = {
+        // Try to get category by ID from Storage
+        context.fetchOne(category.id.fetchDescriptor).orNil()
+        // If none, try to get category by NAME from Storage
+        ?? context.fetchOne(category.nameFetchDescriptor).orNil()
+        // If none, create a new one
+        ?? category.toSwiftDataModel()
+      }()
+      updateInTransaction(context: context, itemId.fetchDescriptor) { model in
+        model.category = category
+      }
+    }
+  }
+  
   @MainActor func updateItemName(itemId: ItemId, name: String) {
     update(itemId.fetchDescriptor) { model in
       model.name = name

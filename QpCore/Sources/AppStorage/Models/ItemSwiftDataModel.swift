@@ -8,6 +8,8 @@ import TripDomain
 
 @Model
 public final class ItemSwiftDataModel: IdentifiableModel {
+  @Relationship(deleteRule: .nullify, inverse: \CategorySwiftDataModel.items)
+  public var category: CategorySwiftDataModel?
   public var id: String?
   public var name: String?
   public var tripItems: [TripItemSwiftDataModel]?
@@ -23,9 +25,11 @@ public final class ItemSwiftDataModel: IdentifiableModel {
   }
     
   init(
+    category: CategorySwiftDataModel?,
     id: String,
     name: String
   ) {
+    self.category = category
     self.id = id
     self.name = name
   }
@@ -41,6 +45,7 @@ public extension Item {
   
   func toSwiftDataModel() -> ItemSwiftDataModel {
     ItemSwiftDataModel(
+      category: category?.toSwiftDataModel(),
       id: id.value,
       name: name
     )
@@ -58,6 +63,7 @@ public extension ItemId {
 public extension ItemSwiftDataModel {
   func toDomainModel() throws -> Item {
     Item(
+      category: try category?.toDomainModel(),
       id: ItemId(try id.require("id")),
       name: try name.require("name")
     )

@@ -80,7 +80,7 @@ public final class EditTripViewModel: ViewModel {
   
   private func removeItem(_ itemId: TripItemId) {
     state.removeItem(id: itemId)
-    Task { await tripRepository.removeItem(itemId, from: state.id) }
+    Task { await tripRepository.removeItem(itemId: itemId, from: state.id) }
   }
   
   private func searchItem(_ query: String) {
@@ -94,29 +94,17 @@ public final class EditTripViewModel: ViewModel {
   
   func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
     state.updateItemCheck(id: itemId, newIsChecked)
-    if let editableItem = findTripItem(itemId) {
-      Task { await tripRepository.updateItemCheck(editableItem.id, isChecked: newIsChecked) }
-    }
+    Task { await tripRepository.updateItemCheck(tripItemId: itemId, isChecked: newIsChecked) }
   }
   
   func updateItemName(_ itemId: ItemId, _ newName: String) {
     state.updateItemName(id: itemId, newName)
-    if let tripItem = findItem(itemId) {
-      Task { await itemRepository.saveItem(tripItem.item) }
-    }
+    Task { await itemRepository.updateItemName(itemId: itemId, name: newName) }
   }
   
   private func updateName(_ newName: String) {
     state.name = newName
     Task { await tripRepository.updateTripName(tripId: state.id, name: state.name) }
-  }
-  
-  private func findItem(_ id: ItemId) -> TripItem? {
-    state.tripItems.first(where: { $0.item.id == id })
-  }
-  
-  private func findTripItem(_ id: TripItemId) -> TripItem? {
-    state.tripItems.first(where: { $0.id == id })
   }
   
   private func filterResult(

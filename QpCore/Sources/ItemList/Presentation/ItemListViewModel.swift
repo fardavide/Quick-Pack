@@ -55,8 +55,7 @@ public final class RealItemListViewModel: ItemListViewModel {
   }
   
   private func updateItemName(_ id: ItemId, _ newName: String) {
-    let item = Item(id: id, name: newName)
-    Task { await itemRepository.saveItem(item) }
+    Task { await itemRepository.updateItemName(itemId: id, name: newName) }
   }
   
   private func findItem(_ id: ItemId) -> Item? {

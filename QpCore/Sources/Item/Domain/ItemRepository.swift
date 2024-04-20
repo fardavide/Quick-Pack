@@ -6,13 +6,14 @@ public protocol ItemRepository: UndoHandler {
   
   var items: any DataPublisher<[Item]> { get }
   
-  func deleteItem(itemId: ItemId) async
-  func saveItem(_ item: Item) async
+  @MainActor func createItem(_ item: Item)
+  @MainActor func updateItemName(itemId: ItemId, name: String)
+  @MainActor func deleteItem(itemId: ItemId)
 }
 
 public final class FakeItemRepository: ItemRepository {
   public var items: any DataPublisher<[Item]>
-  private var saveItemInvocations: [Item] = []
+  private var createItemInvocations: [Item] = []
   
   public init(
     items: [Item] = []
@@ -20,18 +21,19 @@ public final class FakeItemRepository: ItemRepository {
     self.items = Just(.success(items))
   }
   
-  public func lastSavedItem() -> Item? {
-    saveItemInvocations.last
+  public func lastCreatedItem() -> Item? {
+    createItemInvocations.last
   }
   
-  public func waitLastSavedItem() async -> Item {
-    await waitNonNil { lastSavedItem() }
+  public func waitLastCreatedItem() async -> Item {
+    await waitNonNil { lastCreatedItem() }
   }
   
-  public func deleteItem(itemId: ItemId) async {}
-  public func saveItem(_ item: Item) async {
-    saveItemInvocations.append(item)
+  public func createItem(_ item: Item) {
+    createItemInvocations.append(item)
   }
+  public func updateItemName(itemId: ItemId, name: String) {}
+  public func deleteItem(itemId: ItemId) {}
   public func requestUndoOrRedo() -> UndoHandle? {
     nil
   }

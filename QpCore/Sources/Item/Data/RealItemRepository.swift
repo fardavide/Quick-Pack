@@ -26,17 +26,21 @@ final class RealItemRepository: AppStorage, ItemRepository {
     Task { await sanitiseItems() }
   }
   
-  func deleteItem(itemId: ItemId) async {
-    await delete(itemId.fetchDescriptor)
-  }
-  
-  func saveItem(_ item: Item) async {
-    await insertOrUpdate(
+  @MainActor func createItem(_ item: Item) {
+    insertOrFail(
       item.toSwiftDataModel(),
       fetchDescriptor: item.id.fetchDescriptor
-    ) { model in
-      model.name = item.name
+    )
+  }
+  
+  @MainActor func updateItemName(itemId: ItemId, name: String) {
+    update(itemId.fetchDescriptor) { model in
+      model.name = name
     }
+  }
+  
+  @MainActor func deleteItem(itemId: ItemId) {
+    delete(itemId.fetchDescriptor)
   }
   
   @MainActor

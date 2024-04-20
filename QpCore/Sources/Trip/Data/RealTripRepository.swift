@@ -86,8 +86,8 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
-  @MainActor func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) {
-    update(itemId.fetchDescriptor) { model in
+  @MainActor func updateItemCheck(tripItemId: TripItemId, isChecked: Bool) {
+    update(tripItemId.fetchDescriptor) { model in
       model.isChecked = isChecked
     }
   }
@@ -102,7 +102,7 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
-  @MainActor func removeItem(_ itemId: TripItemId, from tripId: TripId) {
+  @MainActor func removeItem(itemId: TripItemId, from tripId: TripId) {
     transaction { context in
       updateInTransaction(context: context, tripId.fetchDescriptor) { model in
         if model.items != nil {

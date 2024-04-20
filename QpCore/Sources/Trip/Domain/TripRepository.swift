@@ -13,9 +13,9 @@ public protocol TripRepository: UndoHandler {
   @MainActor func deleteTrip(tripId: TripId)
   
   @MainActor func addItem(_ item: TripItem, to tripId: TripId)
-  @MainActor func updateItemCheck(_ itemId: TripItemId, isChecked: Bool)
+  @MainActor func updateItemCheck(tripItemId: TripItemId, isChecked: Bool)
   @MainActor func updateItemsOrder(sortedItems: [TripItem])
-  @MainActor func removeItem(_ itemId: TripItemId, from tripId: TripId)
+  @MainActor func removeItem(itemId: TripItemId, from tripId: TripId)
 }
 
 public final class FakeTripRepository: TripRepository {
@@ -45,9 +45,9 @@ public final class FakeTripRepository: TripRepository {
   public func deleteTrip(tripId: TripId) {}
   
   public func addItem(_ item: TripItem, to tripId: TripId) {}
-  public func updateItemCheck(_ itemId: TripItemId, isChecked: Bool) {}
+  public func updateItemCheck(tripItemId: TripItemId, isChecked: Bool) {}
   public func updateItemsOrder(sortedItems: [TripItem]) {}
-  public func removeItem(_ itemId: TripItemId, from tripId: TripId) {}
+  public func removeItem(itemId: TripItemId, from tripId: TripId) {}
   
   public func requestUndoOrRedo() -> Undo.UndoHandle? {
     nil

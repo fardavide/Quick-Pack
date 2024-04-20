@@ -61,7 +61,7 @@ extension EditTripState {
     updateItem(id: id) { tripItem in
       TripItem(
         id: tripItem.id,
-        item: Item(id: tripItem.item.id, name: tripItem.item.name),
+        item: tripItem.item,
         isChecked: newIsChecked,
         order: tripItem.order
       )
@@ -72,7 +72,7 @@ extension EditTripState {
     updateItem(id: id) { tripItem in
       TripItem(
         id: tripItem.id,
-        item: Item(id: tripItem.item.id, name: newName),
+        item: tripItem.item.withName(newName),
         isChecked: tripItem.isChecked,
         order: tripItem.order
       )

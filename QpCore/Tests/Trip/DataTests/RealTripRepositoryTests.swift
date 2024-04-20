@@ -86,7 +86,7 @@ final class RealTripRepositoryTests {
     await scenario.sut.createTrip(trip.withoutItems())
     // crate item
     await scenario.sut.addItem(preexistingTripItem, to: trip.id)
-    await scenario.sut.removeItem(preexistingTripItem.id, from: trip.id)
+    await scenario.sut.removeItem(itemId: preexistingTripItem.id, from: trip.id)
     
     // when
     await scenario.sut.addItem(newTripItem, to: trip.id)
@@ -108,7 +108,7 @@ final class RealTripRepositoryTests {
     #expect(initialTrip?.items == [tripItem])
     
     // when
-    await scenario.sut.removeItem(tripItem.id, from: trip.id)
+    await scenario.sut.removeItem(itemId: tripItem.id, from: trip.id)
     
     // then
     let updatedTrip = await scenario.firstSavedTrip()
@@ -126,7 +126,7 @@ final class RealTripRepositoryTests {
     #expect(initialTrips.orNil()?.first?.items.first?.isChecked == false)
     
     // when
-    await scenario.sut.updateItemCheck(tripItem.id, isChecked: true)
+    await scenario.sut.updateItemCheck(tripItemId: tripItem.id, isChecked: true)
     
     // then
     let savedTrip = await scenario.firstSavedTrip()

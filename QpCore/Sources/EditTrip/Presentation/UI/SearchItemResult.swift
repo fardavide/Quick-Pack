@@ -20,6 +20,7 @@ struct SearchItemResult: View {
           .padding(.vertical, 6)
           .background(TintShapeStyle().opacity(0.1), in: .rect(cornerRadius: 10))
       }
+      .contentShape(Rectangle())
       .onTapGesture { send(.addItem(item)) }
       .contextMenu {
         Button {

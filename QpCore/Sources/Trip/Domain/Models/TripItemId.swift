@@ -19,4 +19,6 @@ public final class TripItemIdSamples {
   public let camera = TripItemId("camera")
   public let iPad = TripItemId("iPad")
   public let nintendoSwitch = TripItemId("Switch")
+  public let shoes = TripItemId("Shoes")
+  public let tShirt = TripItemId("T-Shirt")
 }

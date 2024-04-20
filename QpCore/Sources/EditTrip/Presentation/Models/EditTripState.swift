@@ -3,37 +3,39 @@ import ItemDomain
 import TripDomain
 
 public final class EditTripState: ObservableObject {
+  @Published var categories: [ItemCategoryUiModel]
   @Published var date: TripDate?
   let id: TripId
   let isCompleted: Bool
   @Published var name: String
   @Published var searchItems: [Item] = []
   @Published var searchQuery: String = ""
-  @Published var tripItems: [TripItem]
   
   init(
+    categories: [ItemCategoryUiModel],
     date: TripDate?,
     id: TripId,
     isCompleted: Bool,
-    name: String,
-    tripItems: [TripItem]
+    name: String
   ) {
+    self.categories = categories
     self.date = date
     self.id = id
     self.isCompleted = isCompleted
     self.name = name
-    self.tripItems = tripItems
   }
 }
 
 extension Trip {
   func toInitialEditTripState() -> EditTripState {
     EditTripState(
+      categories: items.group(by: \.item.category).map { category, tripItem in
+        ItemCategoryUiModel(category: category, items: tripItem)
+      },
       date: date,
       id: id,
       isCompleted: isCompleted,
-      name: name,
-      tripItems: items
+      name: name
     )
   }
 }
@@ -41,64 +43,62 @@ extension Trip {
 extension EditTripState {
   static let samples = EditTripStateSamples()
   
-  func insertItem(_ item: TripItem) {
-    tripItems.insert(item, at: 0)
+  func insertItem(_ tripItem: TripItem) {
+    updateCategory(tripItem.item.category) { category in
+      category.insertItem(tripItem)
+    }
   }
   
   func moveItems(from: IndexSet, to: Int) {
-    tripItems.move(fromOffsets: from, toOffset: to)
+    // TODO: tripItems.move(fromOffsets: from, toOffset: to)
   }
   
-  func removeItem(id: ItemId) {
-    tripItems.removeAll { $0.item.id == id }
+  func removeItem(itemId: ItemId) {
+    categories = categories.map { category in
+      category.removeItem(itemId: itemId)
+    }
   }
   
-  func removeItem(id: TripItemId) {
-    tripItems.removeAll { $0.id == id }
+  func removeItem(tripItemId: TripItemId) {
+    categories = categories.map { category in
+      category.removeItem(tripItemId: tripItemId)
+    }
   }
   
-  func updateItemCheck(id: TripItemId, _ newIsChecked: Bool) {
-    updateItem(id: id) { tripItem in
-      TripItem(
-        id: tripItem.id,
-        item: tripItem.item,
-        isChecked: newIsChecked,
-        order: tripItem.order
+  func updateItemCheck(tripItemId: TripItemId, _ newIsChecked: Bool) {
+    categories = categories.map { category in
+      category.updateItemCheck(tripItemId: tripItemId, newIsChecked)
+    }
+  }
+  
+  func updateItemName(itemId: ItemId, _ newName: String) {
+    categories = categories.map { category in
+      category.updateItemName(itemId: itemId, newName)
+    }
+  }
+  
+  private func updateCategory(for tripItem: TripItem, _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel) {
+    updateCategory(tripItem.item.category, f)
+  }
+  
+  private func updateCategory(_ category: ItemCategory?, _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel) {
+    var found = false
+    for i in categories.indices where categories[i].id == category?.id {
+      found = true
+      let newCategory = f(categories[i])
+      if newCategory.isEmpty {
+        categories.remove(at: i)
+      } else {
+        categories[i] = f(categories[i])
+      }
+    }
+    if !found {
+      let baseCategory = ItemCategoryUiModel(
+        category: category,
+        items: []
       )
+      categories.insert(f(baseCategory), at: 0)
     }
-  }
-  
-  func updateItemName(id: ItemId, _ newName: String) {
-    updateItem(id: id) { tripItem in
-      TripItem(
-        id: tripItem.id,
-        item: tripItem.item.withName(newName),
-        isChecked: tripItem.isChecked,
-        order: tripItem.order
-      )
-    }
-  }
-  
-  private func updateItem(id: ItemId, _ f: (TripItem) -> TripItem) {
-    for i in tripItems.indices where tripItems[i].item.id == id {
-      tripItems[i] = f(tripItems[i])
-    }
-  }
-  
-  private func updateItem(id: TripItemId, _ f: (TripItem) -> TripItem) {
-    for i in tripItems.indices where tripItems[i].id == id {
-      tripItems[i] = f(tripItems[i])
-    }
-  }
-  
-  func toTrip() -> Trip {
-    Trip(
-      date: date,
-      id: id,
-      isCompleted: isCompleted,
-      items: tripItems,
-      name: name
-    )
   }
 }
 

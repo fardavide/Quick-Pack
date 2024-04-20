@@ -19,4 +19,6 @@ public final class ItemIdSamples {
   public let camera = ItemId("camera")
   public let iPad = ItemId("iPad")
   public let nintendoSwitch = ItemId("Switch")
+  public let shoes = ItemId("Shoes")
+  public let tShirt = ItemId("T-Shirt")
 }

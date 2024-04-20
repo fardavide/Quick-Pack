@@ -1,4 +1,4 @@
-public struct ItemCategory: Equatable, Identifiable {
+public struct ItemCategory: Equatable, Identifiable, Hashable {
   public let id: CategoryId
   public let name: String
   

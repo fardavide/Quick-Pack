@@ -46,4 +46,14 @@ public final class ItemSamples {
     id: .samples.nintendoSwitch,
     name: "Nintendo Switch"
   )
+  public let shoes = Item(
+    category: .samples.clothes,
+    id: .samples.shoes,
+    name: "Shoes"
+  )
+  public let tShirt = Item(
+    category: .samples.clothes,
+    id: .samples.tShirt,
+    name: "T-shirt"
+  )
 }

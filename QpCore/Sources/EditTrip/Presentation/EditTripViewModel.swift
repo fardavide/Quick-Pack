@@ -27,7 +27,7 @@ public final class EditTripViewModel: ViewModel {
     itemRepository.items
       .eraseToAnyPublisher()
       .combineLatest(
-        state.$tripItems,
+        state.$categories.map { $0.flatMap(\.items) },
         state.$searchQuery.map { $0.ifEmpty(default: "__query__") }
       )
       .map(filterResult)
@@ -66,7 +66,7 @@ public final class EditTripViewModel: ViewModel {
   }
   
   private func deleteItem(_ id: ItemId) {
-    state.removeItem(id: id)
+    state.removeItem(itemId: id)
     Task { await itemRepository.deleteItem(itemId: id) }
   }
   
@@ -75,11 +75,11 @@ public final class EditTripViewModel: ViewModel {
     _ to: Int
   ) {
     state.moveItems(from: from, to: to)
-    Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
+    // TODO: Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
   }
   
   private func removeItem(_ itemId: TripItemId) {
-    state.removeItem(id: itemId)
+    state.removeItem(tripItemId: itemId)
     Task { await tripRepository.removeItem(itemId: itemId, from: state.id) }
   }
   
@@ -93,12 +93,12 @@ public final class EditTripViewModel: ViewModel {
   }
   
   func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
-    state.updateItemCheck(id: itemId, newIsChecked)
+    state.updateItemCheck(tripItemId: itemId, newIsChecked)
     Task { await tripRepository.updateItemCheck(tripItemId: itemId, isChecked: newIsChecked) }
   }
   
   func updateItemName(_ itemId: ItemId, _ newName: String) {
-    state.updateItemName(id: itemId, newName)
+    state.updateItemName(itemId: itemId, newName)
     Task { await itemRepository.updateItemName(itemId: itemId, name: newName) }
   }
   
@@ -133,13 +133,14 @@ public final class EditTripViewModel: ViewModel {
       self.tripRepository = tripRepository
     }
     public func create(_ input: Trip) -> EditTripViewModel {
-      cache.getOrSet(input.id) {
+      cache.getOrSet(
+        input.id,
         EditTripViewModel(
           initialTrip: input,
           itemRepository: itemRepository,
           tripRepository: tripRepository
         )
-      }
+      )
     }
   }
   public final class FakeFactory: Factory {

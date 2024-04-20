@@ -68,4 +68,16 @@ public final class TripItemSamples {
     isChecked: false,
     order: 0
   )
+  public let shoes = TripItem(
+    id: .samples.shoes,
+    item: .samples.shoes,
+    isChecked: false,
+    order: 0
+  )
+  public let tShirt = TripItem(
+    id: .samples.tShirt,
+    item: .samples.tShirt,
+    isChecked: false,
+    order: 0
+  )
 }

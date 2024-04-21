@@ -83,7 +83,7 @@ private struct TripListForm: View {
   let edit: (Trip) -> EditTripViewModel
   
   var body: some View {
-    Form {
+    List {
       Section("Upcoming") {
         TripListItems(
           items: model.upcoming,
@@ -109,7 +109,7 @@ private struct TripListItems: View {
   let edit: (Trip) -> EditTripViewModel
 
   var body: some View {
-    List(items) { item in
+    ForEach(items) { item in
       NavigationLink {
         EditTrip(viewModel: edit(item.domainModel))
       } label: {

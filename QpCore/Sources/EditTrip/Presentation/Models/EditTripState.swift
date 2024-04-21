@@ -1,8 +1,10 @@
 import Foundation
 import ItemDomain
+import Presentation
 import TripDomain
 
 public struct EditTripState {
+  let allCategories: DataLce<[ItemCategory]>
   let categories: [ItemCategoryUiModel]
   let date: TripDate?
   let id: TripId
@@ -12,6 +14,7 @@ public struct EditTripState {
   let searchQuery: String
   
   init(
+    allCategories: DataLce<[ItemCategory]>,
     categories: [ItemCategoryUiModel],
     date: TripDate?,
     id: TripId,
@@ -20,6 +23,7 @@ public struct EditTripState {
     searchItems: [Item],
     searchQuery: String
   ) {
+    self.allCategories = allCategories
     self.categories = categories
     self.date = date
     self.id = id
@@ -33,6 +37,7 @@ public struct EditTripState {
 extension Trip {
   func toInitialEditTripState() -> EditTripState {
     EditTripState(
+      allCategories: .loading,
       categories: items.group(by: \.item.category).map { category, tripItem in
         ItemCategoryUiModel(category: category, items: tripItem)
       },
@@ -62,6 +67,7 @@ extension EditTripState {
   
   func removeItem(itemId: ItemId) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories.map { $0.removeItem(itemId: itemId) },
       date: date,
       id: id,
@@ -74,6 +80,7 @@ extension EditTripState {
   
   func removeItem(tripItemId: TripItemId) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories.map { $0.removeItem(tripItemId: tripItemId) },
       date: date,
       id: id,
@@ -87,6 +94,7 @@ extension EditTripState {
   func update(with trip: Trip) -> EditTripState {
     let delta = trip.toInitialEditTripState()
     return EditTripState(
+      allCategories: allCategories,
       categories: delta.categories,
       date: delta.date,
       id: id,
@@ -97,8 +105,14 @@ extension EditTripState {
     )
   }
   
+  func updateItemCategory(tripItem: TripItem, _ newCategory: ItemCategory?) -> EditTripState {
+    updateCategories { $0.removeItem(tripItemId: tripItem.id) }
+      .updateCategory(newCategory) { $0.insertItem(tripItem) }
+  }
+  
   func updateItemCheck(tripItemId: TripItemId, _ newIsChecked: Bool) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories.map { $0.updateItemCheck(tripItemId: tripItemId, newIsChecked) },
       date: date,
       id: id,
@@ -111,6 +125,7 @@ extension EditTripState {
   
   func updateItemName(itemId: ItemId, _ newName: String) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories.map { $0.updateItemName(itemId: itemId, newName) },
       date: date,
       id: id,
@@ -123,6 +138,20 @@ extension EditTripState {
   
   func withDate(_ date: TripDate?) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withAllCategories(_ allCategories: DataLce<[ItemCategory]>) -> EditTripState {
+    EditTripState(
+      allCategories: allCategories,
       categories: categories,
       date: date,
       id: id,
@@ -135,6 +164,7 @@ extension EditTripState {
   
   func withName(_ name: String) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories,
       date: date,
       id: id,
@@ -147,6 +177,7 @@ extension EditTripState {
   
   func withSearchItems(_ searchItems: [Item]) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories,
       date: date,
       id: id,
@@ -159,6 +190,7 @@ extension EditTripState {
   
   func withSearchQuery(_ searchQuery: String) -> EditTripState {
     EditTripState(
+      allCategories: allCategories,
       categories: categories,
       date: date,
       id: id,
@@ -170,36 +202,47 @@ extension EditTripState {
   }
   
   private func updateCategory(
-    for tripItem: TripItem,
-    _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel
-  ) -> EditTripState {
-    updateCategory(tripItem.item.category, f)
-  }
-  
-  private func updateCategory(
     _ category: ItemCategory?,
     _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel
   ) -> EditTripState {
-    var categories = categories
     var found = false
-    for i in categories.indices where categories[i].id == category?.id {
-      found = true
-      let newCategory = f(categories[i])
-      if newCategory.isEmpty {
-        categories.remove(at: i)
+    let withUpdatedCategories = updateCategories { existantCategory in
+      if existantCategory.id == category?.id {
+        found = true
+        return f(existantCategory)
       } else {
-        categories[i] = f(categories[i])
+        return existantCategory
       }
     }
-    if !found {
+    if found {
+      return withUpdatedCategories
+    } else {
       let baseCategory = ItemCategoryUiModel(
         category: category,
         items: []
       )
-      categories.insert(f(baseCategory), at: 0)
+      return EditTripState(
+        allCategories: allCategories,
+        categories: [f(baseCategory)] + categories,
+        date: date,
+        id: id,
+        isCompleted: isCompleted,
+        name: name,
+        searchItems: searchItems,
+        searchQuery: searchQuery
+      )
     }
-    return EditTripState(
-      categories: categories,
+  }
+  
+  private func updateCategories(
+    _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel
+  ) -> EditTripState {
+    EditTripState(
+      allCategories: allCategories,
+      categories: categories.compactMap { category in
+        let updatedCategory = f(category)
+        return updatedCategory.isEmpty ? nil : updatedCategory
+      },
       date: date,
       id: id,
       isCompleted: isCompleted,

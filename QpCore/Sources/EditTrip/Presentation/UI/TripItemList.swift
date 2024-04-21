@@ -1,17 +1,19 @@
 import ItemDomain
+import Presentation
 import SwiftUI
 import TripDomain
 
 struct TripItemList: View {
   let categories: [ItemCategoryUiModel]
+  let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
-    
 
   public var body: some View {
     List {
       ForEach(categories) { uiModel in
         CategorySection(
           uiModel: uiModel,
+          allCategories: allCategories,
           send: send
         )
       }
@@ -23,6 +25,7 @@ struct TripItemList: View {
 
 private struct CategorySection: View {
   let uiModel: ItemCategoryUiModel
+  let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
 
   @State var isExpanded: Bool = true
@@ -32,6 +35,7 @@ private struct CategorySection: View {
       ForEach(uiModel.items) { tripItem in
         TripItemView(
           tripItem: tripItem,
+          allCategories: allCategories,
           send: send
         )
       }
@@ -51,10 +55,11 @@ private struct CategorySection: View {
 
 private struct TripItemView: View {
   let tripItem: TripItem
+  let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
   
   @State var showRenameAlert: Bool = false
-  @State var showChooseCategorySheet: Bool = false
+  @State var showSetCategorySheet: Bool = false
   
   @State private var newName = ""
 
@@ -77,6 +82,10 @@ private struct TripItemView: View {
     .contentShape(Rectangle())
     .toggleStyle(CheckboxToggleStyle())
     .contextMenu {
+      Button { showSetCategorySheet = true } label: {
+        Label("Set category", systemSymbol: .rectangleAndPencilAndEllipsis)
+          .tint(.accentColor)
+      }
       Button {
         showRenameAlert = true
         newName = tripItem.item.name
@@ -89,17 +98,26 @@ private struct TripItemView: View {
           .tint(.red)
       }
     }
-    .alert("Rename \(tripItem.item.name)", isPresented: $showRenameAlert) {
-      TextField("New name", text: $newName)
-      Button("OK") {
-        send(.updateItemName(tripItem.item.id, newName))
-      }
-    }
     .swipeActions(edge: .trailing) {
       Button { send(.removeItem(tripItem.id)) } label: {
         Label("Remove item", systemSymbol: .xmark)
           .tint(.accentColor)
       }
+    }
+    .alert("Rename \(tripItem.item.name)", isPresented: $showRenameAlert) {
+      TextField("New name", text: $newName)
+      Button("Cancel") { showRenameAlert = false }
+      Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
+    }
+    .sheet(isPresented: $showSetCategorySheet) {
+      SetCategorySheetContent(
+        currentCategory: tripItem.item.category,
+        allCategories: allCategories,
+        onCategoryChange: { newCategory in
+          send(.updateItemCategory(tripItem, newCategory))
+          showSetCategorySheet = false
+        }
+      )
     }
   }
 }
@@ -123,6 +141,7 @@ private struct CheckboxToggleStyle: ToggleStyle {
       ItemCategoryUiModel.samples.tech,
       ItemCategoryUiModel.samples.clothes
     ],
+    allCategories: .loading,
     send: { _ in }
   )
 }

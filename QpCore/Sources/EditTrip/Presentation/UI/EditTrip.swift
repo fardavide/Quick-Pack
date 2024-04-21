@@ -81,6 +81,7 @@ private struct EditTripContent: View {
         
         TripItemList(
           categories: state.categories,
+          allCategories: state.allCategories,
           send: send
         )
         .animation(.default, value: state.categories)

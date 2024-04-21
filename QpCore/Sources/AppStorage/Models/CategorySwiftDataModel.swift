@@ -60,3 +60,9 @@ public extension CategorySwiftDataModel {
     )
   }
 }
+
+public extension [CategorySwiftDataModel] {
+  func toDomainModels() -> [ItemCategory] {
+    safeMap { try $0.toDomainModel() }
+  }
+}

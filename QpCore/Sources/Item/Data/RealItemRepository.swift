@@ -21,6 +21,15 @@ final class RealItemRepository: AppStorage, ItemRepository {
     }
   }()
   
+  lazy var categories: any DataPublisher<[ItemCategory]> = {
+    observe { context in
+      context.fetchAll(
+        map: { $0.toDomainModels() },
+        FetchDescriptor<CategorySwiftDataModel>()
+      )
+    }
+  }()
+  
   init(container: ModelContainer) {
     self.container = container
     Task { await sanitiseItems() }
@@ -33,16 +42,18 @@ final class RealItemRepository: AppStorage, ItemRepository {
     )
   }
   
-  @MainActor func updateItemCategory(itemId: ItemId, category: ItemCategory) {
+  @MainActor func updateItemCategory(itemId: ItemId, category: ItemCategory?) {
     transaction { context in
-      let category = {
+      let category: CategorySwiftDataModel? = if let category = category {
         // Try to get category by ID from Storage
         context.fetchOne(category.id.fetchDescriptor).orNil()
         // If none, try to get category by NAME from Storage
         ?? context.fetchOne(category.nameFetchDescriptor).orNil()
         // If none, create a new one
         ?? category.toSwiftDataModel()
-      }()
+      } else {
+        nil
+      }
       updateInTransaction(context: context, itemId.fetchDescriptor) { model in
         model.category = category
       }

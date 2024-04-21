@@ -27,6 +27,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     tripRepository.trips
       .eraseToAnyPublisher()
       .filterSuccess()
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] trips in
         if let viewModel = self, let trip = trips.first(where: { $0.id == initialTrip.id }) {
           viewModel.state = viewModel.state.update(with: trip)
@@ -49,6 +50,16 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
         }
       }
       .store(in: &subscribers)
+    
+    itemRepository.categories
+      .eraseToAnyPublisher()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] allCategories in
+        if let viewModel = self {
+          viewModel.state = viewModel.state.withAllCategories(allCategories.toLce())
+        }
+      }
+      .store(in: &subscribers)
   }
   
   public func send(_ action: EditTripAction) {
@@ -60,6 +71,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .reorderItems(from, to): reorderItems(from, to)
     case let .searchItem(query): searchItem(query)
     case let .updateDate(newDate): updateDate(newDate)
+    case let .updateItemCategory(tripItem, newCategory): updateItemCategory(tripItem, newCategory)
     case let .updateItemCheck(itemId, newIsChecked): updateItemCheck(itemId, newIsChecked)
     case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
     case let .updateName(newName): updateName(newName)
@@ -105,12 +117,17 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     Task { await tripRepository.updateTripDate(tripId: state.id, date: state.date) }
   }
   
-  func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
+  func updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?) {
+    state = state.updateItemCategory(tripItem: tripItem, newCategory)
+    Task { await itemRepository.updateItemCategory(itemId: tripItem.item.id, category: newCategory) }
+  }
+  
+  private func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
     state = state.updateItemCheck(tripItemId: itemId, newIsChecked)
     Task { await tripRepository.updateItemCheck(tripItemId: itemId, isChecked: newIsChecked) }
   }
   
-  func updateItemName(_ itemId: ItemId, _ newName: String) {
+  private func updateItemName(_ itemId: ItemId, _ newName: String) {
     state = state.updateItemName(itemId: itemId, newName)
     Task { await itemRepository.updateItemName(itemId: itemId, name: newName) }
   }

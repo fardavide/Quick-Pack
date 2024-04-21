@@ -19,9 +19,9 @@ extension Trip {
   func toInitialEditTripState() -> EditTripState {
     EditTripState(
       allCategories: .loading,
-      categories: items.group(by: \.item.category).map { category, tripItem in
-        ItemCategoryUiModel(category: category, items: tripItem)
-      },
+      categories: items.group(by: \.item.category)
+        .map { category, tripItem in ItemCategoryUiModel(category: category, items: tripItem) }
+        .sorted(),
       date: date,
       id: id,
       isCompleted: isCompleted,
@@ -216,7 +216,7 @@ extension EditTripState {
       )
       return EditTripState(
         allCategories: allCategories,
-        categories: [f(baseCategory)] + categories,
+        categories: ([f(baseCategory)] + categories).sorted(),
         date: date,
         id: id,
         isCompleted: isCompleted,

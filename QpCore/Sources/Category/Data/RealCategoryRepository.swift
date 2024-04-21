@@ -16,7 +16,9 @@ final class RealCategoryRepository: AppStorage, CategoryRepository {
     observe { context in
       context.fetchAll(
         map: { $0.toDomainModels() },
-        FetchDescriptor<CategorySwiftDataModel>()
+        FetchDescriptor<CategorySwiftDataModel>(
+          sortBy: [SortDescriptor(\.name)]
+        )
       )
     }
   }()

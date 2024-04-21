@@ -3,12 +3,16 @@ import Foundation
 import ItemDomain
 import TripDomain
 
-struct ItemCategoryUiModel: Equatable, Identifiable {
+struct ItemCategoryUiModel: Comparable, Equatable, Identifiable {
   let category: ItemCategory?
   let items: [TripItem]
   
   var id: CategoryId? {
     category?.id
+  }
+  
+  static func < (lhs: ItemCategoryUiModel, rhs: ItemCategoryUiModel) -> Bool {
+    (lhs.category?.name ?? "") < (rhs.category?.name ?? "")
   }
 }
 

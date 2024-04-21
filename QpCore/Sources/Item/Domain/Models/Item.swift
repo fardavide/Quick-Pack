@@ -1,3 +1,5 @@
+import CategoryDomain
+
 public struct Item: Equatable, Identifiable {
   public let category: ItemCategory?
   public let id: ItemId

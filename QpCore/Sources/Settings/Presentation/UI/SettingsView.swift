@@ -1,3 +1,4 @@
+import CategoryListPresentation
 import Design
 import ItemListPresentation
 import SwiftUI
@@ -10,13 +11,18 @@ public struct SettingsView: View {
   }
   
   public var body: some View {
-    SettingsContent(state: viewModel.state, itemListViewModel: viewModel.itemListViewModel)
+    SettingsContent(
+      state: viewModel.state,
+      itemListViewModel: viewModel.itemListViewModel,
+      categoryListViewModel: viewModel.categoryListViewModel
+    )
   }
 }
 
 private struct SettingsContent: View {
   let state: SettingsState
   let itemListViewModel: ItemListViewModel
+  let categoryListViewModel: CategoryListViewModel
   
   var body: some View {
     NavigationStack {
@@ -30,8 +36,15 @@ private struct SettingsContent: View {
           }
         }
         
-        Section("My items") {
-          ItemList(viewModel: itemListViewModel)
+        Section("Items and Categories") {
+          NavigationLink("Items") {
+            ItemList(viewModel: itemListViewModel)
+              .navigationTitle("Items")
+          }
+          NavigationLink("Categories") {
+            CategoryList(viewModel: categoryListViewModel)
+              .navigationTitle("Categories")
+          }
         }
       }
       .navigationTitle("Settings")
@@ -62,13 +75,15 @@ private struct SettingsContent: View {
 #Preview("Success") {
   SettingsContent(
     state: .samples.content,
-    itemListViewModel: FakeItemListViewModel()
+    itemListViewModel: FakeItemListViewModel(),
+    categoryListViewModel: FakeCategoryListViewModel()
   )
 }
 
 #Preview("Error") {
   SettingsContent(
     state: .samples.error,
-    itemListViewModel: FakeItemListViewModel()
+    itemListViewModel: FakeItemListViewModel(),
+    categoryListViewModel: FakeCategoryListViewModel()
   )
 }

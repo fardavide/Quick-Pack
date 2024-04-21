@@ -1,3 +1,4 @@
+import CategoryDomain
 import Foundation
 import ItemDomain
 import Presentation
@@ -12,26 +13,6 @@ public struct EditTripState {
   let name: String
   let searchItems: [Item]
   let searchQuery: String
-  
-  init(
-    allCategories: DataLce<[ItemCategory]>,
-    categories: [ItemCategoryUiModel],
-    date: TripDate?,
-    id: TripId,
-    isCompleted: Bool,
-    name: String,
-    searchItems: [Item],
-    searchQuery: String
-  ) {
-    self.allCategories = allCategories
-    self.categories = categories
-    self.date = date
-    self.id = id
-    self.isCompleted = isCompleted
-    self.name = name
-    self.searchItems = searchItems
-    self.searchQuery = searchQuery
-  }
 }
 
 extension Trip {

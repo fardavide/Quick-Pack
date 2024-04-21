@@ -1,3 +1,4 @@
+import CategoryDomain
 import Combine
 import Foundation
 import ItemDomain
@@ -12,14 +13,17 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   
   @Published public var state: State
   private var subscribers: [AnyCancellable] = []
+  private let categoryRepository: CategoryRepository
   private let itemRepository: ItemRepository
   private let tripRepository: TripRepository
 
   init(
     initialTrip: Trip,
+    categoryRepository: CategoryRepository,
     itemRepository: ItemRepository,
     tripRepository: TripRepository
   ) {
+    self.categoryRepository = categoryRepository
     self.itemRepository = itemRepository
     self.tripRepository = tripRepository
     state = initialTrip.toInitialEditTripState()
@@ -51,7 +55,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       }
       .store(in: &subscribers)
     
-    itemRepository.categories
+    categoryRepository.categories
       .eraseToAnyPublisher()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] allCategories in
@@ -62,6 +66,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       .store(in: &subscribers)
   }
   
+  // swiftlint:disable cyclomatic_complexity
   public func send(_ action: EditTripAction) {
     switch action {
     case let .addItem(item): addItem(item)
@@ -77,6 +82,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .updateName(newName): updateName(newName)
     }
   }
+  // swiftlint:enable cyclomatic_complexity
 
   private func addItem(_ item: Item) {
     let tripItem = TripItem(id: .new(), item: item, isChecked: false, order: 0)
@@ -155,13 +161,16 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}
   public final class RealFactory: Factory {
+    private let categoryRepository: CategoryRepository
     private let itemRepository: ItemRepository
     private let tripRepository: TripRepository
     private var cache: [TripId: EditTripViewModel] = [:]
     public init(
+      categoryRepository: CategoryRepository,
       itemRepository: ItemRepository,
       tripRepository: TripRepository
     ) {
+      self.categoryRepository = categoryRepository
       self.itemRepository = itemRepository
       self.tripRepository = tripRepository
     }
@@ -170,6 +179,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
         input.id,
         EditTripViewModel(
           initialTrip: input,
+          categoryRepository: categoryRepository,
           itemRepository: itemRepository,
           tripRepository: tripRepository
         )
@@ -194,6 +204,7 @@ public extension EditTripViewModel {
 public final class EditTripViewModelSamples {
   public let content = EditTripViewModel(
     initialTrip: .samples.malaysia,
+    categoryRepository: FakeCategoryRepository(),
     itemRepository: FakeItemRepository(),
     tripRepository: FakeTripRepository()
   )

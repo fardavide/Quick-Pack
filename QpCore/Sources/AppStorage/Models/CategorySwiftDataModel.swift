@@ -1,3 +1,4 @@
+import CategoryDomain
 import ItemDomain
 import QpStorage
 import SwiftData

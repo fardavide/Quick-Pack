@@ -7,6 +7,7 @@ public final class EditTripPresentationModule: Module {
     provider
       .register {
         EditTripViewModel.RealFactory(
+          categoryRepository: provider.get(),
           itemRepository: provider.get(),
           tripRepository: provider.get()
         ) as any EditTripViewModel.Factory

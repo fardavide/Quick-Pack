@@ -1,3 +1,4 @@
+import CategoryDomain
 import Combine
 import QpUtils
 import Undo
@@ -5,7 +6,6 @@ import Undo
 public protocol ItemRepository: UndoHandler {
   
   var items: any DataPublisher<[Item]> { get }
-  var categories: any DataPublisher<[ItemCategory]> { get }
   
   @MainActor func createItem(_ item: Item)
   @MainActor func updateItemCategory(itemId: ItemId, category: ItemCategory?)
@@ -15,15 +15,12 @@ public protocol ItemRepository: UndoHandler {
 
 public final class FakeItemRepository: ItemRepository {
   public var items: any DataPublisher<[Item]>
-  public var categories: any DataPublisher<[ItemCategory]>
   private var createItemInvocations: [Item] = []
   
   public init(
-    items: [Item] = [],
-    categories: [ItemCategory] = []
+    items: [Item] = []
   ) {
     self.items = Just(.success(items))
-    self.categories = Just(.success(categories))
   }
   
   public func lastCreatedItem() -> Item? {

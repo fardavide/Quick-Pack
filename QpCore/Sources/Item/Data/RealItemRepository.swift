@@ -1,4 +1,5 @@
 import AppStorage
+import CategoryDomain
 import Combine
 import Foundation
 import ItemDomain

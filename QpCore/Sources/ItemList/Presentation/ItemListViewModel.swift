@@ -63,13 +63,6 @@ public final class RealItemListViewModel: ItemListViewModel {
   private func updateItemName(_ id: ItemId, _ newName: String) {
     Task { await itemRepository.updateItemName(itemId: id, name: newName) }
   }
-  
-  private func findItem(_ id: ItemId) -> Item? {
-    switch state.items {
-    case let .content(items): items.first(where: { $0.id == id })
-    default: nil
-    }
-  }
 }
 
 public final class FakeItemListViewModel: ItemListViewModel {

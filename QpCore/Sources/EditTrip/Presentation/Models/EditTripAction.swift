@@ -1,3 +1,4 @@
+import CategoryDomain
 import Foundation
 import ItemDomain
 import TripDomain

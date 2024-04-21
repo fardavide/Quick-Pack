@@ -5,6 +5,8 @@ import PackageDescription
 
 private let About = "About"
 private let AppStorage = "AppStorage"
+private let Category = "Category"
+private let CategoryList = "CategoryList"
 private let Common = "Common"
 private let EditTrip = "EditTrip"
 private let Home = "Home"
@@ -47,6 +49,11 @@ let package = Package(
         AppStorage,
         Real+AppStorage,
         StorageModels,
+        // MARK: - Category declarations
+        Category+Data,
+        Category+Domain,
+        // MARK: - Category List declarations
+        CategoryList+Presentation,
         // MARK: - Common declarations
         DateUtils,
         Design,
@@ -134,6 +141,43 @@ let package = Package(
         Trip+Domain
       ]
     ),
+    
+    // MARK: - Category definitions
+    // MARK: Category Data
+      .target(
+        path: [Category, Data],
+        dependencies: [
+          AppStorage,
+          Category+Domain,
+          Utils,
+          StorageModels
+        ]
+      ),
+    .testTarget(path: [Category, Data]),
+    
+    // MARK: Category Domain
+    .target(
+      path: [Category, Domain],
+      dependencies: [
+        Undo,
+        Utils
+      ]
+    ),
+    .testTarget(path: [Category, Domain]),
+    
+    // MARK: - Category List definitions
+    // MARK: Category List Presentation
+      .target(
+        path: [CategoryList, Presentation],
+        dependencies: [
+          Design,
+          Category+Domain,
+          Presentation,
+          Provider,
+          Undo
+        ]
+      ),
+    .testTarget(path: [CategoryList, Presentation]),
     
     // MARK: - Common definitions
     // MARK: Date Utils
@@ -225,6 +269,7 @@ let package = Package(
     .target(
       path: [Item, Domain],
       dependencies: [
+        Category+Domain,
         Undo,
         Utils
       ]
@@ -263,6 +308,7 @@ let package = Package(
         path: [Settings, Presentation],
         dependencies: [
           About+Domain,
+          CategoryList+Presentation,
           Design,
           ItemList+Presentation,
           Provider,

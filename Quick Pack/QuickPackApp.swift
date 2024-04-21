@@ -1,3 +1,4 @@
+import CategoryData
 import HomePresentation
 import ItemData
 import Provider
@@ -27,6 +28,7 @@ final class QpModule: Module {
   
   var dependencies: [Module.Type] = [
     AppStorageModule.self,
+    CategoryDataModule.self,
     ItemDataModule.self,
     SettingsPresentationModule.self,
     TripDataModule.self,

@@ -1,3 +1,4 @@
+import CategoryDomain
 import Design
 import ItemDomain
 import Presentation

@@ -14,6 +14,7 @@ public struct ItemList: View {
       state: viewModel.state,
       send: viewModel.send
     )
+    .undoable(with: viewModel.undoHandler)
   }
 }
 
@@ -46,7 +47,8 @@ private struct ItemListItems: View {
   let items: [Item]
   let send: (ItemListAction) -> Void
   
-  @State var isEditingItem: Bool = false
+  @State private var isRenamingItem: Bool = false
+  @State private var renamingItem: Item?
   @State private var newName = ""
   
   var body: some View {
@@ -56,8 +58,9 @@ private struct ItemListItems: View {
       }
       .swipeActions(edge: .trailing) {
         Button { 
-          isEditingItem = true
           newName = item.name
+          renamingItem = item
+          isRenamingItem = true
         } label: {
           Label("Edit", systemSymbol: .pencil)
             .tint(.accentColor)
@@ -67,17 +70,21 @@ private struct ItemListItems: View {
             .tint(.red)
         }
       }
-      .alert("Rename \(item.name)", isPresented: $isEditingItem) {
-        TextField("New name", text: $newName)
-        Button("Cancel") {
-          isEditingItem = false
-        }
-        Button("OK") {
-          send(.updateName(item.id, newName))
-        }
-      }
     }
     .animation(.default, value: items)
+    .alert(
+      "Rename \(renamingItem?.name ?? "item")",
+      isPresented: $isRenamingItem,
+      presenting: renamingItem
+    ) { item in
+      TextField("New name", text: $newName)
+      Button("Cancel") {
+        isRenamingItem = false
+      }
+      Button("OK") {
+        send(.updateName(item.id, newName))
+      }
+    }
   }
 }
 

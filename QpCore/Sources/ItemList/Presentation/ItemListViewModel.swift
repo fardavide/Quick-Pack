@@ -10,9 +10,14 @@ public class ItemListViewModel: ViewModel, ObservableObject {
   public typealias State = ItemListState
   
   @Published public var state: ItemListState
-  
-  init(state: ItemListState) {
+  public let undoHandler: UndoHandler
+
+  init(
+    state: ItemListState,
+    undoHandler: UndoHandler
+  ) {
     self.state = state
+    self.undoHandler = undoHandler
   }
 
   public func send(_ action: ItemListAction) {}
@@ -20,7 +25,6 @@ public class ItemListViewModel: ViewModel, ObservableObject {
 
 public final class RealItemListViewModel: ItemListViewModel {
   
-  public let undoHandler: UndoHandler
   private var subscribers: [AnyCancellable] = []
   private let itemRepository: ItemRepository
   
@@ -29,8 +33,10 @@ public final class RealItemListViewModel: ItemListViewModel {
     initialState: ItemListState = .initial
   ) {
     self.itemRepository = itemRepository
-    undoHandler = itemRepository
-    super.init(state: initialState)
+    super.init(
+      state: initialState,
+      undoHandler: itemRepository
+    )
     
     itemRepository.items
       .eraseToAnyPublisher()
@@ -68,6 +74,9 @@ public final class RealItemListViewModel: ItemListViewModel {
 
 public final class FakeItemListViewModel: ItemListViewModel {
   public init() {
-    super.init(state: .initial)
+    super.init(
+      state: .initial,
+      undoHandler: FakeUndoHandler()
+    )
   }
 }

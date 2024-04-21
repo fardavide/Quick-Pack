@@ -86,7 +86,9 @@ private struct EditTripContent: View {
         )
         .animation(.default, value: state.categories)
       }
+      #if !os(macOS)
       .environment(\.editMode, .constant(.active))
+      #endif
       .animation(.default, value: state.categories)
       .animation(.default, value: state.searchQuery)
       .animation(.default, value: state.searchItems)

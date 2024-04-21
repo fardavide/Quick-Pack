@@ -60,9 +60,12 @@ extension EditTripState {
     }
   }
   
-  func moveItems(from: IndexSet, to: Int) -> EditTripState {
-    self
-    // TODO: tripItems.move(fromOffsets: from, toOffset: to)
+  func moveItems(
+    for categoryId: CategoryId?,
+    from: IndexSet,
+    to: Int
+  ) -> EditTripState {
+    updateCategory(withId: categoryId) { $0.moveItems(from: from, to: to) }
   }
   
   func removeItem(itemId: ItemId) -> EditTripState {
@@ -199,6 +202,15 @@ extension EditTripState {
       searchItems: searchItems,
       searchQuery: searchQuery
     )
+  }
+  
+  private func updateCategory(
+    withId categoryId: CategoryId?,
+    _ f: (ItemCategoryUiModel) -> ItemCategoryUiModel
+  ) -> EditTripState {
+    updateCategories { category in
+      category.id == categoryId ? f(category) : category
+    }
   }
   
   private func updateCategory(

@@ -9,7 +9,7 @@ struct SearchItemResult: View {
   @State private var newName = ""
   
   var body: some View {
-    List(items) { item in
+    ForEach(items) { item in
       HStack {
         Text(item.name)
         Spacer()
@@ -47,12 +47,14 @@ struct SearchItemResult: View {
 }
 
 #Preview {
-  SearchItemResult(
-    items: [
-      .samples.camera,
-      .samples.iPad,
-      .samples.nintendoSwitch
-    ],
-    send: { _ in }
-  )
+  List {
+    SearchItemResult(
+      items: [
+        .samples.camera,
+        .samples.iPad,
+        .samples.nintendoSwitch
+      ],
+      send: { _ in }
+    )
+  }
 }

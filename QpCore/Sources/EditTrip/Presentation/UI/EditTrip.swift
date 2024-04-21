@@ -22,7 +22,7 @@ public struct EditTrip: View {
 private struct EditTripContent: View {
   let state: EditTripState
   let send: (EditTripAction) -> Void
-  
+
   private let scrollTarget = "target"
   
   var body: some View {
@@ -43,7 +43,7 @@ private struct EditTripContent: View {
       }
     )
     ScrollViewReader { reader in
-      Form {
+      List {
         
         Section {
           TextField(text: nameBinding, prompt: Text("Required")) {
@@ -79,13 +79,14 @@ private struct EditTripContent: View {
           }
         }
         
-        TripItemList(
+        TripItems(
           categories: state.categories,
           allCategories: state.allCategories,
           send: send
         )
         .animation(.default, value: state.categories)
       }
+      .environment(\.editMode, .constant(.active))
       .animation(.default, value: state.categories)
       .animation(.default, value: state.searchQuery)
       .animation(.default, value: state.searchItems)

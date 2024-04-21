@@ -7,7 +7,7 @@ public enum EditTripAction {
   case addNewItem(name: String)
   case deleteItem(_ id: ItemId)
   case removeItem(_ id: TripItemId)
-  case reorderItems(from: IndexSet, to: Int)
+  case reorderItems(for: CategoryId?, from: IndexSet, to: Int)
   case searchItem(_ query: String)
   case updateDate(_ newDate: TripDate?)
   case updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?)

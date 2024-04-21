@@ -68,7 +68,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .addNewItem(name): addNewItem(name)
     case let .deleteItem(itemId): deleteItem(itemId)
     case let .removeItem(itemId): removeItem(itemId)
-    case let .reorderItems(from, to): reorderItems(from, to)
+    case let .reorderItems(categoryId, from, to): reorderItems(categoryId, from, to)
     case let .searchItem(query): searchItem(query)
     case let .updateDate(newDate): updateDate(newDate)
     case let .updateItemCategory(tripItem, newCategory): updateItemCategory(tripItem, newCategory)
@@ -96,11 +96,14 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   }
   
   private func reorderItems(
+    _ categoryId: CategoryId?,
     _ from: IndexSet,
     _ to: Int
   ) {
-    state = state.moveItems(from: from, to: to)
-    // TODO: Task { await tripRepository.updateItemsOrder(sortedItems: state.toTrip().items) }
+    state = state.moveItems(for: categoryId, from: from, to: to)
+    if let items = state.categories.first(where: { $0.category?.id == categoryId })?.items {
+      Task { await tripRepository.updateItemsOrder(sortedItems: items) }
+    }
   }
   
   private func removeItem(_ itemId: TripItemId) {

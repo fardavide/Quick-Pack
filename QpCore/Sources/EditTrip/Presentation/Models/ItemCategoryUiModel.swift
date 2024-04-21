@@ -1,3 +1,4 @@
+import Foundation
 import ItemDomain
 import TripDomain
 
@@ -22,6 +23,12 @@ extension ItemCategoryUiModel {
       category: category,
       items: [tripItem] + items
     )
+  }
+  
+  func moveItems(from: IndexSet, to: Int) -> ItemCategoryUiModel {
+    var items = items
+    items.move(fromOffsets: from, toOffset: to)
+    return ItemCategoryUiModel(category: category, items: items)
   }
   
   func removeItem(itemId: ItemId) -> ItemCategoryUiModel {

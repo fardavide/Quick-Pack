@@ -3,23 +3,20 @@ import Presentation
 import SwiftUI
 import TripDomain
 
-struct TripItemList: View {
+struct TripItems: View {
   let categories: [ItemCategoryUiModel]
   let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
-
+    
   public var body: some View {
-    List {
-      ForEach(categories) { uiModel in
-        CategorySection(
-          uiModel: uiModel,
-          allCategories: allCategories,
-          send: send
-        )
-      }
-      .onMove { indices, newOffset in send(.reorderItems(from: indices, to: newOffset)) }
-      .animation(.default, value: categories)
+    ForEach(categories) { uiModel in
+      CategorySection(
+        uiModel: uiModel,
+        allCategories: allCategories,
+        send: send
+      )
     }
+    .animation(.default, value: categories)
   }
 }
 
@@ -39,17 +36,19 @@ private struct CategorySection: View {
           send: send
         )
       }
+      .onMove { indices, newOffset in
+        send(.reorderItems(for: uiModel.category?.id, from: indices, to: newOffset))
+      }
     } header: {
       HStack {
         Text(uiModel.category?.name ?? "Items")
         Spacer()
-        Image(systemSymbol: .chevronDown)
+        Image(systemSymbol: isExpanded ? .chevronUp : .chevronDown)
       }
-      .contentShape(Rectangle())
+      .contentShape(.rect)
       .onTapGesture { isExpanded = !isExpanded }
     }
     .animation(.default, value: uiModel)
-    .animation(.default, value: isExpanded)
   }
 }
 
@@ -72,12 +71,8 @@ private struct TripItemView: View {
         }
       }
     )
-    HStack {
-      Toggle(isOn: isCheckedBinding) {
-        Text(tripItem.item.name).tint(.primary)
-      }
-      Spacer()
-      Image(systemSymbol: .line3Horizontal)
+    Toggle(isOn: isCheckedBinding) {
+      Text(tripItem.item.name).tint(.primary)
     }
     .contentShape(Rectangle())
     .toggleStyle(CheckboxToggleStyle())
@@ -110,14 +105,17 @@ private struct TripItemView: View {
       Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
     }
     .sheet(isPresented: $showSetCategorySheet) {
-      SetCategorySheetContent(
-        currentCategory: tripItem.item.category,
-        allCategories: allCategories,
-        onCategoryChange: { newCategory in
-          send(.updateItemCategory(tripItem, newCategory))
-          showSetCategorySheet = false
-        }
-      )
+      NavigationStack {
+        SetCategorySheetContent(
+          currentCategory: tripItem.item.category,
+          allCategories: allCategories,
+          onCategoryChange: { newCategory in
+            send(.updateItemCategory(tripItem, newCategory))
+            showSetCategorySheet = false
+          }
+        )
+        .navigationTitle("Set category for \(tripItem.item.name)")
+      }
     }
   }
 }
@@ -136,12 +134,14 @@ private struct CheckboxToggleStyle: ToggleStyle {
 }
 
 #Preview {
-  TripItemList(
-    categories: [
-      ItemCategoryUiModel.samples.tech,
-      ItemCategoryUiModel.samples.clothes
-    ],
-    allCategories: .loading,
-    send: { _ in }
-  )
+  List {
+    TripItems(
+      categories: [
+        ItemCategoryUiModel.samples.tech,
+        ItemCategoryUiModel.samples.clothes
+      ],
+      allCategories: .loading,
+      send: { _ in }
+    )
+  }
 }

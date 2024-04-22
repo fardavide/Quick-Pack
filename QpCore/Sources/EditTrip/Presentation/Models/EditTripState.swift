@@ -13,6 +13,12 @@ public struct EditTripState {
   let name: String
   let searchItems: [Item]
   let searchQuery: String
+  
+  var canCreateItem: Bool {
+    searchQuery.isNotBlank &&
+    searchItems.none { $0.name.localizedStandardCompare(searchQuery).rawValue == 0 } &&
+    categories.allSatisfy { $0.items.none { $0.item.name.localizedCaseInsensitiveCompare(searchQuery).rawValue == 0 } }
+  }
 }
 
 extension Trip {

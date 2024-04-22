@@ -86,13 +86,13 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
 
   private func addItem(_ item: Item) {
     let tripItem = TripItem(id: .new(), item: item, isChecked: false, order: 0)
-    state = state.insertItem(tripItem)
+    state = state.insertItem(tripItem).withSearchQuery("")
     Task { await tripRepository.addItem(tripItem, to: state.id) }
   }
   
   private func addNewItem(_ name: String) {
     let tripItem = TripItem.new(item: .new(name: name))
-    state = state.insertItem(tripItem)
+    state = state.insertItem(tripItem).withSearchQuery("")
     Task { await tripRepository.addItem(tripItem, to: state.id) }
   }
   

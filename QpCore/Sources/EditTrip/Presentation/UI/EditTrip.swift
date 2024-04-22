@@ -71,7 +71,7 @@ private struct EditTripContent: View {
               send: send
             )
           }
-          if state.searchQuery.isNotBlank {
+          if state.canCreateItem {
             Button { send(.addNewItem(name: state.searchQuery)) } label: {
               Text("Create '\(state.searchQuery)'")
             }

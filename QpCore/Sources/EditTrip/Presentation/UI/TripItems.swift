@@ -11,7 +11,7 @@ struct TripItems: View {
     
   public var body: some View {
     ForEach(categories) { uiModel in
-      CategorySection(
+      CategoryGroup(
         uiModel: uiModel,
         allCategories: allCategories,
         send: send
@@ -21,7 +21,7 @@ struct TripItems: View {
   }
 }
 
-private struct CategorySection: View {
+private struct CategoryGroup: View {
   let uiModel: ItemCategoryUiModel
   let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
@@ -29,7 +29,7 @@ private struct CategorySection: View {
   @State var isExpanded: Bool = true
 
   var body: some View {
-    Section(isExpanded: $isExpanded) {
+    DisclosureGroup(isExpanded: $isExpanded) {
       ForEach(uiModel.items) { tripItem in
         TripItemView(
           tripItem: tripItem,
@@ -40,14 +40,18 @@ private struct CategorySection: View {
       .onMove { indices, newOffset in
         send(.reorderItems(for: uiModel.category?.id, from: indices, to: newOffset))
       }
-    } header: {
+    } label: {
       HStack {
-        Text(uiModel.category?.name ?? "Items")
-        Spacer()
-        Image(systemSymbol: isExpanded ? .chevronUp : .chevronDown)
+        if let categoryName = uiModel.category?.name {
+          Text(categoryName)
+          if !isExpanded {
+            Text(uiModel.itemsSummary)
+              .font(.caption)
+          }
+        } else {
+          Text(uiModel.itemsSummary)
+        }
       }
-      .contentShape(.rect)
-      .onTapGesture { isExpanded = !isExpanded }
     }
     .animation(.default, value: uiModel)
   }
@@ -139,7 +143,8 @@ private struct CheckboxToggleStyle: ToggleStyle {
     TripItems(
       categories: [
         ItemCategoryUiModel.samples.tech,
-        ItemCategoryUiModel.samples.clothes
+        ItemCategoryUiModel.samples.clothes,
+        ItemCategoryUiModel.samples.noCategory
       ],
       allCategories: .loading,
       send: { _ in }

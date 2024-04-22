@@ -20,7 +20,13 @@ extension Trip {
     EditTripState(
       allCategories: .loading,
       categories: items.group(by: \.item.category)
-        .map { category, tripItem in ItemCategoryUiModel(category: category, items: tripItem) }
+        .map { category, tripItem in 
+          ItemCategoryUiModel(
+            category: category,
+            items: tripItem,
+            itemsSummary: ItemCategoryUiModel.buildItemsSummary(items: tripItem)
+          )
+        }
         .sorted(),
       date: date,
       id: id,
@@ -212,7 +218,8 @@ extension EditTripState {
     } else {
       let baseCategory = ItemCategoryUiModel(
         category: category,
-        items: []
+        items: [],
+        itemsSummary: ""
       )
       return EditTripState(
         allCategories: allCategories,

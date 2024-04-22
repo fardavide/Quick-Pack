@@ -17,7 +17,7 @@ final class RealCategoryRepository: AppStorage, CategoryRepository {
       context.fetchAll(
         map: { $0.toDomainModels() },
         FetchDescriptor<CategorySwiftDataModel>(
-          sortBy: [SortDescriptor(\.name)]
+          sortBy: [SortDescriptor(\.order), SortDescriptor(\.name)]
         )
       )
     }
@@ -30,6 +30,16 @@ final class RealCategoryRepository: AppStorage, CategoryRepository {
   @MainActor func updateCategoryName(categoryId: CategoryId, name: String) {
     update(categoryId.fetchDescriptor) { model in
       model.name = name
+    }
+  }
+  
+  @MainActor func updateCategoriesOrder(sortedCategories: [ItemCategory]) {
+    transaction { context in
+      for (index, category) in sortedCategories.withIndices() {
+        updateInTransaction(context: context, category.id.fetchDescriptor) { model in
+          model.order = index
+        }
+      }
     }
   }
   

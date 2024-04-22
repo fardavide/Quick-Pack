@@ -14,7 +14,13 @@ struct ItemCategoryUiModel: Comparable, Equatable, Identifiable {
   }
   
   static func < (lhs: ItemCategoryUiModel, rhs: ItemCategoryUiModel) -> Bool {
-    (lhs.category?.name ?? "") < (rhs.category?.name ?? "")
+    (
+      lhs.category?.order ?? Int.min,
+      lhs.category?.name ?? ""
+    ) < (
+      rhs.category?.order ?? Int.min,
+      rhs.category?.name ?? ""
+    )
   }
 }
 

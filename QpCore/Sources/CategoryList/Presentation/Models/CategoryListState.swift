@@ -1,4 +1,5 @@
 import CategoryDomain
+import Foundation
 import Presentation
 
 public struct CategoryListState: Equatable {
@@ -8,6 +9,36 @@ public struct CategoryListState: Equatable {
 public extension CategoryListState {
   static let initial = CategoryListState(categories: .loading)
   static let samples = CategoryListStateSamples()
+  
+  func moveCategories(from: IndexSet, to: Int) -> CategoryListState {
+    CategoryListState(
+      categories: categories.map {
+        var array = $0
+        array.move(fromOffsets: from, toOffset: to)
+        return array
+      }
+    )
+  }
+  
+  func removeCategory(categoryId: CategoryId) -> CategoryListState {
+    CategoryListState(
+      categories: categories.map { $0.filter { $0.id != categoryId } }
+    )
+  }
+  
+  func updateCategoryName(categoryId: CategoryId, newName: String) -> CategoryListState {
+    CategoryListState(
+      categories: categories.map {
+        $0.map { category in
+          if category.id != categoryId {
+            category.withName(newName)
+          } else {
+            category
+          }
+        }
+      }
+    )
+  }
 }
 
 public final class CategoryListStateSamples {
@@ -20,4 +51,5 @@ public final class CategoryListStateSamples {
       ]
     )
   )
+  let empty = CategoryListState(categories: .content([]))
 }

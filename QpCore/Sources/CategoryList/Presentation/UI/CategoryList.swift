@@ -35,7 +35,7 @@ private struct CategoryListContent: View {
       } else {
         SpecialCaseView.primary(
           title: "No category found",
-          image: .macbookAndIphone
+          image: .shippingbox
         )
       }
     }
@@ -51,25 +51,33 @@ private struct CategoryListItems: View {
   @State private var newName = ""
   
   var body: some View {
-    List(categories) { category in
-      HStack {
-        Text(category.name)
+    List {
+      ForEach(categories) { category in
+        HStack {
+          Text(category.name)
+        }
+        .swipeActions(edge: .trailing) {
+          Button {
+            newName = category.name
+            renamingCategory = category
+            isRenamingCategory = true
+          } label: {
+            Label("Edit", systemSymbol: .pencil)
+              .tint(.accentColor)
+          }
+          Button { send(.delete(category.id)) } label: {
+            Label("Delete", systemSymbol: .trash)
+              .tint(.red)
+          }
+        }
       }
-      .swipeActions(edge: .trailing) {
-        Button {
-          newName = category.name
-          renamingCategory = category
-          isRenamingCategory = true
-        } label: {
-          Label("Edit", systemSymbol: .pencil)
-            .tint(.accentColor)
-        }
-        Button { send(.delete(category.id)) } label: {
-          Label("Delete", systemSymbol: .trash)
-            .tint(.red)
-        }
+      .onMove { indices, newOffset in
+        send(.reorderCategories(from: indices, to: newOffset))
       }
     }
+    #if !os(macOS)
+    .environment(\.editMode, .constant(.active))
+    #endif
     .animation(.default, value: categories)
     .alert(
       "Rename \(renamingCategory?.name ?? "category")",
@@ -87,9 +95,16 @@ private struct CategoryListItems: View {
   }
 }
 
-#Preview {
+#Preview("content") {
   CategoryListContent(
     state: .samples.content,
+    send: { _ in }
+  )
+}
+
+#Preview("empty") {
+  CategoryListContent(
+    state: .samples.empty,
     send: { _ in }
   )
 }

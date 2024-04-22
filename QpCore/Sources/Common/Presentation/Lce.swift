@@ -14,11 +14,27 @@ public typealias GenericLce<C: Equatable> = Lce<C, GenericError>
 public typealias DataLce<C: Equatable> = Lce<C, DataError>
 
 public extension Lce {
-  func requireContent() -> C {
+  
+  var content: C? {
     switch self {
     case let .content(content): content
-    default: fatalError("Required content, but was \(self)")
+    default: nil
     }
+  }
+  
+  @inlinable func map(_ transform: (C) -> C) -> Lce<C, E> {
+    switch self {
+    case let .content(content): .content(transform(content))
+    case let .error(error): .error(error)
+    case .loading: .loading
+    }
+  }
+  
+  func requireContent() -> C {
+    guard let content = content else {
+      fatalError("Required content, but was \(self)")
+    }
+    return content
   }
 }
 

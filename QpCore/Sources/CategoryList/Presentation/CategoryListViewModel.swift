@@ -52,15 +52,25 @@ public final class RealCategoryListViewModel: CategoryListViewModel {
   public override func send(_ action: CategoryListAction) {
     switch action {
     case let .delete(id): deleteItem(id)
+    case let .reorderCategories(from, to): reorderCategories(from, to)
     case let .updateName(id, newName): updateItemName(id, newName)
     }
   }
   
   private func deleteItem(_ id: CategoryId) {
+    state = state.removeCategory(categoryId: id)
     Task { await categoryRepository.deleteCategory(categoryId: id) }
   }
   
+  private func reorderCategories(_ from: IndexSet, _ to: Int) {
+    state = state.moveCategories(from: from, to: to)
+    if let sortedCategories = state.categories.content {
+      Task { await categoryRepository.updateCategoriesOrder(sortedCategories: sortedCategories) }
+    }
+  }
+  
   private func updateItemName(_ id: CategoryId, _ newName: String) {
+    state = state.updateCategoryName(categoryId: id, newName: newName)
     Task { await categoryRepository.updateCategoryName(categoryId: id, name: newName) }
   }
 }

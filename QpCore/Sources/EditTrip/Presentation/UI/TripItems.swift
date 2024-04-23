@@ -100,6 +100,11 @@ private struct TripItemView: View {
           Label("Set notes", systemSymbol: .noteText)
             .tint(.accentColor)
         }
+        
+        Button { send(.removeItem(tripItem.id)) } label: {
+          Label("Remove item", systemSymbol: .xmark)
+            .tint(.accentColor)
+        }
       }
       
       Section("Edit item") {
@@ -121,12 +126,6 @@ private struct TripItemView: View {
           Label("Delete", systemSymbol: .trash)
             .tint(.red)
         }
-      }
-    }
-    .swipeActions(edge: .trailing) {
-      Button { send(.removeItem(tripItem.id)) } label: {
-        Label("Remove item", systemSymbol: .xmark)
-          .tint(.accentColor)
       }
     }
     .alert("Rename \(tripItem.item.name)", isPresented: $showRename) {

@@ -5,9 +5,9 @@ import SwiftUI
 
 public struct LceView<Content, LceError: Error>: View where Content: Equatable, LceError: Equatable {
   
-  private let content: (Content) -> AnyView
+  @ViewBuilder private let content: (Content) -> AnyView
   private let errorMessage: LocalizedStringKey?
-  private let error: (LceError) -> AnyView
+  @ViewBuilder private let error: (LceError) -> AnyView
   private let lce: Lce<Content, LceError>
   
   public var body: some View {
@@ -26,7 +26,7 @@ public extension LceView where LceError == GenericError {
   init(
     lce: GenericLce<Content>,
     errorMessage: LocalizedStringKey,
-    content: @escaping (Content) -> any View,
+    @ViewBuilder content: @escaping (Content) -> some View,
     retry: (() -> Void)? = nil
   ) {
     self.content = { data in AnyView(content(data)) }
@@ -47,7 +47,7 @@ public extension LceView where LceError == DataError {
   init(
     lce: DataLce<Content>,
     errorMessage: LocalizedStringKey? = nil,
-    content: @escaping (Content) -> any View,
+    @ViewBuilder content: @escaping (Content) -> some View,
     retry: (() -> Void)? = nil
   ) {
     self.content = { data in AnyView(content(data)) }

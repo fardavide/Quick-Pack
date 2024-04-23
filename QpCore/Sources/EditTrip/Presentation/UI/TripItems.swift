@@ -1,4 +1,3 @@
-import CategoryDomain
 import ItemDomain
 import Presentation
 import SwiftUI
@@ -6,15 +5,15 @@ import TripDomain
 
 struct TripItems: View {
   let categories: [ItemCategoryUiModel]
-  let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
+  let request: (EditTripRequest) -> Void
     
   public var body: some View {
     ForEach(categories) { uiModel in
       CategoryGroup(
         uiModel: uiModel,
-        allCategories: allCategories,
-        send: send
+        send: send,
+        request: request
       )
     }
     .animation(.default, value: categories)
@@ -23,8 +22,8 @@ struct TripItems: View {
 
 private struct CategoryGroup: View {
   let uiModel: ItemCategoryUiModel
-  let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
+  let request: (EditTripRequest) -> Void
 
   @State var isExpanded: Bool = true
 
@@ -33,8 +32,8 @@ private struct CategoryGroup: View {
       ForEach(uiModel.items) { tripItem in
         TripItemView(
           tripItem: tripItem,
-          allCategories: allCategories,
-          send: send
+          send: send,
+          request: request
         )
       }
       .onMove { indices, newOffset in
@@ -59,15 +58,8 @@ private struct CategoryGroup: View {
 
 private struct TripItemView: View {
   let tripItem: TripItem
-  let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
-  
-  @State private var showRename: Bool = false
-  @State private var showSetCategory: Bool = false
-  @State private var showSetNotes: Bool = false
-  
-  @State private var newName = ""
-  @State private var newNotes = ""
+  let request: (EditTripRequest) -> Void
 
   var body: some View {
     let isCheckedBinding = Binding(
@@ -87,16 +79,12 @@ private struct TripItemView: View {
           .font(.caption)
       }
     }
-    .contentShape(Rectangle())
     .toggleStyle(CheckboxToggleStyle())
     .contextMenu {
       
       Section("Edit item for this trip") {
         
-        Button {
-          showSetNotes = true
-          newNotes = tripItem.notes
-        } label: {
+        Button { request(.showSetNotes(tripItem)) } label: {
           Label("Set notes", systemSymbol: .noteText)
             .tint(.accentColor)
         }
@@ -109,15 +97,12 @@ private struct TripItemView: View {
       
       Section("Edit item") {
         
-        Button { showSetCategory = true } label: {
+        Button { request(.showSetCategory(tripItem)) } label: {
           Label("Set category", systemSymbol: .rectangleAndPencilAndEllipsis)
             .tint(.accentColor)
         }
         
-        Button {
-          showRename = true
-          newName = tripItem.item.name
-        } label: {
+        Button { request(.showRename(tripItem)) } label: {
           Label("Rename", systemSymbol: .pencil)
             .tint(.accentColor)
         }
@@ -126,29 +111,6 @@ private struct TripItemView: View {
           Label("Delete", systemSymbol: .trash)
             .tint(.red)
         }
-      }
-    }
-    .alert("Rename \(tripItem.item.name)", isPresented: $showRename) {
-      TextField("New name", text: $newName)
-      Button("Cancel") { showRename = false }
-      Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
-    }
-    .alert("Set notes for \(tripItem.item.name)", isPresented: $showSetNotes) {
-      TextField("Notes", text: $newNotes)
-      Button("Cancel") { showSetNotes = false }
-      Button("OK") { send(.updateItemNotes(tripItem.id, newNotes)) }
-    }
-    .sheet(isPresented: $showSetCategory) {
-      NavigationStack {
-        SetCategorySheetContent(
-          currentCategory: tripItem.item.category,
-          allCategories: allCategories,
-          onCategoryChange: { newCategory in
-            send(.updateItemCategory(tripItem, newCategory))
-            showSetCategory = false
-          }
-        )
-        .navigationTitle("Set category for \(tripItem.item.name)")
       }
     }
   }
@@ -175,8 +137,8 @@ private struct CheckboxToggleStyle: ToggleStyle {
         ItemCategoryUiModel.samples.clothes,
         ItemCategoryUiModel.samples.noCategory
       ],
-      allCategories: .loading,
-      send: { _ in }
+      send: { _ in },
+      request: { _ in }
     )
   }
 }

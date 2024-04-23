@@ -22,8 +22,12 @@ public struct EditTrip: View {
 private struct EditTripContent: View {
   let state: EditTripState
   let send: (EditTripAction) -> Void
-
+  
   private let scrollTarget = "target"
+  @State private var editingTripItem: TripItem? = nil
+  @State private var showRename: Bool = false
+  @State private var showSetCategory: Bool = false
+  @State private var showSetNotes: Bool = false
   
   var body: some View {
     let nameBinding = Binding(
@@ -81,20 +85,62 @@ private struct EditTripContent: View {
         
         TripItems(
           categories: state.categories,
-          allCategories: state.allCategories,
-          send: send
+          send: send,
+          request: handleRequest
         )
-        .animation(.default, value: state.categories)
       }
-      #if !os(macOS)
+      .alert("Rename", isPresented: $showRename, presenting: editingTripItem) { tripItem in
+        @State var newName = tripItem.item.name
+        TextField("New name", text: $newName)
+        Button("Cancel") { showRename = false }
+        Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
+      } message: { tripItem in
+        Text("Rename \(tripItem.item.name)")
+      }
+      .alert("Set notes", isPresented: $showSetNotes, presenting: editingTripItem) { tripItem in
+        @State var newNotes = tripItem.notes
+        TextField("Notes", text: $newNotes)
+        Button("Cancel") { showSetNotes = false }
+        Button("OK") { send(.updateItemNotes(tripItem.id, newNotes)) }
+      } message: { tripItem in
+        Text("Set notes for \(tripItem.item.name)")
+      }
+      .sheet(isPresented: $showSetCategory) {
+        NavigationStack {
+          SetCategorySheetContent(
+            currentCategory: editingTripItem!.item.category,
+            allCategories: state.allCategories,
+            onCategoryChange: { newCategory in
+              send(.updateItemCategory(editingTripItem!, newCategory))
+              showSetCategory = false
+            }
+          )
+          .navigationTitle("Set category for \(editingTripItem!.item.name)")
+        }
+      }
+#if !os(macOS)
       .environment(\.editMode, .constant(.active))
-      #endif
+#endif
       .animation(.default, value: state.categories)
       .animation(.default, value: state.searchQuery)
       .animation(.default, value: state.searchItems)
     }
     .navigationTitle("Edit trip")
     .scrollDismissesKeyboard(.interactively)
+  }
+  
+  private func handleRequest(_ request: EditTripRequest) {
+    switch request {
+    case let .showRename(tripItem):
+      editingTripItem = tripItem
+      showRename = true
+    case let .showSetCategory(tripItem):
+      editingTripItem = tripItem
+      showSetCategory = true
+    case let .showSetNotes(tripItem):
+      editingTripItem = tripItem
+      showSetNotes = true
+    }
   }
 }
 

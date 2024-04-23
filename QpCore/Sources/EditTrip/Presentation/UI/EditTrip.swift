@@ -24,11 +24,13 @@ private struct EditTripContent: View {
   let send: (EditTripAction) -> Void
   
   private let scrollTarget = "target"
-  @State private var editingTripItem: TripItem? = nil
-  @State private var showRename: Bool = false
-  @State private var showSetCategory: Bool = false
-  @State private var showSetNotes: Bool = false
-  
+  @State private var editingTripItem: TripItem?
+  @State private var showRename = false
+  @State private var showSetCategory = false
+  @State private var showSetNotes = false
+  @State private var newName = ""
+  @State private var newNotes = ""
+
   var body: some View {
     let nameBinding = Binding(
       get: { state.name },
@@ -90,7 +92,6 @@ private struct EditTripContent: View {
         )
       }
       .alert("Rename", isPresented: $showRename, presenting: editingTripItem) { tripItem in
-        @State var newName = tripItem.item.name
         TextField("New name", text: $newName)
         Button("Cancel") { showRename = false }
         Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
@@ -98,7 +99,6 @@ private struct EditTripContent: View {
         Text("Rename \(tripItem.item.name)")
       }
       .alert("Set notes", isPresented: $showSetNotes, presenting: editingTripItem) { tripItem in
-        @State var newNotes = tripItem.notes
         TextField("Notes", text: $newNotes)
         Button("Cancel") { showSetNotes = false }
         Button("OK") { send(.updateItemNotes(tripItem.id, newNotes)) }
@@ -133,12 +133,14 @@ private struct EditTripContent: View {
     switch request {
     case let .showRename(tripItem):
       editingTripItem = tripItem
+      newName = tripItem.item.name
       showRename = true
     case let .showSetCategory(tripItem):
       editingTripItem = tripItem
       showSetCategory = true
     case let .showSetNotes(tripItem):
       editingTripItem = tripItem
+      newNotes = tripItem.notes
       showSetNotes = true
     }
   }

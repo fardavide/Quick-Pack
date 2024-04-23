@@ -77,7 +77,8 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .searchItem(query): searchItem(query)
     case let .updateDate(newDate): updateDate(newDate)
     case let .updateItemCategory(tripItem, newCategory): updateItemCategory(tripItem, newCategory)
-    case let .updateItemCheck(itemId, newIsChecked): updateItemCheck(itemId, newIsChecked)
+    case let .updateItemCheck(tripItemId, newIsChecked): updateItemCheck(tripItemId, newIsChecked)
+    case let .updateItemNotes(tripItemId, newNotes): updateItemNotes(tripItemId, newNotes)
     case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
     case let .updateName(newName): updateName(newName)
     }
@@ -85,7 +86,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   // swiftlint:enable cyclomatic_complexity
 
   private func addItem(_ item: Item) {
-    let tripItem = TripItem(id: .new(), item: item, isChecked: false, order: 0)
+    let tripItem = TripItem.new(item: item)
     state = state.insertItem(tripItem).withSearchQuery("")
     Task { await tripRepository.addItem(tripItem, to: state.id) }
   }
@@ -112,9 +113,9 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     }
   }
   
-  private func removeItem(_ itemId: TripItemId) {
-    state = state.removeItem(tripItemId: itemId)
-    Task { await tripRepository.removeItem(itemId: itemId, from: state.id) }
+  private func removeItem(_ tripItemId: TripItemId) {
+    state = state.removeItem(tripItemId: tripItemId)
+    Task { await tripRepository.removeItem(itemId: tripItemId, from: state.id) }
   }
   
   private func searchItem(_ query: String) {
@@ -139,6 +140,11 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   private func updateItemName(_ itemId: ItemId, _ newName: String) {
     state = state.updateItemName(itemId: itemId, newName)
     Task { await itemRepository.updateItemName(itemId: itemId, name: newName) }
+  }
+  
+  private func updateItemNotes(_ itemId: TripItemId, _ newNotes: String) {
+    state = state.updateItemNotes(tripItemId: itemId, newNotes)
+    Task { await tripRepository.updateItemNotes(tripItemId: itemId, notes: newNotes) }
   }
   
   private func updateName(_ newName: String) {

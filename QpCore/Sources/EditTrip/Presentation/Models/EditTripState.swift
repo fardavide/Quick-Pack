@@ -132,6 +132,19 @@ extension EditTripState {
     )
   }
   
+  func updateItemNotes(tripItemId: TripItemId, _ newNotes: String) -> EditTripState {
+    EditTripState(
+      allCategories: allCategories,
+      categories: categories.map { $0.updateItemNotes(tripItemId: tripItemId, newNotes) },
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
   func withDate(_ date: TripDate?) -> EditTripState {
     EditTripState(
       allCategories: allCategories,

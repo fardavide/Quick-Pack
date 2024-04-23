@@ -10,6 +10,7 @@ public final class TripItemSwiftDataModel: IdentifiableModel {
   @Relationship(deleteRule: .nullify, inverse: \ItemSwiftDataModel.tripItems)
   var item: ItemSwiftDataModel?
   public var isChecked: Bool = false
+  public var notes: String = ""
   public var order: Int = 0
   var trip: TripSwiftDataModel?
   
@@ -30,11 +31,13 @@ public final class TripItemSwiftDataModel: IdentifiableModel {
     id: String,
     item: ItemSwiftDataModel?,
     isChecked: Bool,
+    notes: String,
     order: Int
   ) {
     self.id = id
     self.item = item
     self.isChecked = isChecked
+    self.notes = notes
     self.order = order
   }
 }
@@ -45,6 +48,7 @@ public extension TripItem {
       id: item.id.value,
       item: item.toSwiftDataModel(),
       isChecked: isChecked,
+      notes: notes,
       order: order
     )
   }
@@ -65,6 +69,7 @@ extension [TripItemSwiftDataModel] {
         id: TripItemId(swiftDataModel.id),
         item: try swiftDataModel.item.require("Trip item's item").toDomainModel(),
         isChecked: swiftDataModel.isChecked,
+        notes: swiftDataModel.notes,
         order: swiftDataModel.order
       )
     }

@@ -62,10 +62,12 @@ private struct TripItemView: View {
   let allCategories: DataLce<[ItemCategory]>
   let send: (EditTripAction) -> Void
   
-  @State var showRenameAlert: Bool = false
-  @State var showSetCategorySheet: Bool = false
+  @State private var showRename: Bool = false
+  @State private var showSetCategory: Bool = false
+  @State private var showSetNotes: Bool = false
   
   @State private var newName = ""
+  @State private var newNotes = ""
 
   var body: some View {
     let isCheckedBinding = Binding(
@@ -77,25 +79,48 @@ private struct TripItemView: View {
       }
     )
     Toggle(isOn: isCheckedBinding) {
-      Text(tripItem.item.name).tint(.primary)
+      HStack {
+        Text(tripItem.item.name)
+          .tint(.primary)
+        Text(tripItem.notes)
+          .tint(.secondary)
+          .font(.caption)
+      }
     }
     .contentShape(Rectangle())
     .toggleStyle(CheckboxToggleStyle())
     .contextMenu {
-      Button { showSetCategorySheet = true } label: {
-        Label("Set category", systemSymbol: .rectangleAndPencilAndEllipsis)
-          .tint(.accentColor)
+      
+      Section("Edit item for this trip") {
+        
+        Button {
+          showSetNotes = true
+          newNotes = tripItem.notes
+        } label: {
+          Label("Set notes", systemSymbol: .noteText)
+            .tint(.accentColor)
+        }
       }
-      Button {
-        showRenameAlert = true
-        newName = tripItem.item.name
-      } label: {
-        Label("Rename", systemSymbol: .pencil)
-          .tint(.accentColor)
-      }
-      Button { send(.deleteItem(tripItem.item.id)) } label: {
-        Label("Delete", systemSymbol: .trash)
-          .tint(.red)
+      
+      Section("Edit item") {
+        
+        Button { showSetCategory = true } label: {
+          Label("Set category", systemSymbol: .rectangleAndPencilAndEllipsis)
+            .tint(.accentColor)
+        }
+        
+        Button {
+          showRename = true
+          newName = tripItem.item.name
+        } label: {
+          Label("Rename", systemSymbol: .pencil)
+            .tint(.accentColor)
+        }
+       
+        Button { send(.deleteItem(tripItem.item.id)) } label: {
+          Label("Delete", systemSymbol: .trash)
+            .tint(.red)
+        }
       }
     }
     .swipeActions(edge: .trailing) {
@@ -104,19 +129,24 @@ private struct TripItemView: View {
           .tint(.accentColor)
       }
     }
-    .alert("Rename \(tripItem.item.name)", isPresented: $showRenameAlert) {
+    .alert("Rename \(tripItem.item.name)", isPresented: $showRename) {
       TextField("New name", text: $newName)
-      Button("Cancel") { showRenameAlert = false }
+      Button("Cancel") { showRename = false }
       Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
     }
-    .sheet(isPresented: $showSetCategorySheet) {
+    .alert("Set notes for \(tripItem.item.name)", isPresented: $showSetNotes) {
+      TextField("Notes", text: $newNotes)
+      Button("Cancel") { showSetNotes = false }
+      Button("OK") { send(.updateItemNotes(tripItem.id, newNotes)) }
+    }
+    .sheet(isPresented: $showSetCategory) {
       NavigationStack {
         SetCategorySheetContent(
           currentCategory: tripItem.item.category,
           allCategories: allCategories,
           onCategoryChange: { newCategory in
             send(.updateItemCategory(tripItem, newCategory))
-            showSetCategorySheet = false
+            showSetCategory = false
           }
         )
         .navigationTitle("Set category for \(tripItem.item.name)")

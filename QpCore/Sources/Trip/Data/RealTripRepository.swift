@@ -71,6 +71,7 @@ final class RealTripRepository: AppStorage, TripRepository {
         id: tripItem.id.value,
         item: item,
         isChecked: tripItem.isChecked,
+        notes: tripItem.notes,
         order: tripItem.order
       )
       updateInTransaction(context: context, tripId.fetchDescriptor) { model in
@@ -89,6 +90,12 @@ final class RealTripRepository: AppStorage, TripRepository {
   @MainActor func updateItemCheck(tripItemId: TripItemId, isChecked: Bool) {
     update(tripItemId.fetchDescriptor) { model in
       model.isChecked = isChecked
+    }
+  }
+  
+  @MainActor func updateItemNotes(tripItemId: TripItemId, notes: String) {
+    update(tripItemId.fetchDescriptor) { model in
+      model.notes = notes
     }
   }
   

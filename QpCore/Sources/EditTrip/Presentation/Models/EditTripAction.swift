@@ -14,5 +14,6 @@ public enum EditTripAction {
   case updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?)
   case updateItemCheck(_ id: TripItemId, _ newIsChecked: Bool)
   case updateItemName(_ id: ItemId, _ newName: String)
+  case updateItemNotes(_ id: TripItemId, _ newNotes: String)
   case updateName(_ newName: String)
 }

@@ -88,12 +88,13 @@ extension ItemCategoryUiModel {
   
   func updateItemName(itemId: ItemId, _ newName: String) -> ItemCategoryUiModel {
     updateItem(itemId: itemId) { tripItem in
-      TripItem(
-        id: tripItem.id,
-        item: tripItem.item.withName(newName),
-        isChecked: tripItem.isChecked,
-        order: tripItem.order
-      )
+      tripItem.withItemName(name: newName)
+    }
+  }
+  
+  func updateItemNotes(tripItemId: TripItemId, _ newNotes: String) -> ItemCategoryUiModel {
+    updateItem(tripItemId: tripItemId) { tripItem in
+      tripItem.withNotes(notes: newNotes)
     }
   }
   

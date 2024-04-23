@@ -14,6 +14,7 @@ public protocol TripRepository: UndoHandler {
   
   @MainActor func addItem(_ item: TripItem, to tripId: TripId)
   @MainActor func updateItemCheck(tripItemId: TripItemId, isChecked: Bool)
+  @MainActor func updateItemNotes(tripItemId: TripItemId, notes: String)
   @MainActor func updateItemsOrder(sortedItems: [TripItem])
   @MainActor func removeItem(itemId: TripItemId, from tripId: TripId)
 }
@@ -46,6 +47,7 @@ public final class FakeTripRepository: TripRepository {
   
   public func addItem(_ item: TripItem, to tripId: TripId) {}
   public func updateItemCheck(tripItemId: TripItemId, isChecked: Bool) {}
+  public func updateItemNotes(tripItemId: TripItemId, notes: String) {}
   public func updateItemsOrder(sortedItems: [TripItem]) {}
   public func removeItem(itemId: TripItemId, from tripId: TripId) {}
   

@@ -12,7 +12,6 @@ final class TripTests {
   
   @Test func comparable_considersNamesIfSameDate() {
     let baseTrip = Trip.samples.malaysia
-    let date = TripDate(year: 2024)
     #expect(baseTrip.withName("b") > baseTrip.withName("a"))
     #expect(baseTrip.withName("b") < baseTrip.withName("c"))
   }

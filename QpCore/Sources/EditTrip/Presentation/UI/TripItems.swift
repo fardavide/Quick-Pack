@@ -76,7 +76,7 @@ private struct TripItemView: View {
           .tint(.primary)
         Text(tripItem.notes)
           .tint(.secondary)
-          .font(.caption)
+          .font(.caption.weight(.light))
       }
     }
     .toggleStyle(CheckboxToggleStyle())

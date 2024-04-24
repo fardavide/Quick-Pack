@@ -55,6 +55,8 @@ private struct ItemListItems: View {
     List(items) { item in
       HStack {
         Text(item.name)
+        Text(item.category?.name ?? "")
+          .font(.caption2.weight(.light))
       }
       .swipeActions(edge: .trailing) {
         Button { 

@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6BAC4F272BD970CC0054CB63 /* CoreTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreTestPlan.xctestplan; sourceTree = "<group>"; };
 		6BBA333F2BC5A43B00EB803D /* QpModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QpModuleTests.swift; sourceTree = "<group>"; };
 		6BBA33432BC5A46000EB803D /* Scaffolding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scaffolding.swift; sourceTree = "<group>"; };
 		6BC255712BC1A4DC008C5577 /* Quick Pack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Quick Pack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +84,7 @@
 		6BC255682BC1A4DC008C5577 = {
 			isa = PBXGroup;
 			children = (
+				6BAC4F272BD970CC0054CB63 /* CoreTestPlan.xctestplan */,
 				6BC2561E2BC28127008C5577 /* QpCore */,
 				6BC255732BC1A4DC008C5577 /* Quick Pack */,
 				6BC255872BC1A4DD008C5577 /* Quick PackTests */,

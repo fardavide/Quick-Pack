@@ -1,7 +1,10 @@
 import Testing
 
+import CategoryDomain
 import DateUtils
 import Foundation
+import ItemDomain
+import QpUtils
 import TripDomain
 @testable import EditTripPresentation
 
@@ -9,27 +12,30 @@ final class EditTripViewModelTests {
   
   @Test func saveTripName() async {
     // given
-    let scenario = Scenario()
+    let scenario = Scenario(
+      initialTrip: .samples.malaysia
+    )
     
     // when
-    scenario.sut.send(.updateName(newName: "New name"))
+    scenario.sut.send(.updateName("New name"))
     
     // then
-    let savedTrip = await scenario.tripRepository.waitLastCreatedTrip()
-    #expect(savedTrip.name == "New name")
+    let last = await scenario.tripRepository.waitlastUpdateTripName()
+    #expect(last == (.samples.malaysia, "New name"))
   }
   
   @Test func savePreciseTripDate() async {
     // given
-    let scenario = Scenario()
+    let scenario = Scenario(
+      initialTrip: .samples.malaysia
+    )
     
     // when
-    scenario.sut.send(.updateDate(newDate: Date.of(year: 2024, month: .oct, day: 15)))
+    scenario.sut.send(.updateDate(TripDate(year: 2024, month: .oct, day: 15)))
     
     // then
-    let savedTrip = await scenario.tripRepository.waitLastCreatedTrip()
-    #expect(savedTrip.date?.value == Date.of(year: 2024, month: .oct, day: 15))
-    #expect(savedTrip.date?.precision == .exact)
+    let last = await scenario.tripRepository.waitlastUpdateTripDate()
+    #expect(last == (.samples.malaysia, TripDate(year: 2024, month: .oct, day: 15)))
   }
 }
 
@@ -40,11 +46,15 @@ private final class Scenario {
   
   init(
     initialTrip: Trip = .samples.malaysia,
+    categoryRepository: CategoryRepository = FakeCategoryRepository(),
+    itemRepository: ItemRepository = FakeItemRepository(),
     tripRepository: FakeTripRepository = FakeTripRepository()
   ) {
     self.tripRepository = tripRepository
     sut = EditTripViewModel(
       initialTrip: initialTrip,
+      categoryRepository: categoryRepository,
+      itemRepository: itemRepository,
       tripRepository: tripRepository
     )
   }

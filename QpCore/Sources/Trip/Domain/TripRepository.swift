@@ -21,7 +21,9 @@ public protocol TripRepository: UndoHandler {
 
 public final class FakeTripRepository: TripRepository {
   public var trips: any DataPublisher<[Trip]>
-  private var createTripInvocations: [Trip] = []
+  public private(set) var createTrip: [Trip] = []
+  public private(set) var updateTripName: [(TripId, newName: String)] = []
+  public private(set) var updateTripDate: [(TripId, TripDate?)] = []
   
   public init(
     trips: [Trip] = []
@@ -29,19 +31,27 @@ public final class FakeTripRepository: TripRepository {
     self.trips = Just(.success(trips))
   }
   
-  public func lastCreatedTrip() -> Trip? {
-    createTripInvocations.last
+  // MARK: utils
+  public func waitLastCreateTrip() async -> Trip? {
+    await waitNonNil { createTrip.last }
+  }
+  public func waitlastUpdateTripName() async -> (TripId, newName: String) {
+    await waitNonNil { updateTripName.last }
+  }
+  public func waitlastUpdateTripDate() async -> (TripId, TripDate?) {
+    await waitNonNil { updateTripDate.last }
   }
   
-  public func waitLastCreatedTrip() async -> Trip {
-    await waitNonNil { lastCreatedTrip() }
-  }
-  
+  // MARK: overrides
   public func createTrip(_ trip: Trip) {
-    createTripInvocations.append(trip)
+    createTrip.append(trip)
   }
-  public func updateTripName(tripId: TripId, name: String) {}
-  public func updateTripDate(tripId: TripId, date: TripDate?) {}
+  public func updateTripName(tripId: TripId, name: String) {
+    updateTripName.append((tripId, name))
+  }
+  public func updateTripDate(tripId: TripId, date: TripDate?) {
+    updateTripDate.append((tripId, date))
+  }
   public func markTripCompleted(tripId: TripId, isCompleted: Bool) {}
   public func deleteTrip(tripId: TripId) {}
   

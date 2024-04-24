@@ -1,0 +1,171 @@
+{
+  "configurations" : [
+    {
+      "id" : "9AAE5F32-D124-4255-A5CA-096F505CABDA",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "AboutDomainTests",
+        "name" : "AboutDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "AppStorageTests",
+        "name" : "AppStorageTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "CategoryDataTests",
+        "name" : "CategoryDataTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "CategoryDomainTests",
+        "name" : "CategoryDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "CategoryListPresentationTests",
+        "name" : "CategoryListPresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "DateUtilsTests",
+        "name" : "DateUtilsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "DesignTests",
+        "name" : "DesignTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "EditTripPresentationTests",
+        "name" : "EditTripPresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "HomePresentationTests",
+        "name" : "HomePresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "ItemDataTests",
+        "name" : "ItemDataTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "ItemDomainTests",
+        "name" : "ItemDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "ItemListPresentationTests",
+        "name" : "ItemListPresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "PresentationTests",
+        "name" : "PresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "ProviderTests",
+        "name" : "ProviderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "QpStorageTests",
+        "name" : "QpStorageTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "QpUtilsTests",
+        "name" : "QpUtilsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "RealAppStorageTests",
+        "name" : "RealAppStorageTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "SettingsPresentationTests",
+        "name" : "SettingsPresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "TripDataTests",
+        "name" : "TripDataTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "TripDomainTests",
+        "name" : "TripDomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "TripListPresentationTests",
+        "name" : "TripListPresentationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:QpCore",
+        "identifier" : "UndoTests",
+        "name" : "UndoTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -6,7 +6,7 @@ public extension Date {
     let formatter = switch formatter {
     case .iso8601: ISO8601DateFormatter()
     }
-    formatter.timeZone = .current
+    formatter.timeZone = .gmt
     return formatter.date(from: string)
   }
   

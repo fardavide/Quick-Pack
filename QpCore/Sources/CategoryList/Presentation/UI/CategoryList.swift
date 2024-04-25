@@ -55,6 +55,8 @@ private struct CategoryListItems: View {
       ForEach(categories) { category in
         HStack {
           Text(category.name)
+          Text("\(category.itemCount) items")
+            .font(.caption2.weight(.light))
         }
         .swipeActions(edge: .trailing) {
           Button {

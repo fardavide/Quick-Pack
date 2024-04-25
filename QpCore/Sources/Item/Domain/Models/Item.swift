@@ -30,6 +30,10 @@ public extension Item {
   func withName(_ name: String) -> Item {
     Item(category: category, id: id, name: name)
   }
+  
+  func withoutCategory() -> Item {
+    Item(category: nil, id: id, name: name)
+  }
 }
 
 public final class ItemSamples {

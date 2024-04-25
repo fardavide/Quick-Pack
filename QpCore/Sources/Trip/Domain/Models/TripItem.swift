@@ -83,6 +83,16 @@ public extension TripItem {
       order: order
     )
   }
+  
+  func withoutCategory() -> TripItem {
+    TripItem(
+      id: id,
+      item: item.withoutCategory(),
+      isChecked: isChecked,
+      notes: notes,
+      order: order
+    )
+  }
 }
 
 public final class TripItemSamples {

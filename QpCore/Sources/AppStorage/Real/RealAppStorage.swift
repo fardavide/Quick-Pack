@@ -10,11 +10,12 @@ public final class RealAppStorage: AppStorage {
   
   private let schema = Schema(
     [
+      CategorySwiftDataModel.self,
       ItemSwiftDataModel.self,
       TripItemSwiftDataModel.self,
       TripSwiftDataModel.self
     ],
-    version: .init(0, 1, 2)
+    version: .init(0, 1, 3)
   )
   
   public let container: ModelContainer

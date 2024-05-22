@@ -8,7 +8,7 @@ import TripDomain
 public final class TripItemSwiftDataModel: IdentifiableModel {
   public var id: String = UUID().uuidString
   @Relationship(deleteRule: .nullify, inverse: \ItemSwiftDataModel.tripItems)
-  var item: ItemSwiftDataModel?
+  public var item: ItemSwiftDataModel?
   public var isChecked: Bool = false
   public var notes: String = ""
   public var order: Int = 0

@@ -83,7 +83,7 @@ final class RealItemRepository: AppStorage, ItemRepository {
       deleteInTransaction(
         context: context,
         FetchDescriptor<ItemSwiftDataModel>(
-          predicate: #Predicate { $0.name == "" }
+          predicate: #Predicate { $0.name == nil || $0.name == "" }
         )
       )
     }

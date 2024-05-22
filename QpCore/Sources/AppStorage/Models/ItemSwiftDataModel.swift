@@ -64,7 +64,7 @@ public extension ItemSwiftDataModel {
   func toDomainModel() throws -> Item {
     Item(
       category: try category?.toDomainModel(),
-      id: ItemId(try id.require("id")),
+      id: ItemId(try id.require("item id for name '\(String(describing: name))'")),
       name: try name.require("name")
     )
   }

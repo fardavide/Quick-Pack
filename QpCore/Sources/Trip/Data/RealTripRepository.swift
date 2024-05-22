@@ -122,12 +122,21 @@ final class RealTripRepository: AppStorage, TripRepository {
   
   @MainActor func sanitiseItems() async {
     let currentDate = Date.now
-    updateAll(
-      FetchDescriptor<TripSwiftDataModel>()
-    ) { model in
-      if model.date?.value != nil && model.date!.value < currentDate {
-        model.isCompleted = true
+    transaction { context in
+      updateAllInTransaction(
+        context: context,
+        FetchDescriptor<TripSwiftDataModel>()
+      ) { model in
+        if model.date?.value != nil && model.date!.value < currentDate {
+          model.isCompleted = true
+        }
       }
+      deleteInTransaction(
+        context: context,
+        FetchDescriptor<TripItemSwiftDataModel>(
+          predicate: #Predicate { $0.item == nil }
+        )
+      )
     }
   }
 }

@@ -60,7 +60,7 @@ public extension CategoryId {
 public extension CategorySwiftDataModel {
   func toDomainModel() throws -> ItemCategory {
     ItemCategory(
-      id: CategoryId(try id.require("id")),
+      id: CategoryId(try id.require("category id")),
       itemCount: items?.count ?? 0,
       name: try name.require("name"),
       order: order

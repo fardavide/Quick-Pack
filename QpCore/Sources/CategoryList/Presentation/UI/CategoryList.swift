@@ -58,7 +58,7 @@ private struct CategoryListItems: View {
           Text("\(category.itemCount) items")
             .font(.caption2.weight(.light))
         }
-        .swipeActions(edge: .trailing) {
+        .contextMenu {
           Button {
             newName = category.name
             renamingCategory = category

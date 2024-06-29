@@ -1,5 +1,5 @@
 {
-  "originHash" : "6cf0359df0fc9ff0fd5e562986ad5428e1f613fdc2a231f1207a9abd354f6456",
+  "originHash" : "af05909078ac94fb7ad8c01c5f5f907a4a6517bd697ffcbee7c9a8bd69582c40",
   "pins" : [
     {
       "identity" : "sfsafesymbols",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-testing.git",
       "state" : {
-        "revision" : "462243a4ce3c682960bef581a84ae63d1b48f5b6",
-        "version" : "0.8.0"
+        "revision" : "69d59cfc76e5daf498ca61f5af409f594768eef9",
+        "version" : "0.10.0"
       }
     }
   ],

@@ -112,10 +112,16 @@ private struct EditTripContent: View {
             allCategories: state.allCategories,
             onCategoryChange: { newCategory in
               send(.updateItemCategory(editingTripItem!, newCategory))
-              showSetCategory = false
             }
           )
           .navigationTitle("Set category for \(editingTripItem!.item.name)")
+          .toolbar {
+            ToolbarItem(placement: .automatic) {
+              Button("Save") {
+                showSetCategory = false
+              }
+            }
+          }
         }
       }
 #if !os(macOS)

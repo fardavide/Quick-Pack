@@ -124,7 +124,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   
   private func updateDate(_ newDate: TripDate?) {
     state = state.withDate(newDate)
-    Task { await tripRepository.updateTripDate(tripId: state.id, date: state.date) }
+    Task { await tripRepository.updateTripDate(tripId: state.id, date: newDate) }
   }
   
   func updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?) {

@@ -180,7 +180,7 @@ final class RealTripRepositoryTests {
     await scenario.sut.createTrip(trip.withoutItems())
 
     // when
-    await scenario.sut.sanitiseItems()
+    await scenario.sut.cleanUp()
 
     // then
     let savedTrip = await scenario.firstSavedTrip()

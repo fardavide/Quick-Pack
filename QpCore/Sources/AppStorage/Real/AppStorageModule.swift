@@ -1,7 +1,7 @@
 import AppStorage
 import Provider
 
-public final class AppStorageModule: Module {
+public final class AppStorageModule: @preconcurrency Module {
   public init() {}
   
   @MainActor public func register(on provider: Provider) {

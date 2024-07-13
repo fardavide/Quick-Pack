@@ -1,13 +1,13 @@
 {
-  "originHash" : "af05909078ac94fb7ad8c01c5f5f907a4a6517bd697ffcbee7c9a8bd69582c40",
+  "originHash" : "a28c1046368ca1069e886d961ee428b606c2f83f71866aafa1f85b4f7644289f",
   "pins" : [
     {
       "identity" : "sfsafesymbols",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SFSafeSymbols/SFSafeSymbols.git",
       "state" : {
-        "revision" : "7cca2d60925876b5953a2cf7341cd80fbeac983c",
-        "version" : "4.1.1"
+        "revision" : "e2e28f4e56e1769c2ec3c61c9355fc64eb7a535a",
+        "version" : "5.3.0"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax.git",
       "state" : {
-        "revision" : "28018f2a83454368e631fe36c0001ad0db74866e",
-        "version" : "600.0.0-prerelease-2024-05-14"
+        "revision" : "4c6cc0a3b9e8f14b3ae2307c5ccae4de6167ac2c",
+        "version" : "600.0.0-prerelease-2024-06-12"
       }
     },
     {

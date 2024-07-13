@@ -12,6 +12,7 @@ final class DataCleanUpTask {
   
   init(operation: DataCleanUpOperation) {
     self.operation = operation
+    operationQueue.maxConcurrentOperationCount = 1
   }
 
   func runAndSchedule() {
@@ -22,7 +23,7 @@ final class DataCleanUpTask {
   
   private func register() {
     BGTaskScheduler.shared.register(forTaskWithIdentifier: dataCleanUpTaskId, using: nil) { task in
-      self.performCleanup(task: (task as! BGAppRefreshTask))
+      self.performCleanup(task: task as? BGAppRefreshTask)
     }
   }
   
@@ -41,13 +42,12 @@ final class DataCleanUpTask {
   private func performCleanup(task: BGAppRefreshTask? = nil) {
     if let task = task {
       task.expirationHandler = {
-        self.operation.cancel()
+        self.operationQueue.cancelAllOperations()
       }
       
-      operation.completionBlock = {
-        task.setTaskCompleted(success: !self.operation.isCancelled)
-        self.schedule() // Schedule the next task after completion
-      }
+//      operation.completionBlock = {
+//        task.setTaskCompleted(success: !self.operation.isCancelled)
+//      }
     } else {
       operation.completionBlock = {
         print("Immediate cleanup completed")
@@ -80,10 +80,12 @@ final class DataCleanUpOperation: Operation, @unchecked Sendable {
     self.tripRepository = tripRepository
   }
   
-  @MainActor override func main() {
+  override func main() {
     guard !isCancelled else { return }
-    categoryReposiory.cleanUp()
-    itemRepository.cleanUp()
-    tripRepository.cleanUp()
+    Task {
+      categoryReposiory.cleanUp()
+      await itemRepository.cleanUp()
+      await tripRepository.cleanUp()
+    }
   }
 }

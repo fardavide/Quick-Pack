@@ -22,7 +22,6 @@ final class RealTripRepository: AppStorage, TripRepository {
   
   init(container: ModelContainer) {
     self.container = container
-    Task { await sanitiseItems() }
   }
   
   @MainActor func createTrip(_ trip: Trip) {
@@ -120,7 +119,7 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
-  @MainActor func sanitiseItems() async {
+  @MainActor func cleanUp() {
     let currentDate = Date.now
     transaction { context in
       updateAllInTransaction(

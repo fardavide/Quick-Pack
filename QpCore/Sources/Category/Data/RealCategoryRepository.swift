@@ -46,4 +46,6 @@ final class RealCategoryRepository: AppStorage, CategoryRepository {
   @MainActor func deleteCategory(categoryId: CategoryId) {
     delete(categoryId.fetchDescriptor)
   }
+  
+  func cleanUp() {}
 }

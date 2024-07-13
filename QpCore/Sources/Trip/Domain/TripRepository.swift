@@ -17,6 +17,8 @@ public protocol TripRepository: UndoHandler {
   @MainActor func updateItemNotes(tripItemId: TripItemId, notes: String)
   @MainActor func updateItemsOrder(sortedItems: [TripItem])
   @MainActor func removeItem(itemId: TripItemId, from tripId: TripId)
+  
+  @MainActor func cleanUp()
 }
 
 public final class FakeTripRepository: TripRepository {
@@ -64,4 +66,6 @@ public final class FakeTripRepository: TripRepository {
   public func requestUndoOrRedo() -> Undo.UndoHandle? {
     nil
   }
+  
+  public func cleanUp() {}
 }

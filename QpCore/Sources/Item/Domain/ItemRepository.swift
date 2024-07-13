@@ -11,6 +11,8 @@ public protocol ItemRepository: UndoHandler {
   @MainActor func updateItemCategory(itemId: ItemId, category: ItemCategory?)
   @MainActor func updateItemName(itemId: ItemId, name: String)
   @MainActor func deleteItem(itemId: ItemId)
+  
+  @MainActor func cleanUp()
 }
 
 public final class FakeItemRepository: ItemRepository {
@@ -40,4 +42,6 @@ public final class FakeItemRepository: ItemRepository {
   public func requestUndoOrRedo() -> UndoHandle? {
     nil
   }
+  
+  public func cleanUp() {}
 }

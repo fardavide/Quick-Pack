@@ -35,7 +35,6 @@ final class RealItemRepository: AppStorage, ItemRepository {
   
   init(container: ModelContainer) {
     self.container = container
-    Task { await sanitiseItems() }
   }
   
   @MainActor func createItem(_ item: Item) {
@@ -74,7 +73,7 @@ final class RealItemRepository: AppStorage, ItemRepository {
   }
   
   @MainActor
-  private func sanitiseItems() {
+  public func cleanUp() {
     transaction { context in
       updateAllInTransaction(
         context: context,

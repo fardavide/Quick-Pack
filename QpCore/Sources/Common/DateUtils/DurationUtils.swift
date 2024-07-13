@@ -1,9 +1,15 @@
 import Foundation
 
 public extension Duration {
+  
   static prefix func - (duration: Duration) -> Duration {
     let (seconds, attoseconds) = duration.components
     return Duration(secondsComponent: -seconds, attosecondsComponent: -attoseconds)
+  }
+
+  var secondsInterval: Double {
+    let v = components
+    return Double(v.seconds) + Double(v.attoseconds) * 1e-12
   }
 }
 

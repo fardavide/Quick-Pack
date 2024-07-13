@@ -9,6 +9,8 @@ public protocol CategoryRepository: UndoHandler {
   @MainActor func updateCategoryName(categoryId: CategoryId, name: String)
   @MainActor func updateCategoriesOrder(sortedCategories: [ItemCategory])
   @MainActor func deleteCategory(categoryId: CategoryId)
+  
+  func cleanUp()
 }
 
 public final class FakeCategoryRepository: CategoryRepository {
@@ -26,4 +28,6 @@ public final class FakeCategoryRepository: CategoryRepository {
   public func requestUndoOrRedo() -> UndoHandle? {
     nil
   }
+  
+  public func cleanUp() {}
 }

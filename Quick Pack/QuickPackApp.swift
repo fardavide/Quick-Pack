@@ -15,6 +15,7 @@ struct QuickPackApp: App {
   
   init() {
     QpModule().start(with: provider)
+    provider.get(DataCleanUpTask.self).runAndSchedule()
   }
   
   var body: some Scene {
@@ -34,4 +35,16 @@ final class QpModule: Module {
     TripDataModule.self,
     TripListPresentionModule.self
   ]
+  
+  func register(on provider: Provider) {
+    provider
+      .register { DataCleanUpTask(operation: provider.get()) }
+      .register {
+        DataCleanUpOperation(
+          categoryReposiory: provider.get(),
+          itemRepository: provider.get(),
+          tripRepository: provider.get()
+        )
+      }
+  }
 }

@@ -1,6 +1,6 @@
 import CategoryDomain
 
-public struct Item: Equatable, Identifiable {
+@frozen public struct Item: Equatable, Identifiable {
   public let category: ItemCategory?
   public let id: ItemId
   public let name: String
@@ -36,7 +36,7 @@ public extension Item {
   }
 }
 
-public final class ItemSamples {
+public final class ItemSamples: Sendable {
   public let camera = Item(
     category: .samples.tech,
     id: .samples.camera,

@@ -23,12 +23,14 @@ public extension AppStorage {
     return context.undoManager!
   }
   
-  func observe<Model: Equatable>(
-    _ f: @escaping (ModelContext) -> Result<Model, DataError>
+  @inlinable func observe<Model: Equatable>(
+    _ f: @Sendable @escaping (ModelContext) -> Result<Model, DataError>
   ) -> any DataPublisher<Model> {
-    Timer.publish(every: 0.5, on: .main, in: .default) { f(ModelContext(container)) }
-      .share()
-      .removeDuplicates()
+    Timer.publish(every: 0.5, on: .main, in: .default) { [container] in
+      f(ModelContext(container))
+    }
+    .share()
+    .removeDuplicates()
   }
   
   @MainActor func deleteInTransaction<Model: IdentifiableModel>(

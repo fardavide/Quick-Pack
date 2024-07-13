@@ -3,7 +3,7 @@ import QpUtils
 import SFSafeSymbols
 import SwiftUI
 
-public struct LceView<Content, LceError: Error>: View where Content: Equatable, LceError: Equatable {
+public struct LceView<Content, LceError: Error>: View where Content: Equatable, Content: Sendable, LceError: Equatable {
   
   @ViewBuilder private let content: (Content) -> AnyView
   private let errorMessage: LocalizedStringKey?

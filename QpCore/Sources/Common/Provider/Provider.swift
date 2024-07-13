@@ -3,7 +3,7 @@ public final class Provider {
   private var factories: [Key: () -> Any] = [:]
   
   @discardableResult
-  public func register<Output>(_ createInstance: @escaping () -> Output) -> Provider {
+  @MainActor public func register<Output>(_ createInstance: @MainActor @escaping () -> Output) -> Provider {
     let key = Key(Output.self)
     factories[key] = createInstance
     return self

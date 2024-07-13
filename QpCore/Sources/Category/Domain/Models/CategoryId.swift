@@ -1,6 +1,6 @@
 import Foundation
 
-public struct CategoryId: Equatable, Hashable {
+@frozen public struct CategoryId: Equatable, Hashable {
   public let value: String
   
   public init(_ value: String) {
@@ -15,7 +15,7 @@ public extension CategoryId {
   }
 }
 
-public final class CategoryIdSamples {
+public final class CategoryIdSamples: Sendable {
   public let clothes = CategoryId("clothes")
   public let misc = CategoryId("misc")
   public let tech = CategoryId("tech")

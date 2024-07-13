@@ -56,12 +56,12 @@ public final class RealItemListViewModel: ItemListViewModel {
     }
   }
   
-  private func deleteItem(_ id: ItemId) {
-    Task { await itemRepository.deleteItem(itemId: id) }
+  @MainActor private func deleteItem(_ id: ItemId) {
+    Task { itemRepository.deleteItem(itemId: id) }
   }
   
-  private func updateItemName(_ id: ItemId, _ newName: String) {
-    Task { await itemRepository.updateItemName(itemId: id, name: newName) }
+  @MainActor private func updateItemName(_ id: ItemId, _ newName: String) {
+    Task { itemRepository.updateItemName(itemId: id, name: newName) }
   }
 }
 

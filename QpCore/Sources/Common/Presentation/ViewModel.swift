@@ -5,5 +5,5 @@ public protocol ViewModel<Action, State> {
   associatedtype State
   
   var state: State { get }
-  func send(_ action: Action)
+  @MainActor func send(_ action: Action)
 }

@@ -13,7 +13,7 @@ public struct UndoHandle: Identifiable {
 
 extension UndoHandle {
   
-  func executeAsync() {
+  @MainActor func executeAsync() {
     Task { await execute() }
   }
 }

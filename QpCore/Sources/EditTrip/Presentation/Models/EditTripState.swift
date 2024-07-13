@@ -4,7 +4,7 @@ import ItemDomain
 import Presentation
 import TripDomain
 
-public struct EditTripState {
+@frozen public struct EditTripState {
   let allCategories: DataLce<[ItemCategory]>
   let categories: [ItemCategoryUiModel]
   let date: TripDate?
@@ -272,7 +272,7 @@ extension EditTripState {
   }
 }
 
-final class EditTripStateSamples {
+final class EditTripStateSamples: Sendable {
   let noSearch = Trip.samples.malaysia.toInitialEditTripState()
   var withSearch: EditTripState {
     noSearch

@@ -57,21 +57,21 @@ public final class RealCategoryListViewModel: CategoryListViewModel {
     }
   }
   
-  private func deleteItem(_ id: CategoryId) {
+  @MainActor private func deleteItem(_ id: CategoryId) {
     state = state.removeCategory(categoryId: id)
-    Task { await categoryRepository.deleteCategory(categoryId: id) }
+    Task { categoryRepository.deleteCategory(categoryId: id) }
   }
   
-  private func reorderCategories(_ from: IndexSet, _ to: Int) {
+  @MainActor private func reorderCategories(_ from: IndexSet, _ to: Int) {
     state = state.moveCategories(from: from, to: to)
     if let sortedCategories = state.categories.content {
-      Task { await categoryRepository.updateCategoriesOrder(sortedCategories: sortedCategories) }
+      Task { categoryRepository.updateCategoriesOrder(sortedCategories: sortedCategories) }
     }
   }
   
-  private func updateItemName(_ id: CategoryId, _ newName: String) {
+  @MainActor private func updateItemName(_ id: CategoryId, _ newName: String) {
     state = state.updateCategoryName(categoryId: id, newName: newName)
-    Task { await categoryRepository.updateCategoryName(categoryId: id, name: newName) }
+    Task { categoryRepository.updateCategoryName(categoryId: id, name: newName) }
   }
 }
 

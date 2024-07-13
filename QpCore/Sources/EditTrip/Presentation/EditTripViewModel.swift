@@ -59,15 +59,15 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       .eraseToAnyPublisher()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] allCategories in
-        if let viewModel = self {
-          viewModel.state = viewModel.state.withAllCategories(allCategories.toLce())
+        if let self {
+          state = state.withAllCategories(allCategories.toLce())
         }
       }
       .store(in: &subscribers)
   }
   
   // swiftlint:disable cyclomatic_complexity
-  public func send(_ action: EditTripAction) {
+  @MainActor public func send(_ action: EditTripAction) {
     switch action {
     case let .addItem(item): addItem(item)
     case let .addNewItem(name): addNewItem(name)
@@ -85,71 +85,71 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   }
   // swiftlint:enable cyclomatic_complexity
 
-  private func addItem(_ item: Item) {
+  @MainActor private func addItem(_ item: Item) {
     let tripItem = TripItem.new(item: item)
     state = state.insertItem(tripItem).withSearchQuery("")
-    Task { await tripRepository.addItem(tripItem, to: state.id) }
+    Task { tripRepository.addItem(tripItem, to: state.id) }
   }
   
-  private func addNewItem(_ name: String) {
+  @MainActor private func addNewItem(_ name: String) {
     let tripItem = TripItem.new(item: .new(name: name))
     state = state.insertItem(tripItem).withSearchQuery("")
-    Task { await tripRepository.addItem(tripItem, to: state.id) }
+    Task { tripRepository.addItem(tripItem, to: state.id) }
   }
   
-  private func deleteItem(_ id: ItemId) {
+  @MainActor private func deleteItem(_ id: ItemId) {
     state = state.removeItem(itemId: id)
-    Task { await itemRepository.deleteItem(itemId: id) }
+    Task { itemRepository.deleteItem(itemId: id) }
   }
   
-  private func reorderItems(
+  @MainActor private func reorderItems(
     _ categoryId: CategoryId?,
     _ from: IndexSet,
     _ to: Int
   ) {
     state = state.moveItems(for: categoryId, from: from, to: to)
     if let items = state.categories.first(where: { $0.category?.id == categoryId })?.items {
-      Task { await tripRepository.updateItemsOrder(sortedItems: items) }
+      Task { tripRepository.updateItemsOrder(sortedItems: items) }
     }
   }
   
-  private func removeItem(_ tripItemId: TripItemId) {
+  @MainActor private func removeItem(_ tripItemId: TripItemId) {
     state = state.removeItem(tripItemId: tripItemId)
-    Task { await tripRepository.removeItem(itemId: tripItemId, from: state.id) }
+    Task { tripRepository.removeItem(itemId: tripItemId, from: state.id) }
   }
   
   private func searchItem(_ query: String) {
     state = state.withSearchQuery(query)
   }
   
-  private func updateDate(_ newDate: TripDate?) {
+  @MainActor private func updateDate(_ newDate: TripDate?) {
     state = state.withDate(newDate)
-    Task { await tripRepository.updateTripDate(tripId: state.id, date: newDate) }
+    Task { tripRepository.updateTripDate(tripId: state.id, date: newDate) }
   }
   
-  func updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?) {
+  @MainActor func updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?) {
     state = state.updateItemCategory(tripItem: tripItem, newCategory)
-    Task { await itemRepository.updateItemCategory(itemId: tripItem.item.id, category: newCategory) }
+    Task { itemRepository.updateItemCategory(itemId: tripItem.item.id, category: newCategory) }
   }
   
-  private func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
+  @MainActor private func updateItemCheck(_ itemId: TripItemId, _ newIsChecked: Bool) {
     state = state.updateItemCheck(tripItemId: itemId, newIsChecked)
-    Task { await tripRepository.updateItemCheck(tripItemId: itemId, isChecked: newIsChecked) }
+    Task { tripRepository.updateItemCheck(tripItemId: itemId, isChecked: newIsChecked) }
   }
   
-  private func updateItemName(_ itemId: ItemId, _ newName: String) {
+  @MainActor private func updateItemName(_ itemId: ItemId, _ newName: String) {
     state = state.updateItemName(itemId: itemId, newName)
-    Task { await itemRepository.updateItemName(itemId: itemId, name: newName) }
+    Task { itemRepository.updateItemName(itemId: itemId, name: newName) }
   }
   
-  private func updateItemNotes(_ itemId: TripItemId, _ newNotes: String) {
+  @MainActor private func updateItemNotes(_ itemId: TripItemId, _ newNotes: String) {
     state = state.updateItemNotes(tripItemId: itemId, newNotes)
-    Task { await tripRepository.updateItemNotes(tripItemId: itemId, notes: newNotes) }
+    Task { tripRepository.updateItemNotes(tripItemId: itemId, notes: newNotes) }
   }
   
-  private func updateName(_ newName: String) {
+  @MainActor private func updateName(_ newName: String) {
     state = state.withName(newName)
-    Task { await tripRepository.updateTripName(tripId: state.id, name: state.name) }
+    Task { tripRepository.updateTripName(tripId: state.id, name: newName) }
   }
   
   private func filterResult(
@@ -207,11 +207,13 @@ public extension EditTripViewModel {
   static let samples = EditTripViewModelSamples()
 }
 
-public final class EditTripViewModelSamples {
-  public let content = EditTripViewModel(
-    initialTrip: .samples.malaysia,
-    categoryRepository: FakeCategoryRepository(),
-    itemRepository: FakeItemRepository(),
-    tripRepository: FakeTripRepository()
-  )
+public final class EditTripViewModelSamples: Sendable {
+  public func content() -> EditTripViewModel {
+    EditTripViewModel(
+      initialTrip: .samples.malaysia,
+      categoryRepository: FakeCategoryRepository(),
+      itemRepository: FakeItemRepository(),
+      tripRepository: FakeTripRepository()
+    )
+  }
 }

@@ -2,14 +2,15 @@ import AboutDomain
 import CategoryListPresentation
 import ItemListPresentation
 import Presentation
+import SwiftUI
 
 public class SettingsViewModel: ViewModel {
   public typealias Action = SettingsAction
   public typealias State = SettingsState
   
+  @Published public var state: State
   public let categoryListViewModel: CategoryListViewModel
   public let itemListViewModel: ItemListViewModel
-  public let state: SettingsState
   
   init(
     categoryListViewModel: CategoryListViewModel,
@@ -40,18 +41,12 @@ final class RealSettingsViewModel: SettingsViewModel {
       itemListViewModel: itemListViewModel,
       state: initialState
     )
-    load()
+    state = SettingsState(appVersion: getAppVersion.run().toGenericLce(\.string))
   }
   
   override func send(_ action: SettingsAction) {
     switch action {
     case .none: {}()
-    }
-  }
-  
-  private func load() {
-    Task {
-      state.appVersion = getAppVersion.run().toGenericLce(\.string)
     }
   }
 }

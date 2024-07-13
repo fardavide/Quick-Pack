@@ -1,10 +1,10 @@
 import Foundation
 import TripDomain
 
-struct TripListItemUiModel: Equatable, Identifiable {
+@frozen @usableFromInline struct TripListItemUiModel: Equatable, Identifiable {
   let date: String?
   let domainModel: Trip
-  let id: TripId
+  @usableFromInline let id: TripId
   let isCompleted: Bool
   let name: String
 }
@@ -13,7 +13,7 @@ extension TripListItemUiModel {
   static let samples = TripListItemUiModelSamples()
 }
 
-class TripListItemUiModelSamples {
+final class TripListItemUiModelSamples: Sendable {
   
   let malaysia = TripListItemUiModel(
     date: "October 2024",

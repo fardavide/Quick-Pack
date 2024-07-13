@@ -1,20 +1,20 @@
 import Presentation
 import SwiftUI
 
-public final class TripListState: ObservableObject {
-  @Published var trips: DataLce<TripListUiModel>
-  
-  init(trips: DataLce<TripListUiModel>) {
-    self.trips = trips
-  }
+@frozen public struct TripListState {
+  let trips: DataLce<TripListUiModel>
 }
 
 extension TripListState {
   static let initial = TripListState(trips: .loading)
   static let samples = TripListStateSamples()
+  
+  func withTrips(_ trips: DataLce<TripListUiModel>) -> TripListState {
+    TripListState(trips: trips)
+  }
 }
 
-final class TripListStateSamples {
+final class TripListStateSamples: Sendable {
   let content = TripListState(
     trips: .content(
       TripListUiModel(

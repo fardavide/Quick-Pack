@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Trip: Comparable, Equatable {
+@frozen public struct Trip: Comparable, Equatable {
   public let date: TripDate?
   public let id: TripId
   public let isCompleted: Bool
@@ -97,7 +97,7 @@ public extension Trip {
   }
 }
 
-public final class TripSamples {
+public final class TripSamples: Sendable {
   public let malaysia = Trip(
     date: TripDate(year: 2024, month: .oct),
     id: .samples.malaysia,

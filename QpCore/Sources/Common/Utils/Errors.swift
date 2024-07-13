@@ -1,8 +1,8 @@
-public struct GenericError: Error, Equatable {
+@frozen public struct GenericError: Error, Equatable {
   public init() {}
 }
 
-public enum DataError: Error, Equatable {
+@frozen public enum DataError: Error, Equatable, Sendable {
   case noData
   case unknown
 }

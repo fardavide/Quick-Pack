@@ -8,9 +8,13 @@ import TripDomain
 import Undo
 
 public struct TripList: View {
-  private let viewModel: TripListViewModel = getProvider().get()
+  @ObservedObject var viewModel: TripListViewModel
   
-  public init() {}
+  public init(
+    viewModel: TripListViewModel
+  ) {
+    self.viewModel = viewModel
+  }
   
   public var body: some View {
     TripListContent(
@@ -24,7 +28,7 @@ public struct TripList: View {
 }
 
 private struct TripListContent: View {
-  @ObservedObject var state: TripListState
+  let state: TripListState
   let undoHandler: UndoHandler
   let settingsViewModel: SettingsViewModel
   let send: (TripListAction) -> Void
@@ -145,22 +149,22 @@ private struct TripListItems: View {
 }
 
 #Preview("With items") {
-  return TripListContent(
-    state: .samples.content,
+  TripListContent(
+    state: TripListState.samples.content,
     undoHandler: FakeUndoHandler(),
     settingsViewModel: FakeSettingsViewModel(),
     send: { _ in },
-    edit: { _ in .samples.content }
+    edit: { _ in EditTripViewModel.samples.content() }
   )
 }
 
 #Preview("Zero") {
-  getProvider().register { EditTripViewModel.samples.content }
+  getProvider().register { EditTripViewModel.samples.content() }
   return TripListContent(
-    state: .samples.empty,
+    state: TripListState.samples.empty,
     undoHandler: FakeUndoHandler(),
     settingsViewModel: FakeSettingsViewModel(),
     send: { _ in },
-    edit: { _ in .samples.content }
+    edit: { _ in EditTripViewModel.samples.content() }
   )
 }

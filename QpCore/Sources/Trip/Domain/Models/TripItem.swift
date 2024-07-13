@@ -1,6 +1,6 @@
 import ItemDomain
 
-public struct TripItem: Comparable, Equatable, Identifiable {
+@frozen public struct TripItem: Comparable, Equatable, Identifiable {
   public let id: TripItemId
   public let item: Item
   public let isChecked: Bool
@@ -95,7 +95,7 @@ public extension TripItem {
   }
 }
 
-public final class TripItemSamples {
+public final class TripItemSamples: Sendable {
   public let camera = TripItem(
     id: .samples.camera,
     item: .samples.camera,

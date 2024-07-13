@@ -4,16 +4,16 @@ import ItemDomain
 import SwiftUI
 import TripDomain
 
-struct ItemCategoryUiModel: Comparable, Equatable, Identifiable {
+@frozen @usableFromInline struct ItemCategoryUiModel: Comparable, Equatable, Identifiable, @unchecked Sendable {
   let category: ItemCategory?
   let items: [TripItem]
   let itemsSummary: LocalizedStringKey
   
-  var id: CategoryId? {
+  @usableFromInline var id: CategoryId? {
     category?.id
   }
   
-  static func < (lhs: ItemCategoryUiModel, rhs: ItemCategoryUiModel) -> Bool {
+  @usableFromInline static func < (lhs: ItemCategoryUiModel, rhs: ItemCategoryUiModel) -> Bool {
     (
       lhs.category?.order ?? Int.min,
       lhs.category?.name ?? ""
@@ -129,7 +129,7 @@ extension ItemCategoryUiModel {
   }
 }
 
-final class ItemCategoryUiModelSamples {
+final class ItemCategoryUiModelSamples: Sendable {
   let clothes = ItemCategoryUiModel(
     category: .samples.clothes,
     items: [

@@ -1,4 +1,4 @@
-public struct ItemCategory: Equatable, Identifiable, Hashable {
+@frozen public struct ItemCategory: Equatable, Identifiable, Hashable {
   public let id: CategoryId
   public let itemCount: Int
   public let name: String
@@ -39,7 +39,7 @@ public extension ItemCategory {
   }
 }
 
-public final class CategorySamples {
+public final class CategorySamples: Sendable {
   public let clothes = ItemCategory(
     id: .samples.clothes,
     itemCount: 3,

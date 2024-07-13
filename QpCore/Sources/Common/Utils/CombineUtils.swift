@@ -30,17 +30,12 @@ public extension Timer {
     on runLoop: RunLoop,
     in mode: RunLoop.Mode,
     options: RunLoop.SchedulerOptions? = nil,
-    _ value: @escaping () -> T
-  ) -> Publishers.FlatMap<Future<T, Never>, Publishers.Autoconnect<Timer.TimerPublisher>> {
+    _ value: @Sendable @escaping () -> T
+  ) -> Publishers.FlatMap<Just<T>, Publishers.Autoconnect<Timer.TimerPublisher>> {
     publish(every: interval, tolerance: tolerance, on: runLoop, in: mode, options: options)
       .autoconnect()
       .flatMap { _ in
-        Future { promise in
-          Task {
-            let output = value()
-            promise(.success(output))
-          }
-        }
+        Just(value())
       }
   }
 }

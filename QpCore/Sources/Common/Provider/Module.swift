@@ -25,7 +25,7 @@ public protocol Module {
 
   init()
 
-  func register(on provider: Provider)
+  @MainActor func register(on provider: Provider)
   @MainActor func start(with provider: Provider)
 }
 

@@ -1,4 +1,4 @@
-public struct AppVersion: Equatable {
+public struct AppVersion: Equatable, Sendable {
   public let major: Int
   public let minor: Int
   public let patch: Int?

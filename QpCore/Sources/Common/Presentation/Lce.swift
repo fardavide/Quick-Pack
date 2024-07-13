@@ -1,7 +1,7 @@
 import QpUtils
 
 /// Loading, Content, Error construct
-public enum Lce<C, E: Error>: Equatable where C: Equatable, E: Equatable {
+@frozen public enum Lce<C, E: Error>: Equatable, Sendable where C: Equatable, C: Sendable, E: Equatable, E: Sendable {
   case content(C)
   case error(E)
   case loading
@@ -11,7 +11,7 @@ public enum Lce<C, E: Error>: Equatable where C: Equatable, E: Equatable {
 public typealias GenericLce<C: Equatable> = Lce<C, GenericError>
 
 /// `Lce` with `DataError`
-public typealias DataLce<C: Equatable> = Lce<C, DataError>
+public typealias DataLce<C: Equatable> = Lce<C, DataError> where C: Sendable
 
 public extension Lce {
   
@@ -44,7 +44,7 @@ public extension Lce where E == GenericError {
   }
 }
 
-public extension Result where Success: Equatable {
+public extension Result where Success: Equatable, Success: Sendable {
   
   /// Map Result to `Lce`
   /// - Parameter transform: closure that transforms the `Success` to `R`
@@ -61,7 +61,7 @@ public extension Result where Success: Equatable {
   
   /// Map Result to `GenericLce`
   /// - Parameter transform: closure that transforms the `Success` to `R`
-  func toGenericLce<R>(
+  func toGenericLce<R: Sendable>(
     _ transform: (Success) -> R
   ) -> GenericLce<R> where R: Equatable {
     toLce(
@@ -76,11 +76,11 @@ public extension Result where Success: Equatable {
   }
 }
 
-public extension Result where Success: Equatable, Failure == DataError {
+public extension Result where Success: Equatable, Success: Sendable, Failure == DataError {
   
   /// Maps Result `DataLce`
   /// - Parameter transform: closure that transforms the `Success` to `R`
-  func toLce<R>(transform: (Success) -> R) -> DataLce<R> {
+  func toLce<R: Sendable>(transform: (Success) -> R) -> DataLce<R> {
     toLce(
       transform: transform,
       error: { $0 }
@@ -93,11 +93,11 @@ public extension Result where Success: Equatable, Failure == DataError {
   }
 }
 
-public extension Result where Success: Equatable, Failure == GenericError {
+public extension Result where Success: Equatable, Success: Sendable, Failure == GenericError {
   
   /// Maps Result `GenericLce`
   /// - Parameter transform: closure that transforms the `Success` to `R`
-  func toLce<R>(transform: (Success) -> R) -> GenericLce<R> {
+  func toLce<R: Sendable>(transform: (Success) -> R) -> GenericLce<R> {
     toLce(
       transform: transform,
       error: { $0 }

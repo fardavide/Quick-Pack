@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ItemId: Equatable, Hashable {
+@frozen public struct ItemId: Equatable, Hashable {
   public let value: String
   
   public init(_ value: String) {
@@ -15,7 +15,7 @@ public extension ItemId {
   }
 }
 
-public final class ItemIdSamples {
+public final class ItemIdSamples: Sendable {
   public let camera = ItemId("camera")
   public let iPad = ItemId("iPad")
   public let nintendoSwitch = ItemId("Switch")

@@ -1,4 +1,4 @@
-struct TripListUiModel: Equatable {
+@frozen @usableFromInline struct TripListUiModel: Equatable {
   let completed: [TripListItemUiModel]
   let upcoming: [TripListItemUiModel]
 }

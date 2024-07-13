@@ -361,7 +361,9 @@ let package = Package(
       ]
     ),
     .testTarget(path: [TripList, Presentation])
-  ]
+  ],
+  
+  swiftLanguageVersions: [SwiftVersion.v6]
 )
 
 private extension Target {

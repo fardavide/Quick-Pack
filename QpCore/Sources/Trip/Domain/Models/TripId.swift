@@ -1,6 +1,6 @@
 import Foundation
 
-public struct TripId: Equatable, Hashable {
+@frozen public struct TripId: Equatable, Hashable {
   public let value: String
   
   public init(_ value: String) {
@@ -15,7 +15,7 @@ public extension TripId {
   }
 }
 
-public final class TripIdSamples {
+public final class TripIdSamples: Sendable {
   public let malaysia = TripId("malaysia")
   public let tunisia = TripId("tunisia")
   public let tuscany = TripId("tuscany")

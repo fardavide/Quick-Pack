@@ -8,11 +8,11 @@ import SettingsPresentation
 import TripDomain
 import Undo
 
-public final class TripListViewModel: ViewModel {
+public final class TripListViewModel: ViewModel, ObservableObject {
   public typealias Action = TripListAction
   public typealias State = TripListState
   
-  public let state: State
+  @Published public var state: State
   public let undoHandler: UndoHandler
   public let settingsViewModel: SettingsViewModel
   private var subscribers: [AnyCancellable] = []
@@ -37,8 +37,8 @@ public final class TripListViewModel: ViewModel {
     tripRepository.trips
       .eraseToAnyPublisher()
       .receive(on: DispatchQueue.main)
-      .sink { [weak self] result in
-        self?.state.trips = result.toLce(transform: mapper.toUiModel)
+      .sink { result in
+        self.state = self.state.withTrips(result.toLce(transform: mapper.toUiModel))
       }
       .store(in: &subscribers)
   }
@@ -56,20 +56,20 @@ public final class TripListViewModel: ViewModel {
     editTripViewModelFactory.create(trip)
   }
   
-  private func deleteTrip(_ tripId: TripId) {
-    Task { await tripRepository.deleteTrip(tripId: tripId) }
+  @MainActor private func deleteTrip(_ tripId: TripId) {
+    Task { tripRepository.deleteTrip(tripId: tripId) }
   }
   
-  private func markCompleted(_ tripId: TripId) {
-    Task { await tripRepository.markTripCompleted(tripId: tripId, isCompleted: true) }
+  @MainActor private func markCompleted(_ tripId: TripId) {
+    Task { tripRepository.markTripCompleted(tripId: tripId, isCompleted: true) }
   }
   
-  private func markNotCompleted(_ tripId: TripId) {
-    Task { await tripRepository.markTripCompleted(tripId: tripId, isCompleted: false) }
+  @MainActor private func markNotCompleted(_ tripId: TripId) {
+    Task { tripRepository.markTripCompleted(tripId: tripId, isCompleted: false) }
   }
   
-  private func newTrip() {
-    Task { await tripRepository.createTrip(.new()) }
+  @MainActor private func newTrip() {
+    Task { tripRepository.createTrip(.new()) }
   }
 }
 
@@ -77,12 +77,14 @@ public extension TripListViewModel {
   static let samples = TripListViewModelSamples()
 }
 
-public final class TripListViewModelSamples {
-  public let content = TripListViewModel(
-    editTripViewModelFactory: EditTripViewModel.FakeFactory(viewModel: .samples.content),
-    mapper: FakeTripListUiModelMapper(),
-    settingsViewModel: FakeSettingsViewModel(),
-    tripRepository: FakeTripRepository(trips: [Trip.samples.malaysia]),
-    initialState: .samples.content
-  )
+public final class TripListViewModelSamples: Sendable {
+  public func content() -> TripListViewModel {
+    TripListViewModel(
+      editTripViewModelFactory: EditTripViewModel.FakeFactory(viewModel: .samples.content()),
+      mapper: FakeTripListUiModelMapper(),
+      settingsViewModel: FakeSettingsViewModel(),
+      tripRepository: FakeTripRepository(trips: [Trip.samples.malaysia]),
+      initialState: .samples.content
+    )
+  }
 }

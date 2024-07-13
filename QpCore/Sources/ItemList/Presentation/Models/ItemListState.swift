@@ -1,7 +1,7 @@
 import ItemDomain
 import Presentation
 
-public struct ItemListState: Equatable {
+@frozen public struct ItemListState: Equatable {
   let items: DataLce<[Item]>
 }
 
@@ -10,7 +10,7 @@ public extension ItemListState {
   static let samples = ItemListStateSamples()
 }
 
-public final class ItemListStateSamples {
+public final class ItemListStateSamples: Sendable {
   let content = ItemListState(
     items: .content(
       [

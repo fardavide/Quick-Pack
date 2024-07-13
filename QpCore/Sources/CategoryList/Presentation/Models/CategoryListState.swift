@@ -2,7 +2,7 @@ import CategoryDomain
 import Foundation
 import Presentation
 
-public struct CategoryListState: Equatable {
+@frozen public struct CategoryListState: Equatable, Sendable {
   let categories: DataLce<[ItemCategory]>
 }
 
@@ -41,7 +41,7 @@ public extension CategoryListState {
   }
 }
 
-public final class CategoryListStateSamples {
+public final class CategoryListStateSamples: Sendable {
   let content = CategoryListState(
     categories: .content(
       [

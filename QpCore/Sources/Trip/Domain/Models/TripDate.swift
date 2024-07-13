@@ -1,7 +1,7 @@
 import DateUtils
 import Foundation
 
-public struct TripDate: Codable, Comparable, Equatable, Hashable {
+@frozen public struct TripDate: Codable, Comparable, Equatable, Hashable {
   
   public let value: Date
   public let precision: Precision
@@ -10,7 +10,7 @@ public struct TripDate: Codable, Comparable, Equatable, Hashable {
     lhs.value < rhs.value
   }
   
-  public enum Precision: CaseIterable, Codable, Identifiable {
+  @frozen public enum Precision: CaseIterable, Codable, Identifiable {
     case exact
     case month
     case year

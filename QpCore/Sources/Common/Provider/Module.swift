@@ -26,7 +26,7 @@ public protocol Module {
   init()
 
   func register(on provider: Provider)
-  func start(with provider: Provider)
+  @MainActor func start(with provider: Provider)
 }
 
 public extension Module {
@@ -35,7 +35,7 @@ public extension Module {
 
   func register(on provider: Provider) {}
 
-  func start(with provider: Provider) {
+  @MainActor func start(with provider: Provider) {
     let uniqueModules = ModuleRegistry.instance.findAllModulesRecursively(from: dependencies)
     for module in uniqueModules {
       module.register(on: provider)
@@ -45,7 +45,7 @@ public extension Module {
 }
 
 private class ModuleRegistry {
-  static let instance = ModuleRegistry()
+  @MainActor static let instance = ModuleRegistry()
 
   private var modules = [ObjectIdentifier: Module]()
 

@@ -36,18 +36,18 @@ public struct ProviderError: Error, Equatable {
   let key: String
 }
 
-public func getProvider() -> Provider {
+@MainActor public func getProvider() -> Provider {
   Provider.get()
 }
 
 public extension Provider {
-  private static var instance: Provider?
+  @MainActor private static var instance: Provider?
 
-  static func get() -> Provider {
+  @MainActor static func get() -> Provider {
     instance ?? start()
   }
 
-  static func start() -> Provider {
+  @MainActor static func start() -> Provider {
     if instance == nil {
       instance = Provider()
       return instance!

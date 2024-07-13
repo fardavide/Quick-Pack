@@ -1,6 +1,6 @@
 /// Actor that can handle Undo/Redo actions
 public protocol UndoHandler {
-  func requestUndoOrRedo() -> UndoHandle?
+  @MainActor func requestUndoOrRedo() -> UndoHandle?
 }
 
 public final class FakeUndoHandler: UndoHandler {

@@ -188,7 +188,7 @@ final class RealTripRepositoryTests {
   }
 }
 
-private final class Scenario {
+private final class Scenario: @unchecked Sendable {
   
   let sut: RealTripRepository
   

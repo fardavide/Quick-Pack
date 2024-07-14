@@ -3,7 +3,7 @@ import Foundation
 import ItemDomain
 import TripDomain
 
-public enum EditTripAction {
+@frozen public enum EditTripAction {
   case addItem(_ item: Item)
   case addNewItem(name: String)
   case deleteItem(_ id: ItemId)

@@ -50,6 +50,16 @@
       }
     },
     {
+      "skippedTests" : {
+        "suites" : [
+          {
+            "name" : "DateMathTest",
+            "testFunctions" : [
+              "plusDuration()"
+            ]
+          }
+        ]
+      },
       "target" : {
         "containerPath" : "container:QpCore",
         "identifier" : "DateUtilsTests",

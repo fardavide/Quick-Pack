@@ -4,7 +4,7 @@ import Testing
 
 final class ModuleTests {
   
-  @Test func onStart_modulesAreNotRegisteredMultipleTimes() {
+  @MainActor @Test func onStart_modulesAreNotRegisteredMultipleTimes() {
     // given
     let module = ThirdTestModule()
     let provider = Provider.get()
@@ -23,7 +23,7 @@ private protocol TestModule: Module {
   var initialized: Bool { get }
 }
 
-private var initializedModulesToCount = [ObjectIdentifier: Int]()
+nonisolated(unsafe) private var initializedModulesToCount = [ObjectIdentifier: Int]()
 
 private func getCount(type: any Module.Type) -> Int {
   getCount(id: ObjectIdentifier(type))

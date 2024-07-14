@@ -67,7 +67,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   }
   
   // swiftlint:disable cyclomatic_complexity
-  @MainActor public func send(_ action: EditTripAction) {
+  public func send(_ action: EditTripAction) {
     switch action {
     case let .addItem(item): addItem(item)
     case let .addNewItem(name): addNewItem(name)

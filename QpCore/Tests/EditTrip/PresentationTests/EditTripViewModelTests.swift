@@ -17,7 +17,7 @@ final class EditTripViewModelTests {
     )
     
     // when
-    scenario.sut.send(.updateName("New name"))
+    await scenario.sut.send(.updateName("New name"))
     
     // then
     let last = await scenario.tripRepository.waitlastUpdateTripName()
@@ -31,7 +31,7 @@ final class EditTripViewModelTests {
     )
     
     // when
-    scenario.sut.send(.updateDate(TripDate(year: 2024, month: .oct, day: 15)))
+    await scenario.sut.send(.updateDate(TripDate(year: 2024, month: .oct, day: 15)))
     
     // then
     let last = await scenario.tripRepository.waitlastUpdateTripDate()
@@ -39,7 +39,7 @@ final class EditTripViewModelTests {
   }
 }
 
-private final class Scenario {
+private final class Scenario: @unchecked Sendable {
   
   let sut: EditTripViewModel
   let tripRepository: FakeTripRepository

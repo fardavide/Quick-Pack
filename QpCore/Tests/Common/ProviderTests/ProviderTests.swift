@@ -2,7 +2,8 @@ import Testing
 
 @testable import Provider
 
-final class ProviderTests {
+@MainActor final class ProviderTests {
+  
   private let provider = getProvider()
   
   @Test func whenNotRegistered_errorWithType() {
@@ -13,7 +14,7 @@ final class ProviderTests {
     #expect(result == Result.failure(ProviderError(key: "Int")))
   }
   
-  @Test func whenRegistered_rightInstanceIsReturned() {
+  @MainActor @Test func whenRegistered_rightInstanceIsReturned() {
     // given
     provider.register {
       Child(value: "Hello test")
@@ -26,7 +27,7 @@ final class ProviderTests {
     #expect(result.value == "Hello test")
   }
   
-  @Test func whenRegisteredForParent_rightInstanceIsReturned() {
+  @MainActor @Test func whenRegisteredForParent_rightInstanceIsReturned() {
     // given
     provider.register {
       Child(value: "Hello parent") as Parent
@@ -39,7 +40,7 @@ final class ProviderTests {
     #expect(result.value == "Hello parent")
   }
   
-  @Test func whenRegisteredFactory_rightInstanceIsCreated() {
+  @MainActor @Test func whenRegisteredFactory_rightInstanceIsCreated() {
     // given
     provider.register { ChildFactory() }
     

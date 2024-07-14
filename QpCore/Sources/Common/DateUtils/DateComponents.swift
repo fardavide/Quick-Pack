@@ -6,8 +6,20 @@ public extension Date {
     self.get(.day)
   }
   
+  var hour: Int {
+    self.get(.hour)
+  }
+  
+  var minute: Int {
+    self.get(.minute)
+  }
+  
   var month: Month {
-    Month.from(self.get(.month))
+    Month.from(monthInt)
+  }
+  
+  var monthInt: Int {
+    self.get(.month)
   }
   
   var year: Int {

@@ -14,6 +14,7 @@ private let EditTrip = "EditTrip"
 private let Home = "Home"
 private let Item = "Item"
 private let ItemList = "ItemList"
+private let Notifications = "Notifications"
 private let Settings = "Settings"
 private let SfSafeSymbols = "SFSafeSymbols"
 private let Trip = "Trip"
@@ -76,6 +77,8 @@ let package = Package(
         Item+Domain,
         // MARK: - Item List declarations
         ItemList+Presentation,
+        // MARK: - Notifications declarations
+        Notifications,
         // MARK: - Settings declarations
         Settings+Presentation,
         // MARK: - Trip declarations
@@ -261,6 +264,7 @@ let package = Package(
       path: [EditTrip, Presentation],
       dependencies: [
         Design,
+        Notifications,
         Presentation,
         Provider,
         Trip+Domain
@@ -292,6 +296,18 @@ let package = Package(
     ),
     .testTarget(path: [Item, Domain]),
     
+    // MARK: - Home definitions
+    // MARK: Home Presentation
+    .target(
+      path: [Home, Presentation],
+      dependencies: [
+        EditTrip+Presentation,
+        Provider,
+        TripList+Presentation
+      ]
+    ),
+    .testTarget(path: [Home, Presentation]),
+    
     // MARK: - Item List definitions
     // MARK: Item List Presentation
     .target(
@@ -306,31 +322,30 @@ let package = Package(
     ),
     .testTarget(path: [ItemList, Presentation]),
     
-    // MARK: - Home definitions
-    // MARK: Home Presentation
+    // MARK: - Notifications definitions
     .target(
-      path: [Home, Presentation],
+      path: [Notifications],
       dependencies: [
-        EditTrip+Presentation,
+        DateUtils,
         Provider,
-        TripList+Presentation
+        Trip+Domain
       ]
     ),
-    .testTarget(path: [Home, Presentation]),
+    .testTarget(path: [Notifications]),
     
     // MARK: - Settings definitions
     // MARK: Settings Presentation
-      .target(
-        path: [Settings, Presentation],
-        dependencies: [
-          About+Domain,
-          CategoryList+Presentation,
-          Design,
-          ItemList+Presentation,
-          Provider,
-          Presentation
-        ]
-      ),
+    .target(
+      path: [Settings, Presentation],
+      dependencies: [
+        About+Domain,
+        CategoryList+Presentation,
+        Design,
+        ItemList+Presentation,
+        Provider,
+        Presentation
+      ]
+    ),
     .testTarget(path: [Settings, Presentation]),
     
     // MARK: - Trip definitions

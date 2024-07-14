@@ -2,10 +2,12 @@ import CategoryDomain
 import Combine
 import Foundation
 import ItemDomain
+import Notifications
 import Presentation
 import Provider
 import QpUtils
 import TripDomain
+import UserNotifications
 
 public final class EditTripViewModel: ViewModel, ObservableObject {
   public typealias Action = EditTripAction
@@ -15,16 +17,19 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   private var subscribers: [AnyCancellable] = []
   private let categoryRepository: CategoryRepository
   private let itemRepository: ItemRepository
+  private let scheduleRemindersTask: ScheduleReminders
   private let tripRepository: TripRepository
 
   init(
     initialTrip: Trip,
     categoryRepository: CategoryRepository,
     itemRepository: ItemRepository,
+    scheduleRemindersTask: ScheduleReminders,
     tripRepository: TripRepository
   ) {
     self.categoryRepository = categoryRepository
     self.itemRepository = itemRepository
+    self.scheduleRemindersTask = scheduleRemindersTask
     self.tripRepository = tripRepository
     state = initialTrip.toInitialEditTripState()
     
@@ -155,7 +160,15 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   
   @MainActor private func updateReminder(_ newReminder: Date?) {
     state = state.withReminder(newReminder)
-    Task { tripRepository.updateReminder(tripId: state.id, reminder: newReminder) }
+    Task {
+      do {
+        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
+      } catch {
+        print(error)
+      }
+      tripRepository.updateReminder(tripId: state.id, reminder: newReminder)
+      scheduleRemindersTask.run()
+    }
   }
 
   private func filterResult(
@@ -175,15 +188,19 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   public final class RealFactory: Factory {
     private let categoryRepository: CategoryRepository
     private let itemRepository: ItemRepository
+    private let scheduleRemindersTask: ScheduleReminders
     private let tripRepository: TripRepository
     private var cache: [TripId: EditTripViewModel] = [:]
+    
     public init(
       categoryRepository: CategoryRepository,
       itemRepository: ItemRepository,
+      scheduleRemindersTask: ScheduleReminders,
       tripRepository: TripRepository
     ) {
       self.categoryRepository = categoryRepository
       self.itemRepository = itemRepository
+      self.scheduleRemindersTask = scheduleRemindersTask
       self.tripRepository = tripRepository
     }
     public func create(_ input: Trip) -> EditTripViewModel {
@@ -193,6 +210,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
           initialTrip: input,
           categoryRepository: categoryRepository,
           itemRepository: itemRepository,
+          scheduleRemindersTask: scheduleRemindersTask,
           tripRepository: tripRepository
         )
       )
@@ -219,6 +237,7 @@ public final class EditTripViewModelSamples: Sendable {
       initialTrip: .samples.malaysia,
       categoryRepository: FakeCategoryRepository(),
       itemRepository: FakeItemRepository(),
+      scheduleRemindersTask: FakeScheduleReminders(),
       tripRepository: FakeTripRepository()
     )
   }

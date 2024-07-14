@@ -9,6 +9,7 @@ public final class EditTripPresentationModule: Module {
         EditTripViewModel.RealFactory(
           categoryRepository: provider.get(),
           itemRepository: provider.get(),
+          scheduleRemindersTask: provider.get(),
           tripRepository: provider.get()
         ) as any EditTripViewModel.Factory
       }

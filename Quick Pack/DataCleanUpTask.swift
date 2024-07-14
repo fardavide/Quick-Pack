@@ -1,10 +1,10 @@
-import BackgroundTasks
+@preconcurrency import BackgroundTasks
 import CategoryDomain
 import Foundation
 import ItemDomain
 import TripDomain
 
-final class DataCleanUpTask {
+final class DataCleanUpTask: Sendable {
   
   private let dataCleanUpTaskId = "QP.data.cleanup"
   private let operationQueue = OperationQueue()
@@ -16,14 +16,17 @@ final class DataCleanUpTask {
   }
 
   func runAndSchedule() {
+#if !os(macOS)
     register()
     schedule()
+#endif
     performCleanup()
   }
   
+#if !os(macOS)
   private func register() {
     BGTaskScheduler.shared.register(forTaskWithIdentifier: dataCleanUpTaskId, using: nil) { task in
-      self.performCleanup(task: task as? BGAppRefreshTask)
+      self.performScheduledCleanup(task: task)
     }
   }
   
@@ -39,19 +42,22 @@ final class DataCleanUpTask {
     }
   }
   
-  private func performCleanup(task: BGAppRefreshTask? = nil) {
-    if let task = task {
-      task.expirationHandler = {
-        self.operationQueue.cancelAllOperations()
-      }
-      
-//      operation.completionBlock = {
-//        task.setTaskCompleted(success: !self.operation.isCancelled)
-//      }
-    } else {
-      operation.completionBlock = {
-        print("Immediate cleanup completed")
-      }
+  private func performScheduledCleanup(task: BGTask) {
+    task.expirationHandler = {
+      self.operationQueue.cancelAllOperations()
+    }
+    
+    operation.completionBlock = {
+      task.setTaskCompleted(success: !self.operation.isCancelled)
+    }
+    
+    operationQueue.addOperation(operation)
+  }
+#endif
+  
+  private func performCleanup() {
+    operation.completionBlock = {
+      print("Immediate cleanup completed")
     }
     
     operationQueue.addOperation(operation)

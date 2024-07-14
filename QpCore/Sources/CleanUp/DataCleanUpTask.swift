@@ -4,7 +4,7 @@ import Foundation
 import ItemDomain
 import TripDomain
 
-final class DataCleanUpTask: Sendable {
+public final class DataCleanUpTask: Sendable {
   
   private let dataCleanUpTaskId = "QP.data.cleanup"
   private let operationQueue = OperationQueue()
@@ -15,7 +15,7 @@ final class DataCleanUpTask: Sendable {
     operationQueue.maxConcurrentOperationCount = 1
   }
 
-  func runAndSchedule() {
+  public func runAndSchedule() {
 #if !os(macOS)
     register()
     schedule()

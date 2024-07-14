@@ -1,4 +1,5 @@
 import CategoryData
+import CleanUp
 import HomePresentation
 import ItemData
 import Provider
@@ -30,21 +31,10 @@ final class QpModule: Module {
   var dependencies: [Module.Type] = [
     AppStorageModule.self,
     CategoryDataModule.self,
+    CleanUpModule.self,
     ItemDataModule.self,
     SettingsPresentationModule.self,
     TripDataModule.self,
     TripListPresentionModule.self
   ]
-  
-  func register(on provider: Provider) {
-    provider
-      .register { DataCleanUpTask(operation: provider.get()) }
-      .register {
-        DataCleanUpOperation(
-          categoryReposiory: provider.get(),
-          itemRepository: provider.get(),
-          tripRepository: provider.get()
-        )
-      }
-  }
 }

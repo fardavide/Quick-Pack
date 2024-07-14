@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6B82ADDB2C427E71003F46B6 /* DataCleanUpTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B82ADDA2C427E6B003F46B6 /* DataCleanUpTask.swift */; };
 		6BBA33402BC5A43B00EB803D /* QpModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBA333F2BC5A43B00EB803D /* QpModuleTests.swift */; };
 		6BBA33472BC5A4A200EB803D /* Testing in Frameworks */ = {isa = PBXBuildFile; productRef = 6BBA33462BC5A4A200EB803D /* Testing */; };
 		6BC255752BC1A4DC008C5577 /* QuickPackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */; };
@@ -35,7 +34,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6B82ADDA2C427E6B003F46B6 /* DataCleanUpTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCleanUpTask.swift; sourceTree = "<group>"; };
 		6BAC4F272BD970CC0054CB63 /* CoreTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreTestPlan.xctestplan; sourceTree = "<group>"; };
 		6BBA333F2BC5A43B00EB803D /* QpModuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QpModuleTests.swift; sourceTree = "<group>"; };
 		6BBA33432BC5A46000EB803D /* Scaffolding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scaffolding.swift; sourceTree = "<group>"; };
@@ -104,7 +102,6 @@
 		6BC255732BC1A4DC008C5577 /* Quick Pack */ = {
 			isa = PBXGroup;
 			children = (
-				6B82ADDA2C427E6B003F46B6 /* DataCleanUpTask.swift */,
 				6BC256212BC289E8008C5577 /* Quick-Pack-Info.plist */,
 				6BC255742BC1A4DC008C5577 /* QuickPackApp.swift */,
 				6BC2557A2BC1A4DD008C5577 /* Assets.xcassets */,
@@ -310,7 +307,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BC255752BC1A4DC008C5577 /* QuickPackApp.swift in Sources */,
-				6B82ADDB2C427E71003F46B6 /* DataCleanUpTask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

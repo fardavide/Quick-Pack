@@ -3,10 +3,12 @@
 import CompilerPluginSupport
 import PackageDescription
 
+// MARK: - First level
 private let About = "About"
 private let AppStorage = "AppStorage"
 private let Category = "Category"
 private let CategoryList = "CategoryList"
+private let CleanUp = "CleanUp"
 private let Common = "Common"
 private let EditTrip = "EditTrip"
 private let Home = "Home"
@@ -17,6 +19,7 @@ private let SfSafeSymbols = "SFSafeSymbols"
 private let Trip = "Trip"
 private let TripList = "TripList"
 
+// MARK: - Second level
 private let Api = "Api"
 private let Data = "Data"
 private let DateUtils = "DateUtils"
@@ -54,6 +57,8 @@ let package = Package(
         Category+Domain,
         // MARK: - Category List declarations
         CategoryList+Presentation,
+        // MARK: - Clean Up declarations
+        CleanUp,
         // MARK: - Common declarations
         DateUtils,
         Design,
@@ -166,18 +171,30 @@ let package = Package(
     
     // MARK: - Category List definitions
     // MARK: Category List Presentation
-      .target(
-        path: [CategoryList, Presentation],
-        dependencies: [
-          Design,
-          Category+Domain,
-          Presentation,
-          Provider,
-          Undo
-        ]
-      ),
+    .target(
+      path: [CategoryList, Presentation],
+      dependencies: [
+        Design,
+        Category+Domain,
+        Presentation,
+        Provider,
+        Undo
+      ]
+    ),
     .testTarget(path: [CategoryList, Presentation]),
     
+    // MARK: - Clean Up definitions
+    .target(
+      path: [CleanUp],
+      dependencies: [
+        Category+Domain,
+        Item+Domain,
+        Provider,
+        Trip+Domain
+      ]
+    ),
+    .testTarget(path: [CleanUp]),
+
     // MARK: - Common definitions
     // MARK: Date Utils
     .target(

@@ -15,7 +15,8 @@ final class TripListItemUiModelMapperTests {
       id: TripId("trip"),
       isCompleted: false,
       items: [],
-      name: "Trip"
+      name: "Trip",
+      reminder: nil
     )
     
     // when
@@ -32,7 +33,8 @@ final class TripListItemUiModelMapperTests {
       id: TripId("xmas"),
       isCompleted: false,
       items: [],
-      name: "Xmas holidays"
+      name: "Xmas holidays",
+      reminder: nil
     )
     
     // when
@@ -49,7 +51,8 @@ final class TripListItemUiModelMapperTests {
       id: TripId("malaysia"),
       isCompleted: false,
       items: [],
-      name: "Malaysia"
+      name: "Malaysia",
+      reminder: nil
     )
     
     // when
@@ -66,7 +69,8 @@ final class TripListItemUiModelMapperTests {
       id: TripId("summer"),
       isCompleted: false,
       items: [],
-      name: "Summer"
+      name: "Summer",
+      reminder: nil
     )
     
     // when

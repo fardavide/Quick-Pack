@@ -16,4 +16,5 @@ import TripDomain
   case updateItemName(_ id: ItemId, _ newName: String)
   case updateItemNotes(_ id: TripItemId, _ newNotes: String)
   case updateName(_ newName: String)
+  case updateReminder(_ newReminder: Date?)
 }

@@ -52,6 +52,12 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }
   
+  func updateReminder(tripId: TripId, reminder: Date?) {
+    update(tripId.fetchDescriptor) { model in
+      model.reminder = reminder
+    }
+  }
+  
   @MainActor func deleteTrip(tripId: TripId) {
     delete(tripId.fetchDescriptor)
   }

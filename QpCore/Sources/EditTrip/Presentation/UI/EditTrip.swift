@@ -1,6 +1,7 @@
 import Design
 import Provider
 import QpUtils
+import SFSafeSymbols
 import SwiftUI
 import TripDomain
 
@@ -28,8 +29,81 @@ private struct EditTripContent: View {
   @State private var showRename = false
   @State private var showSetCategory = false
   @State private var showSetNotes = false
+  @State private var showSetReminder = false
   @State private var newName = ""
   @State private var newNotes = ""
+
+  private var reminderButton: some View {
+    Button { showSetReminder = true } label: {
+      if let reminder = state.reminder {
+        let text = reminder.formatted(
+          Date.FormatStyle()
+            .month(.abbreviated)
+            .day(.defaultDigits)
+            .hour(.defaultDigits(amPM: .abbreviated))
+            .minute(.defaultDigits)
+        )
+        Label(text, systemSymbol: .alarm)
+          .font(.footnote)
+          .labelStyle(.titleAndIcon)
+      } else {
+        Image(systemSymbol: .alarm)
+      }
+    }
+    .buttonStyle(BorderedButtonStyle())
+  }
+
+  private var categorySheet: some View {
+    NavigationStack {
+      SetCategorySheetContent(
+        currentCategory: editingTripItem!.item.category,
+        allCategories: state.allCategories,
+        onCategoryChange: { newCategory in
+          send(.updateItemCategory(editingTripItem!, newCategory))
+        }
+      )
+      .navigationTitle("Set category for \(editingTripItem!.item.name)")
+      .toolbar {
+        ToolbarItem(placement: .topBarLeading) {
+          Button { showSetCategory = false } label: {
+            Label("Close", systemSymbol: .arrowBackward)
+          }
+          .tint(.secondary)
+        }
+      }
+    }
+  }
+
+  private var reminderSheet: some View {
+    let dateBinding = Binding(
+      get: { state.reminder ?? Date.now },
+      set: { send(.updateReminder($0)) }
+    )
+    return NavigationStack {
+      Form {
+        DatePicker("Time", selection: dateBinding, displayedComponents: [.date, .hourAndMinute])
+      }
+      .navigationTitle("Set reminder")
+      .toolbar {
+        ToolbarItem(placement: .automatic) {
+          Button {
+            send(.updateReminder(nil))
+            showSetReminder = false
+          } label: {
+            Label("Remove", systemSymbol: .trash)
+          }
+          .tint(.red)
+        }
+        ToolbarItem(placement: .topBarLeading) {
+          Button { showSetReminder = false } label: {
+            Label("Close", systemSymbol: .arrowBackward)
+          }
+          .tint(.secondary)
+        }
+      }
+    }
+    .presentationDetents([.medium])
+  }
 
   var body: some View {
     let nameBinding = Binding(
@@ -105,25 +179,8 @@ private struct EditTripContent: View {
       } message: { tripItem in
         Text("Set notes for \(tripItem.item.name)")
       }
-      .sheet(isPresented: $showSetCategory) {
-        NavigationStack {
-          SetCategorySheetContent(
-            currentCategory: editingTripItem!.item.category,
-            allCategories: state.allCategories,
-            onCategoryChange: { newCategory in
-              send(.updateItemCategory(editingTripItem!, newCategory))
-            }
-          )
-          .navigationTitle("Set category for \(editingTripItem!.item.name)")
-          .toolbar {
-            ToolbarItem(placement: .automatic) {
-              Button("Save") {
-                showSetCategory = false
-              }
-            }
-          }
-        }
-      }
+      .sheet(isPresented: $showSetCategory) { categorySheet }
+      .sheet(isPresented: $showSetReminder) { reminderSheet }
 #if !os(macOS)
       .environment(\.editMode, .constant(.active))
 #endif
@@ -132,6 +189,11 @@ private struct EditTripContent: View {
       .animation(.default, value: state.searchItems)
     }
     .navigationTitle("Edit trip")
+    .toolbar {
+      ToolbarItem(placement: .automatic) {
+        reminderButton
+      }
+    }
     .scrollDismissesKeyboard(.interactively)
   }
   
@@ -153,15 +215,19 @@ private struct EditTripContent: View {
 }
 
 #Preview("No search") {
-  EditTripContent(
-    state: .samples.noSearch,
-    send: { _ in }
-  )
+  NavigationStack {
+    EditTripContent(
+      state: .samples.noSearch,
+      send: { _ in }
+    )
+  }
 }
 
 #Preview("With search") {
-  EditTripContent(
-    state: .samples.withSearch,
-    send: { _ in }
-  )
+  NavigationStack {
+    EditTripContent(
+      state: .samples.withSearch,
+      send: { _ in }
+    )
+  }
 }

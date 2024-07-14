@@ -6,6 +6,7 @@ import Foundation
   public let isCompleted: Bool
   public let items: [TripItem]
   public let name: String
+  public let reminder: Date?
   
   public static func < (lhs: Trip, rhs: Trip) -> Bool {
     switch (lhs.date, rhs.date) {
@@ -34,13 +35,15 @@ import Foundation
     id: TripId,
     isCompleted: Bool,
     items: [TripItem],
-    name: String
+    name: String,
+    reminder: Date?
   ) {
     self.date = date
     self.id = id
     self.isCompleted = isCompleted
     self.items = items
     self.name = name
+    self.reminder = reminder
   }
 }
 
@@ -52,7 +55,8 @@ public extension Trip {
       id: .new(),
       isCompleted: false,
       items: [],
-      name: "My Trip"
+      name: "My Trip",
+      reminder: nil
     )
   }
   
@@ -62,7 +66,8 @@ public extension Trip {
       id: id,
       isCompleted: isCompleted,
       items: items,
-      name: name
+      name: name,
+      reminder: reminder
     )
   }
   
@@ -72,7 +77,8 @@ public extension Trip {
       id: id,
       isCompleted: isCompleted,
       items: items,
-      name: name
+      name: name,
+      reminder: reminder
     )
   }
   
@@ -82,7 +88,8 @@ public extension Trip {
       id: id,
       isCompleted: isCompleted,
       items: [],
-      name: name
+      name: name,
+      reminder: reminder
     )
   }
   
@@ -92,7 +99,8 @@ public extension Trip {
       id: id,
       isCompleted: isCompleted,
       items: items,
-      name: name
+      name: name,
+      reminder: reminder
     )
   }
 }
@@ -107,7 +115,8 @@ public final class TripSamples: Sendable {
       .samples.iPad,
       .samples.nintendoSwitch
     ],
-    name: "Malaysia"
+    name: "Malaysia",
+    reminder: Date.of(year: 2024, month: .oct, day: 10, hour: 16)
   )
   public let tunisia = Trip(
     date: TripDate(year: 2023, month: .oct, day: 12),
@@ -118,7 +127,8 @@ public final class TripSamples: Sendable {
       .samples.iPad,
       .samples.nintendoSwitch
     ],
-    name: "Tunisia"
+    name: "Tunisia",
+    reminder: nil
   )
   public let tuscany = Trip(
     date: TripDate(year: 2024, month: .apr),
@@ -129,6 +139,7 @@ public final class TripSamples: Sendable {
       .samples.iPad,
       .samples.nintendoSwitch
     ],
-    name: "Tuscany"
+    name: "Tuscany",
+    reminder: nil
   )
 }

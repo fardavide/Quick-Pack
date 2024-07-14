@@ -11,6 +11,7 @@ import TripDomain
   let id: TripId
   let isCompleted: Bool
   let name: String
+  let reminder: Date?
   let searchItems: [Item]
   let searchQuery: String
   
@@ -38,6 +39,7 @@ extension Trip {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: nil,
       searchItems: [],
       searchQuery: ""
     )
@@ -69,6 +71,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -82,6 +85,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -96,6 +100,7 @@ extension EditTripState {
       id: id,
       isCompleted: delta.isCompleted,
       name: delta.name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -114,6 +119,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -127,6 +133,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -140,19 +147,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
-      searchItems: searchItems,
-      searchQuery: searchQuery
-    )
-  }
-  
-  func withDate(_ date: TripDate?) -> EditTripState {
-    EditTripState(
-      allCategories: allCategories,
-      categories: categories,
-      date: date,
-      id: id,
-      isCompleted: isCompleted,
-      name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -166,6 +161,21 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withDate(_ date: TripDate?) -> EditTripState {
+    EditTripState(
+      allCategories: allCategories,
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -179,6 +189,21 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withReminder(_ reminder: Date?) -> EditTripState {
+    EditTripState(
+      allCategories: allCategories,
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -192,6 +217,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -205,6 +231,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -247,6 +274,7 @@ extension EditTripState {
         id: id,
         isCompleted: isCompleted,
         name: name,
+        reminder: reminder,
         searchItems: searchItems,
         searchQuery: searchQuery
       )
@@ -266,6 +294,7 @@ extension EditTripState {
       id: id,
       isCompleted: isCompleted,
       name: name,
+      reminder: reminder,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -274,6 +303,7 @@ extension EditTripState {
 
 final class EditTripStateSamples: Sendable {
   let noSearch = Trip.samples.malaysia.toInitialEditTripState()
+    .withReminder(Date.of(year: 2024, month: .oct, day: 10, hour: 19))
   var withSearch: EditTripState {
     noSearch
       .withSearchItems([.samples.camera])

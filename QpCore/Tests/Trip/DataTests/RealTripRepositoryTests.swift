@@ -175,7 +175,8 @@ final class RealTripRepositoryTests {
       id: .samples.tunisia,
       isCompleted: false,
       items: [],
-      name: Trip.samples.tunisia.name
+      name: Trip.samples.tunisia.name,
+      reminder: nil
     )
     await scenario.sut.createTrip(trip.withoutItems())
 

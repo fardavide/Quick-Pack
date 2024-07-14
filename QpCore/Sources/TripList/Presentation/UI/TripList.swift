@@ -159,8 +159,7 @@ private struct TripListItems: View {
 }
 
 #Preview("Zero") {
-  getProvider().register { EditTripViewModel.samples.content() }
-  return TripListContent(
+  TripListContent(
     state: TripListState.samples.empty,
     undoHandler: FakeUndoHandler(),
     settingsViewModel: FakeSettingsViewModel(),

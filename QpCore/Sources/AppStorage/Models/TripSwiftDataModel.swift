@@ -13,6 +13,7 @@ public final class TripSwiftDataModel: IdentifiableModel {
   @Relationship(deleteRule: .cascade, inverse: \TripItemSwiftDataModel.trip)
   public var items: [TripItemSwiftDataModel]?
   public var name: String?
+  public var reminder: Date?
   
   public static let typeDescription: String = "trip"
   
@@ -29,13 +30,15 @@ public final class TripSwiftDataModel: IdentifiableModel {
     id: String,
     isCompleted: Bool,
     items: [TripItemSwiftDataModel],
-    name: String
+    name: String,
+    reminder: Date?
   ) {
     self.date = date
     self.id = id
     self.isCompleted = isCompleted
     self.items = items
     self.name = name
+    self.reminder = reminder
   }
 }
 
@@ -46,7 +49,8 @@ public extension Trip {
       id: id.value,
       isCompleted: isCompleted,
       items: items.map { $0.toSwiftDataModel() },
-      name: name
+      name: name,
+      reminder: reminder
     )
   }
 }
@@ -67,7 +71,8 @@ public extension [TripSwiftDataModel] {
         id: TripId(swiftDataModel.id),
         isCompleted: swiftDataModel.isCompleted,
         items: try swiftDataModel.items.require("Trip items").toDomainModels(),
-        name: try swiftDataModel.name.require("Trip name")
+        name: try swiftDataModel.name.require("Trip name"),
+        reminder: swiftDataModel.reminder
       )
     }
     .sorted(by: <)

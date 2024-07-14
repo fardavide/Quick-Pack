@@ -2,13 +2,6 @@ import Foundation
 
 public extension Date {
   
-  static func from(_ string: String, formatter: Date.Formatter) -> Date? {
-    let formatter = switch formatter {
-    case .iso8601: ISO8601DateFormatter()
-    }
-    return formatter.date(from: string)
-  }
-  
   /// Create a `date` using given parameters and the system's current timezone
   /// - Parameters:
   ///   - year: year of the `Date`
@@ -51,11 +44,11 @@ public extension Date {
     formatter.dateFormat = dateFormat
     return formatter.string(from: self)
   }
+}
+
+extension Date.FormatStyle.DateStyle {
   
-  enum Formatter {
-    /*
-     Example: 2016-04-14T10:44:00+0000
-     */
-    case iso8601
+  var noYear: Date.FormatStyle.DateStyle {
+    self
   }
 }

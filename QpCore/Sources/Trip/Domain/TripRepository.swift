@@ -1,4 +1,5 @@
 import Combine
+import Foundation
 import QpUtils
 import Undo
 
@@ -10,6 +11,7 @@ public protocol TripRepository: UndoHandler {
   @MainActor func updateTripName(tripId: TripId, name: String)
   @MainActor func updateTripDate(tripId: TripId, date: TripDate?)
   @MainActor func markTripCompleted(tripId: TripId, isCompleted: Bool)
+  @MainActor func updateReminder(tripId: TripId, reminder: Date?)
   @MainActor func deleteTrip(tripId: TripId)
   
   @MainActor func addItem(_ item: TripItem, to tripId: TripId)
@@ -55,6 +57,7 @@ public final class FakeTripRepository: TripRepository {
     updateTripDate.append((tripId, date))
   }
   public func markTripCompleted(tripId: TripId, isCompleted: Bool) {}
+  public func updateReminder(tripId: TripId, reminder: Date?) {}
   public func deleteTrip(tripId: TripId) {}
   
   public func addItem(_ item: TripItem, to tripId: TripId) {}

@@ -33,8 +33,8 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       .filterSuccess()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] trips in
-        if let viewModel = self, let trip = trips.first(where: { $0.id == initialTrip.id }) {
-          viewModel.state = viewModel.state.update(with: trip)
+        if let self, let trip = trips.first(where: { $0.id == initialTrip.id }) {
+          state = state.update(with: trip)
         }
       }
       .store(in: &subscribers)
@@ -49,8 +49,8 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       .removeDuplicates()
       .receive(on: DispatchQueue.main)
       .sink { [weak self] searchResult in
-        if let viewModel = self {
-          viewModel.state = viewModel.state.withSearchItems(searchResult)
+        if let self {
+          state = state.withSearchItems(searchResult)
         }
       }
       .store(in: &subscribers)
@@ -81,6 +81,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .updateItemNotes(tripItemId, newNotes): updateItemNotes(tripItemId, newNotes)
     case let .updateItemName(itemId, newName): updateItemName(itemId, newName)
     case let .updateName(newName): updateName(newName)
+    case let .updateReminder(newReminder): updateReminder(newReminder)
     }
   }
   // swiftlint:enable cyclomatic_complexity
@@ -152,6 +153,11 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     Task { tripRepository.updateTripName(tripId: state.id, name: newName) }
   }
   
+  @MainActor private func updateReminder(_ newReminder: Date?) {
+    state = state.withReminder(newReminder)
+    Task { tripRepository.updateReminder(tripId: state.id, reminder: newReminder) }
+  }
+
   private func filterResult(
     result: Result<[Item], DataError>,
     tripItems: [TripItem],

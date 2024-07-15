@@ -1,6 +1,6 @@
 import ItemDomain
 
-@frozen public struct TripItem: Comparable, Equatable, Identifiable {
+@frozen public struct TripItem: Comparable, Equatable, Identifiable, Hashable {
   public let id: TripItemId
   public let item: Item
   public let isChecked: Bool

@@ -1,6 +1,6 @@
 import Foundation
 
-@frozen public struct Trip: Comparable, Equatable {
+@frozen public struct Trip: Comparable, Equatable, Hashable {
   public let date: TripDate?
   public let id: TripId
   public let isCompleted: Bool

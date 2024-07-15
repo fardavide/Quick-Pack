@@ -1,9 +1,11 @@
-import Testing
+@testable import TripData
 
+import DateUtils
+import Foundation
 import StorageModels
 import SwiftData
+import Testing
 import TripDomain
-@testable import TripData
 
 final class RealTripRepositoryTests {
   
@@ -168,24 +170,33 @@ final class RealTripRepositoryTests {
   }
   
   @Test func pastTripsAreMarkedAsCompleted() async {
-    // given
-    let scenario = Scenario()
-    let trip = Trip(
-      date: TripDate(year: 2023, month: .oct),
-      id: .samples.tunisia,
-      isCompleted: false,
-      items: [],
-      name: Trip.samples.tunisia.name,
-      reminder: nil
+    // guven
+    let scenario = Scenario(
+      currentDate: Date.of(year: 2024, month: .jul, day: 15, hour: 6, minute: 35)
     )
-    await scenario.sut.createTrip(trip.withoutItems())
-
+    let trips: [Trip: Bool] = [
+      Trip.new().withDate(TripDate(year: 2023)): true,
+      Trip.new().withDate(TripDate(year: 2024, month: .jun)): true,
+      Trip.new().withDate(TripDate(year: 2024, month: .jul, day: 14)): true,
+      Trip.new().withDate(TripDate(year: 2024, month: .jul, day: 15)): false,
+      Trip.new().withDate(TripDate(year: 2024, month: .jul)): false,
+      Trip.new().withDate(TripDate(year: 2024)): false
+    ]
+    for (trip, _) in trips {
+      await scenario.sut.createTrip(trip)
+    }
+    
     // when
     await scenario.sut.cleanUp()
-
+    
     // then
-    let savedTrip = await scenario.firstSavedTrip()
-    #expect(savedTrip?.isCompleted == true)
+    let savedTrips = await scenario.sut.trips.waitFirst().orThrow()
+    for (trip, shouldBeCompleted) in trips {
+      #expect(
+        savedTrips.first { $0.id == trip.id }?.isCompleted == shouldBeCompleted,
+        "Trip with date \(trip.date) should be \(shouldBeCompleted)"
+      )
+    }
   }
 }
 
@@ -193,13 +204,18 @@ private final class Scenario: @unchecked Sendable {
   
   let sut: RealTripRepository
   
-  init() {
+  init(
+    currentDate: Date = Date.now
+  ) {
     do {
       let container = try ModelContainer(
         for: TripSwiftDataModel.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: true)
       )
-      sut = RealTripRepository(container: container)
+      sut = RealTripRepository(
+        container: container,
+        getCurrentDate: FakeGetCurrentDate(date: currentDate)
+      )
     } catch {
       fatalError(error.localizedDescription)
     }

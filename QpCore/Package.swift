@@ -202,7 +202,9 @@ let package = Package(
     // MARK: Date Utils
     .target(
       path: [Common, DateUtils],
-      dependencies: []
+      dependencies: [
+        Provider
+      ]
     ),
     .testTarget(path: [Common, DateUtils]),
     

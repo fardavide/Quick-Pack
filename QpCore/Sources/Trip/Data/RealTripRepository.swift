@@ -1,5 +1,6 @@
 import AppStorage
 import Combine
+import DateUtils
 import Foundation
 import QpStorage
 import QpUtils
@@ -10,6 +11,7 @@ import TripDomain
 final class RealTripRepository: AppStorage, TripRepository {
   
   let container: ModelContainer
+  let getCurrentDate: GetCurrentDate
   
   lazy var trips: any DataPublisher<[Trip]> = {
     observe { context in
@@ -20,8 +22,12 @@ final class RealTripRepository: AppStorage, TripRepository {
     }
   }()
   
-  init(container: ModelContainer) {
+  init(
+    container: ModelContainer,
+    getCurrentDate: GetCurrentDate
+  ) {
     self.container = container
+    self.getCurrentDate = getCurrentDate
   }
   
   @MainActor func createTrip(_ trip: Trip) {
@@ -45,7 +51,7 @@ final class RealTripRepository: AppStorage, TripRepository {
       model.isCompleted = isCompleted
       // If set not completed, remove the date if in the past
       if let date = model.date?.value {
-        if !isCompleted && date < Date.now {
+        if !isCompleted && date < getCurrentDate.run() {
           model.date = nil
         }
       }
@@ -126,7 +132,7 @@ final class RealTripRepository: AppStorage, TripRepository {
   }
   
   @MainActor func cleanUp() {
-    let currentDate = Date.now
+    let currentDate = getCurrentDate.run() - 1.days()
     transaction { context in
       updateAllInTransaction(
         context: context,

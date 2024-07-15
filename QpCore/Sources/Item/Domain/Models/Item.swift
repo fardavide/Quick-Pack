@@ -1,6 +1,6 @@
 import CategoryDomain
 
-@frozen public struct Item: Equatable, Identifiable {
+@frozen public struct Item: Equatable, Identifiable, Hashable {
   public let category: ItemCategory?
   public let id: ItemId
   public let name: String

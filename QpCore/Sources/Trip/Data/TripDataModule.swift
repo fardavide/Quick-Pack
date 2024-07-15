@@ -5,7 +5,7 @@ import TripDomain
 public final class TripDataModule: Module {
   public init() {}
   
-  public var dependencies = [
+  public var dependencies: [Module.Type] = [
     DateUtilsModule.self
   ]
   

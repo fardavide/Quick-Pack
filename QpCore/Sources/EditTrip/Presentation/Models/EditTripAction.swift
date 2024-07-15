@@ -9,6 +9,7 @@ import TripDomain
   case deleteItem(_ id: ItemId)
   case removeItem(_ id: TripItemId)
   case reorderItems(for: CategoryId?, from: IndexSet, to: Int)
+  case requestNotificationsAuthorization
   case searchItem(_ query: String)
   case updateDate(_ newDate: TripDate?)
   case updateItemCategory(_ tripItem: TripItem, _ newCategory: ItemCategory?)

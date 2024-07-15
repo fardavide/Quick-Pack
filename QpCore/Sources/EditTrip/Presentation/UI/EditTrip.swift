@@ -34,7 +34,10 @@ private struct EditTripContent: View {
   @State private var newNotes = ""
 
   private var reminderButton: some View {
-    Button { showSetReminder = true } label: {
+    Button {
+      send(.requestNotificationsAuthorization)
+      showSetReminder = true
+    } label: {
       if let reminder = state.reminder {
         let text = reminder.formatted(
           Date.FormatStyle()
@@ -63,14 +66,6 @@ private struct EditTripContent: View {
         }
       )
       .navigationTitle("Set category for \(editingTripItem!.item.name)")
-      .toolbar {
-        ToolbarItem(placement: .topBarLeading) {
-          Button { showSetCategory = false } label: {
-            Label("Close", systemSymbol: .arrowBackward)
-          }
-          .tint(.secondary)
-        }
-      }
     }
   }
 
@@ -93,12 +88,6 @@ private struct EditTripContent: View {
             Label("Remove", systemSymbol: .trash)
           }
           .tint(.red)
-        }
-        ToolbarItem(placement: .topBarLeading) {
-          Button { showSetReminder = false } label: {
-            Label("Close", systemSymbol: .arrowBackward)
-          }
-          .tint(.secondary)
         }
       }
     }

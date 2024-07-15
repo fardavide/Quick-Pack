@@ -79,6 +79,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .deleteItem(itemId): deleteItem(itemId)
     case let .removeItem(itemId): removeItem(itemId)
     case let .reorderItems(categoryId, from, to): reorderItems(categoryId, from, to)
+    case .requestNotificationsAuthorization: requestNotificationsAuthorization()
     case let .searchItem(query): searchItem(query)
     case let .updateDate(newDate): updateDate(newDate)
     case let .updateItemCategory(tripItem, newCategory): updateItemCategory(tripItem, newCategory)
@@ -119,12 +120,22 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     }
   }
   
+  @MainActor private func requestNotificationsAuthorization() {
+    Task {
+      do {
+        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
   @MainActor private func removeItem(_ tripItemId: TripItemId) {
     state = state.removeItem(tripItemId: tripItemId)
     Task { tripRepository.removeItem(itemId: tripItemId, from: state.id) }
   }
   
-  private func searchItem(_ query: String) {
+  @MainActor private func searchItem(_ query: String) {
     state = state.withSearchQuery(query)
   }
   
@@ -161,11 +172,6 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   @MainActor private func updateReminder(_ newReminder: Date?) {
     state = state.withReminder(newReminder)
     Task {
-      do {
-        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
-      } catch {
-        print(error)
-      }
       tripRepository.updateReminder(tripId: state.id, reminder: newReminder)
       scheduleRemindersTask.run()
     }

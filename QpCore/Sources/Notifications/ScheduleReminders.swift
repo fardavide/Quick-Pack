@@ -9,9 +9,13 @@ public protocol ScheduleReminders {
 }
 
 public final class FakeScheduleReminders: ScheduleReminders {
+  public private(set) var didRun = false
+  
   public init() {}
   
-  public func run() {}
+  public func run() {
+    didRun = true
+  }
 }
 
 public final class RealScheduleReminders: ScheduleReminders, @unchecked Sendable {

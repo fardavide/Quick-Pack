@@ -26,6 +26,7 @@ public protocol TripRepository: UndoHandler {
 public final class FakeTripRepository: TripRepository {
   public var trips: any DataPublisher<[Trip]>
   public private(set) var createTrip: [Trip] = []
+  public private(set) var updateReminder: [(TripId, Date?)] = []
   public private(set) var updateTripName: [(TripId, newName: String)] = []
   public private(set) var updateTripDate: [(TripId, TripDate?)] = []
   
@@ -38,6 +39,9 @@ public final class FakeTripRepository: TripRepository {
   // MARK: utils
   public func waitLastCreateTrip() async -> Trip? {
     await waitNonNil { createTrip.last }
+  }
+  public func waitLastUpdateReminder() async -> (TripId, Date?) {
+    await waitNonNil { updateReminder.last }
   }
   public func waitlastUpdateTripName() async -> (TripId, newName: String) {
     await waitNonNil { updateTripName.last }
@@ -57,7 +61,9 @@ public final class FakeTripRepository: TripRepository {
     updateTripDate.append((tripId, date))
   }
   public func markTripCompleted(tripId: TripId, isCompleted: Bool) {}
-  public func updateReminder(tripId: TripId, reminder: Date?) {}
+  public func updateReminder(tripId: TripId, reminder: Date?) {
+    updateReminder.append((tripId, reminder))
+  }
   public func deleteTrip(tripId: TripId) {}
   
   public func addItem(_ item: TripItem, to tripId: TripId) {}

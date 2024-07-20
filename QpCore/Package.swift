@@ -93,7 +93,7 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(url: "https://github.com/apple/swift-testing.git", from: "0.10.0"),
+    .package(url: "https://github.com/apple/swift-testing.git", from: "0.11.0"),
     .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", .upToNextMajor(from: Version(5, 3, 0)))
   ],
   targets: [

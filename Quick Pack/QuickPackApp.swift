@@ -12,11 +12,11 @@ import TripListPresentation
 
 @main
 struct QuickPackApp: App {
-
-  private let provider = Provider.start()
   
   init() {
+    let provider = getProvider()
     QpModule().start(with: provider)
+    
     provider.get(DataCleanUpTask.self).runAndSchedule()
     provider.get(ScheduleReminders.self).run()
   }

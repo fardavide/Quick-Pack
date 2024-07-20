@@ -7,7 +7,7 @@ final class QpModuleTests {
   
   // Failing preview?
 //  @Test func module() {
-//    let provider = Provider.get()
+//    let provider = getProvider()
 //    QpModule().start(with: provider)
 //  }
 }

@@ -19,6 +19,7 @@ private let Settings = "Settings"
 private let SfSafeSymbols = "SFSafeSymbols"
 private let Trip = "Trip"
 private let TripList = "TripList"
+private let Widgets = "Widgets"
 
 // MARK: - Second level
 private let Api = "Api"
@@ -85,7 +86,9 @@ let package = Package(
         Trip+Data,
         Trip+Domain,
         // MARK: - Trip List declarations
-        TripList+Presentation
+        TripList+Presentation,
+        // MARK: - Widgets
+        Widgets
       ]
     )
   ],
@@ -394,7 +397,19 @@ let package = Package(
         Undo
       ]
     ),
-    .testTarget(path: [TripList, Presentation])
+    .testTarget(path: [TripList, Presentation]),
+    
+    // MARK: - Widgets definitions
+    // MARK: Widgets
+    .target(
+      path: [Widgets],
+      dependencies: [
+        DateUtils,
+        Provider,
+        Trip+Domain
+      ]
+    ),
+    .testTarget(path: [Widgets])
   ],
   
   swiftLanguageVersions: [SwiftVersion.v6]

@@ -37,15 +37,11 @@ public struct ProviderError: Error, Equatable {
 }
 
 @MainActor public func getProvider() -> Provider {
-  Provider.get()
+  Provider.instance ?? Provider.start()
 }
 
-public extension Provider {
-  @MainActor private static var instance: Provider?
-
-  @MainActor static func get() -> Provider {
-    instance ?? start()
-  }
+private extension Provider {
+  @MainActor static var instance: Provider?
 
   @MainActor static func start() -> Provider {
     if instance == nil {

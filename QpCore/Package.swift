@@ -404,6 +404,7 @@ let package = Package(
     .target(
       path: [Widgets],
       dependencies: [
+        Real+AppStorage,
         DateUtils,
         Provider,
         Trip+Domain

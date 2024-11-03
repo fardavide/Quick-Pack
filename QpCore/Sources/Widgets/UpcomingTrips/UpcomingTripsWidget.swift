@@ -42,6 +42,7 @@ public struct UpcomingTripsWidget: Widget {
   UpcomingTripsEntry.samples.empty
 }
 
+#if !os(macOS)
 #Preview("rectangular", as: .accessoryRectangular) {
     UpcomingTripsWidget()
 } timeline: {
@@ -59,3 +60,4 @@ public struct UpcomingTripsWidget: Widget {
 } timeline: {
   UpcomingTripsEntry.samples.empty
 }
+#endif

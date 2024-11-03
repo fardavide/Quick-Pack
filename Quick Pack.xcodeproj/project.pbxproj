@@ -859,7 +859,7 @@
 			repositoryURL = "https://github.com/apple/swift-testing";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.7.0;
+				minimumVersion = 6.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

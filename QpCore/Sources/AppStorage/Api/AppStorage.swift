@@ -5,6 +5,7 @@ import QpUtils
 import SwiftData
 import SwiftUI
 import Undo
+import WidgetKit
 
 public protocol AppStorage: UndoHandler {
   var container: ModelContainer { get }
@@ -21,6 +22,26 @@ public extension AppStorage {
       context.undoManager = UndoManager()
     }
     return context.undoManager!
+  }
+  
+  @MainActor func getAll<DataModel: IdentifiableModel, Model>(
+    fetchDescriptor: FetchDescriptor<DataModel>,
+    map: ([DataModel]) -> [Model]
+  ) -> Result<[Model], DataError> {
+    context.fetchAll(
+      map: map,
+      fetchDescriptor
+    )
+  }
+  
+  @MainActor func getAll<DataModel: IdentifiableModel, Model>(
+    fetchDescriptor: FetchDescriptor<DataModel>,
+    mapEach: (DataModel) -> Model
+  ) -> Result<[Model], DataError> {
+    context.fetchAll(
+      mapEach: mapEach,
+      fetchDescriptor
+    )
   }
   
   @inlinable func observe<Model: Equatable>(
@@ -61,6 +82,7 @@ public extension AppStorage {
       .onFailure { _ in
         undoManager.setActionName("create \(model.modelDescription)")
         context.insert(model)
+        WidgetCenter.shared.reloadAllTimelines()
       }
   }
   
@@ -74,10 +96,12 @@ public extension AppStorage {
       .onSuccess { model in
         undoManager.setActionName("update \(model.modelDescription)")
         update(model)
+        WidgetCenter.shared.reloadAllTimelines()
       }
       .onFailure { _ in
         undoManager.setActionName("create \(model.modelDescription)")
         context.insert(model)
+        WidgetCenter.shared.reloadAllTimelines()
       }
   }
   
@@ -89,6 +113,7 @@ public extension AppStorage {
     context.fetchOne(fetchDescriptor).onSuccess { model in
       undoManager.setActionName("update \(model.modelDescription)")
       update(model)
+      WidgetCenter.shared.reloadAllTimelines()
     }
   }
   
@@ -106,6 +131,7 @@ public extension AppStorage {
       for model in models {
         update(model)
       }
+      WidgetCenter.shared.reloadAllTimelines()
     }.onFailure { error in
       print(error)
     }

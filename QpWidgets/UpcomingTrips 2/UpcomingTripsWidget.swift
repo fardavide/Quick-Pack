@@ -1,5 +1,7 @@
-import WidgetKit
+import AppStorage
+import Provider
 import SwiftUI
+import WidgetKit
 
 public struct UpcomingTripsWidget: Widget {
   var kind: String = "UpcomingTrips"

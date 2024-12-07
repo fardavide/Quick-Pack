@@ -7,6 +7,8 @@ public protocol TripRepository: UndoHandler {
   
   var trips: any DataPublisher<[Trip]> { get }
   
+  @MainActor func getTrips() -> Result<[Trip], DataError>
+  
   @MainActor func createTrip(_ trip: Trip)
   @MainActor func updateTripName(tripId: TripId, name: String)
   @MainActor func updateTripDate(tripId: TripId, date: TripDate?)
@@ -25,6 +27,9 @@ public protocol TripRepository: UndoHandler {
 
 public final class FakeTripRepository: TripRepository {
   public var trips: any DataPublisher<[Trip]>
+  public func getTrips() -> Result<[Trip], DataError> {
+    .success([])
+  }
   public private(set) var createTrip: [Trip] = []
   public private(set) var updateReminder: [(TripId, Date?)] = []
   public private(set) var updateTripName: [(TripId, newName: String)] = []

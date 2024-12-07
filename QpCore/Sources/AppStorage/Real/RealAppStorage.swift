@@ -15,7 +15,7 @@ public final class RealAppStorage: AppStorage {
       TripItemSwiftDataModel.self,
       TripSwiftDataModel.self
     ],
-    version: .init(0, 1, 4)
+    version: .init(0, 1, 5)
   )
   
   public let container: ModelContainer

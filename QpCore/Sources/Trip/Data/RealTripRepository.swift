@@ -30,6 +30,13 @@ final class RealTripRepository: AppStorage, TripRepository {
     self.getCurrentDate = getCurrentDate
   }
   
+  @MainActor func getTrips() -> Result<[Trip], DataError> {
+    getAll(
+      fetchDescriptor: FetchDescriptor<TripSwiftDataModel>(),
+      map: { $0.toDomainModels() }
+    )
+  }
+  
   @MainActor func createTrip(_ trip: Trip) {
     insertOrFail(trip.toSwiftDataModel(), fetchDescriptor: trip.id.fetchDescriptor)
   }

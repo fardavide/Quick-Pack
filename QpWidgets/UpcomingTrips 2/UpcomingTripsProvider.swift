@@ -1,5 +1,6 @@
 import DateUtils
 import Provider
+import QpUtils
 import TripDomain
 import WidgetKit
 
@@ -19,7 +20,7 @@ public final class UpcomingTripsProvider: AppIntentTimelineProvider {
     for configuration: UpcomingTripsIntent,
     in context: Context
   ) async -> UpcomingTripsEntry {
-    UpcomingTripsEntry(date: .now, trips: await tripsOrEmpty())
+    UpcomingTripsEntry(date: .now, trips: await tripsOrEmpty().ifEmpty(.placeholders))
   }
   
   public func timeline(
@@ -37,9 +38,9 @@ public final class UpcomingTripsProvider: AppIntentTimelineProvider {
   }
   
   private func tripsOrEmpty() async -> [UpcomingTripModel] {
-    if let trips = await tripRepository.trips.waitFirst().orNil() {
+    await tripRepository.getTrips().fold { trips in
       trips.map { trip in UpcomingTripModel(name: trip.name, date: trip.date) }
-    } else {
+    } onFailure: { _ in
       []
     }
   }

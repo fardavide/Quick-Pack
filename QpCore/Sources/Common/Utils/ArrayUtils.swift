@@ -17,6 +17,10 @@ public extension Collection {
     return dict
   }
   
+  @inlinable func ifEmpty(_ transform: @autoclosure () -> Self) -> Self {
+    isEmpty ? transform() : self
+  }
+  
   /// Checks none of the elements matches the `predicate`
   /// - Returns `true` if none of the `Element`s match the `predicate`, `false` if any of them does
   @inlinable func none(_ predicate: (Element) -> Bool) -> Bool {

@@ -22,6 +22,16 @@ public extension Result where Failure == GenericError {
 
 public extension Result {
   
+  @inlinable func fold<R>(
+    onSuccess: (Success) -> R,
+    onFailure: (Failure) -> R
+  ) -> R {
+    switch self {
+    case let .success(value): return onSuccess(value)
+    case let .failure(error): return onFailure(error)
+    }
+  }
+  
   /// Executes `f` in case of `Failure`
   /// - Parameter f: closure to execute
   /// - Returns: self

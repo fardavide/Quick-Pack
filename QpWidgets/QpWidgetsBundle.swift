@@ -1,6 +1,5 @@
 import Provider
 import SwiftUI
-import Widgets
 import WidgetKit
 
 @main

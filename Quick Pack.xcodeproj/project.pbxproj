@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -340,7 +340,6 @@
 				};
 			};
 			buildConfigurationList = 6BC2556C2BC1A4DC008C5577 /* Build configuration list for PBXProject "Quick Pack" */;
-			compatibilityVersion = "Xcode 15.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -351,6 +350,7 @@
 			packageReferences = (
 				6BBA33452BC5A4A200EB803D /* XCRemoteSwiftPackageReference "swift-testing" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 6BC255722BC1A4DC008C5577 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -502,7 +502,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.17.1;
+				MARKETING_VERSION = 0.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "fardavide.Quick-Pack.Widgets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -541,7 +541,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 0.17.1;
+				MARKETING_VERSION = 0.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "fardavide.Quick-Pack.Widgets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -711,7 +711,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.17.1;
+				MARKETING_VERSION = 0.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "fardavide.Quick-Pack";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;
@@ -757,7 +757,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.17.1;
+				MARKETING_VERSION = 0.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "fardavide.Quick-Pack";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = NO;

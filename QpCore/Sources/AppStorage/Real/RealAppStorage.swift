@@ -23,7 +23,6 @@ public final class RealAppStorage: AppStorage {
   @MainActor private init() {
     let configuration = ModelConfiguration(
       schema: schema,
-      url: URL.documentsDirectory.appending(path: "/q-pack/data.store"),
       cloudKitDatabase: .automatic
     )
     

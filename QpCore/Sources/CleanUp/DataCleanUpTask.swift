@@ -51,11 +51,7 @@ public final class DataCleanUpTask: Sendable {
       task.setTaskCompleted(success: !self.operation.isCancelled)
     }
     
-    do {
-      try operationQueue.addOperation(operation)
-    } catch {
-      print("Could not add operation: \(error)")
-    }
+    operationQueue.addOperation(operation)
   }
 #endif
   

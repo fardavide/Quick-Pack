@@ -21,15 +21,10 @@ public final class RealAppStorage: AppStorage {
   public let container: ModelContainer
   
   @MainActor private init() {
-    let configuration = ModelConfiguration(
-      schema: schema,
-      cloudKitDatabase: .automatic
-    )
-    
     do {
       container = try ModelContainer(
         for: schema,
-        configurations: configuration
+        configurations: ModelConfiguration(schema: schema)
       )
     } catch {
       fatalError(error.localizedDescription)

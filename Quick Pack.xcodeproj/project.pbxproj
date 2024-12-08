@@ -20,11 +20,6 @@
 		6BC2557F2BC1A4DD008C5577 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BC2557E2BC1A4DD008C5577 /* Preview Assets.xcassets */; };
 		6BC255952BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */; };
 		6BC256202BC28181008C5577 /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = 6BC2561F2BC28181008C5577 /* Core */; };
-		6BC90A312D04B3C100C1DB2E /* UpcomingTripsEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC90A2B2D04B3C100C1DB2E /* UpcomingTripsEntry.swift */; };
-		6BC90A322D04B3C100C1DB2E /* UpcomingTripsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC90A2D2D04B3C100C1DB2E /* UpcomingTripsProvider.swift */; };
-		6BC90A332D04B3C100C1DB2E /* UpcomingTripsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC90A2E2D04B3C100C1DB2E /* UpcomingTripsView.swift */; };
-		6BC90A342D04B3C100C1DB2E /* UpcomingTripsWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC90A2F2D04B3C100C1DB2E /* UpcomingTripsWidget.swift */; };
-		6BC90A352D04B3C100C1DB2E /* UpcomingTripsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC90A2C2D04B3C100C1DB2E /* UpcomingTripsIntent.swift */; };
 		6BC90A392D04B69E00C1DB2E /* WidgetsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC90A382D04B69E00C1DB2E /* WidgetsModule.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,14 +81,17 @@
 		6BC255942BC1A4DD008C5577 /* QuickPackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickPackUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		6BC2561E2BC28127008C5577 /* QpCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = QpCore; sourceTree = "<group>"; };
 		6BC256212BC289E8008C5577 /* Quick-Pack-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Quick-Pack-Info.plist"; sourceTree = SOURCE_ROOT; };
-		6BC90A2B2D04B3C100C1DB2E /* UpcomingTripsEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTripsEntry.swift; sourceTree = "<group>"; };
-		6BC90A2C2D04B3C100C1DB2E /* UpcomingTripsIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTripsIntent.swift; sourceTree = "<group>"; };
-		6BC90A2D2D04B3C100C1DB2E /* UpcomingTripsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTripsProvider.swift; sourceTree = "<group>"; };
-		6BC90A2E2D04B3C100C1DB2E /* UpcomingTripsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTripsView.swift; sourceTree = "<group>"; };
-		6BC90A2F2D04B3C100C1DB2E /* UpcomingTripsWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTripsWidget.swift; sourceTree = "<group>"; };
 		6BC90A382D04B69E00C1DB2E /* WidgetsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetsModule.swift; sourceTree = "<group>"; };
 		6BC90A3A2D04C61100C1DB2E /* QpWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QpWidgetsExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		6BC90A3B2D06029400C1DB2E /* UpcomingTrip */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UpcomingTrip;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		6B0498802C4B9425006B4697 /* Frameworks */ = {
@@ -135,10 +133,10 @@
 		6B0498882C4B9425006B4697 /* QpWidgets */ = {
 			isa = PBXGroup;
 			children = (
+				6BC90A3B2D06029400C1DB2E /* UpcomingTrip */,
 				6B0498892C4B9425006B4697 /* QpWidgetsBundle.swift */,
 				6B0498912C4B9426006B4697 /* Assets.xcassets */,
 				6B0498932C4B9426006B4697 /* Info.plist */,
-				6BC90A302D04B3C100C1DB2E /* UpcomingTrips 2 */,
 				6BC90A382D04B69E00C1DB2E /* WidgetsModule.swift */,
 			);
 			path = QpWidgets;
@@ -216,18 +214,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6BC90A302D04B3C100C1DB2E /* UpcomingTrips 2 */ = {
-			isa = PBXGroup;
-			children = (
-				6BC90A2B2D04B3C100C1DB2E /* UpcomingTripsEntry.swift */,
-				6BC90A2C2D04B3C100C1DB2E /* UpcomingTripsIntent.swift */,
-				6BC90A2D2D04B3C100C1DB2E /* UpcomingTripsProvider.swift */,
-				6BC90A2E2D04B3C100C1DB2E /* UpcomingTripsView.swift */,
-				6BC90A2F2D04B3C100C1DB2E /* UpcomingTripsWidget.swift */,
-			);
-			path = "UpcomingTrips 2";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -242,6 +228,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				6BC90A3B2D06029400C1DB2E /* UpcomingTrip */,
 			);
 			name = QpWidgetsExtension;
 			packageProductDependencies = (
@@ -427,11 +416,6 @@
 			files = (
 				6B04988A2C4B9425006B4697 /* QpWidgetsBundle.swift in Sources */,
 				6BC90A392D04B69E00C1DB2E /* WidgetsModule.swift in Sources */,
-				6BC90A312D04B3C100C1DB2E /* UpcomingTripsEntry.swift in Sources */,
-				6BC90A322D04B3C100C1DB2E /* UpcomingTripsProvider.swift in Sources */,
-				6BC90A332D04B3C100C1DB2E /* UpcomingTripsView.swift in Sources */,
-				6BC90A342D04B3C100C1DB2E /* UpcomingTripsWidget.swift in Sources */,
-				6BC90A352D04B3C100C1DB2E /* UpcomingTripsIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

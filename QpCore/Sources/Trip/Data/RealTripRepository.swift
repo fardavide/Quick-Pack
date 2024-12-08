@@ -37,6 +37,16 @@ final class RealTripRepository: AppStorage, TripRepository {
     )
   }
   
+  @MainActor func getNextTrip() -> Result<Trip?, DataError> {
+    get(
+      fetchDescriptor: FetchDescriptor<TripSwiftDataModel>(
+        predicate: #Predicate { $0.isCompleted == false },
+        sortBy: [SortDescriptor(\.date?.value)]
+      ),
+      map: { $0.toDomainModelOrEmptyValues() }
+    )
+  }
+  
   @MainActor func createTrip(_ trip: Trip) {
     insertOrFail(trip.toSwiftDataModel(), fetchDescriptor: trip.id.fetchDescriptor)
   }

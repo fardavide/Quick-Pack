@@ -24,6 +24,16 @@ public extension AppStorage {
     return context.undoManager!
   }
   
+  @MainActor func get<DataModel: IdentifiableModel, Model>(
+    fetchDescriptor: FetchDescriptor<DataModel>,
+    map: (DataModel) -> Model
+  ) -> Result<Model?, DataError> {
+    context.fetchOne(
+      map: map,
+      fetchDescriptor
+    )
+  }
+  
   @MainActor func getAll<DataModel: IdentifiableModel, Model>(
     fetchDescriptor: FetchDescriptor<DataModel>,
     map: ([DataModel]) -> [Model]

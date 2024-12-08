@@ -63,6 +63,19 @@ public extension TripId {
   }
 }
 
+public extension TripSwiftDataModel {
+  func toDomainModelOrEmptyValues() -> Trip {
+    Trip(
+      date: date,
+      id: TripId(id),
+      isCompleted: isCompleted,
+      items: items?.toDomainModels() ?? [],
+      name: name ?? "",
+      reminder: reminder
+    )
+  }
+}
+
 public extension [TripSwiftDataModel] {
   func toDomainModels() -> [Trip] {
     safeMap { swiftDataModel in

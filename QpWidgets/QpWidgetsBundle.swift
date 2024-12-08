@@ -10,6 +10,6 @@ struct QpWidgetsBundle: WidgetBundle {
   }
   
   var body: some Widget {
-    UpcomingTripsWidget()
+    UpcomingTripWidget()
   }
 }

@@ -15,6 +15,14 @@ struct UpcomingTripWidget: Widget {
       UpcomingTripView(model: entry.model)
         .containerBackground(.fill.tertiary, for: .widget)
     }
+    #if os(macOS)
+    .supportedFamilies(
+      [
+        .systemSmall,
+        .systemMedium,
+      ]
+    )
+    #else
     .supportedFamilies(
       [
         .systemSmall,
@@ -22,6 +30,7 @@ struct UpcomingTripWidget: Widget {
         .accessoryRectangular
       ]
     )
+    #endif
   }
 }
 

@@ -12,36 +12,31 @@ struct UpcomingTripWidget: Widget {
       intent: UpcomingTripIntent.self,
       provider: UpcomingTripProvider()
     ) { entry in
-      UpcomingTripView(entry: entry)
+      UpcomingTripView(model: entry.model)
         .containerBackground(.fill.tertiary, for: .widget)
     }
+    .supportedFamilies(
+      [
+        .systemSmall,
+        .systemMedium,
+        .accessoryRectangular
+      ]
+    )
   }
-  
-  init() {}
 }
 
 #Preview("small", as: .systemSmall) {
     UpcomingTripWidget()
 } timeline: {
   UpcomingTripEntry.samples.none
+  UpcomingTripEntry.samples.monzaXmas2024
 }
 
 #Preview("medium", as: .systemMedium) {
     UpcomingTripWidget()
 } timeline: {
   UpcomingTripEntry.samples.none
-}
-
-#Preview("large", as: .systemLarge) {
-    UpcomingTripWidget()
-} timeline: {
-  UpcomingTripEntry.samples.none
-}
-
-#Preview("extra large", as: .systemExtraLarge) {
-    UpcomingTripWidget()
-} timeline: {
-  UpcomingTripEntry.samples.none
+  UpcomingTripEntry.samples.monzaXmas2024
 }
 
 #if !os(macOS)
@@ -49,17 +44,6 @@ struct UpcomingTripWidget: Widget {
     UpcomingTripWidget()
 } timeline: {
   UpcomingTripEntry.samples.none
-}
-
-#Preview("circular", as: .accessoryCircular) {
-    UpcomingTripWidget()
-} timeline: {
-  UpcomingTripEntry.samples.none
-}
-
-#Preview("inline", as: .accessoryInline) {
-    UpcomingTripWidget()
-} timeline: {
-  UpcomingTripEntry.samples.none
+  UpcomingTripEntry.samples.monzaXmas2024
 }
 #endif

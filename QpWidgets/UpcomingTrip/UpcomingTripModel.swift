@@ -38,6 +38,6 @@ struct UpcomingTripModelSamples {
   let monzaXmas2024 = UpcomingTripModel(
     name: "Monza 🎄",
     countdown: "14 days left",
-    items: "0/23 items packed"
+    items: "0 / 23 items packed"
   )
 }

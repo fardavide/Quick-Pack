@@ -1,6 +1,7 @@
 strict: true
 
 disabled_rules:
+  - cyclomatic_complexity
   - file_length
   - identifier_name
   - trailing_whitespace

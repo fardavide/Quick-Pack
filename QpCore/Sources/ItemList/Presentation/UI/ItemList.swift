@@ -59,7 +59,7 @@ private struct ItemListItems: View {
           .font(.caption2.weight(.light))
       }
       .swipeActions(edge: .trailing) {
-        Button { 
+        Button {
           newName = item.name
           renamingItem = item
           isRenamingItem = true
@@ -70,6 +70,18 @@ private struct ItemListItems: View {
         Button { send(.delete(item.id)) } label: {
           Label("Delete", systemSymbol: .trash)
             .tint(.red)
+        }
+      }
+      .contextMenu {
+        Button {
+          newName = item.name
+          renamingItem = item
+          isRenamingItem = true
+        } label: {
+          Label("Edit", systemSymbol: .pencil)
+        }
+        Button(role: .destructive) { send(.delete(item.id)) } label: {
+          Label("Delete", systemSymbol: .trash)
         }
       }
     }

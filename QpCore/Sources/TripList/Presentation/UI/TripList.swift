@@ -142,6 +142,21 @@ private struct TripListItems: View {
               .tint(.red)
           }
         }
+        .contextMenu {
+          if item.isCompleted {
+            Button { send(.markNotCompleted(id: item.id)) } label: {
+              Label("Mark not completed", systemSymbol: .checkmark)
+                .symbolVariant(.slash)
+            }
+          } else {
+            Button { send(.markCompleted(id: item.id)) } label: {
+              Label("Mark completed", systemSymbol: .checkmark)
+            }
+          }
+          Button(role: .destructive) { send(.delete(id: item.id)) } label: {
+            Label("Delete", systemSymbol: .trash)
+          }
+        }
       }
     }
     .animation(.default, value: items)

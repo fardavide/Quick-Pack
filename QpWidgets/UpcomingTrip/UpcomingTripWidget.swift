@@ -19,7 +19,7 @@ struct UpcomingTripWidget: Widget {
     .supportedFamilies(
       [
         .systemSmall,
-        .systemMedium,
+        .systemMedium
       ]
     )
     #else

@@ -65,11 +65,9 @@ private struct CategoryListItems: View {
             isRenamingCategory = true
           } label: {
             Label("Edit", systemSymbol: .pencil)
-              .tint(.accentColor)
           }
-          Button { send(.delete(category.id)) } label: {
+          Button(role: .destructive) { send(.delete(category.id)) } label: {
             Label("Delete", systemSymbol: .trash)
-              .tint(.red)
           }
         }
       }

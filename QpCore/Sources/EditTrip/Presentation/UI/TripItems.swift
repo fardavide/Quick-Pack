@@ -86,12 +86,10 @@ private struct TripItemView: View {
         
         Button { request(.showSetNotes(tripItem)) } label: {
           Label("Set notes", systemSymbol: .noteText)
-            .tint(.accentColor)
         }
         
         Button { send(.removeItem(tripItem.id)) } label: {
           Label("Remove item", systemSymbol: .xmark)
-            .tint(.accentColor)
         }
       }
       
@@ -99,17 +97,14 @@ private struct TripItemView: View {
         
         Button { request(.showSetCategory(tripItem)) } label: {
           Label("Set category", systemSymbol: .rectangleAndPencilAndEllipsis)
-            .tint(.accentColor)
         }
         
         Button { request(.showRename(tripItem)) } label: {
           Label("Rename", systemSymbol: .pencil)
-            .tint(.accentColor)
         }
        
-        Button { send(.deleteItem(tripItem.item.id)) } label: {
+        Button(role: .destructive) { send(.deleteItem(tripItem.item.id)) } label: {
           Label("Delete", systemSymbol: .trash)
-            .tint(.red)
         }
       }
     }

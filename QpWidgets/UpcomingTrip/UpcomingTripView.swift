@@ -18,7 +18,6 @@ struct UpcomingTripView: View {
         .font(.caption)
         .foregroundColor(.secondary)
     }
-    // TODO .widgetURL(editTripUrl(tripId: trip.id))
     case .none: Text("No upcoming trips")
     case .error(let error): Text("Error: \(error)")
     }

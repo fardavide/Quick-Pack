@@ -48,6 +48,7 @@ private extension Result<Trip?, DataError> {
     switch self {
     case .success(.some(let trip)): .some(
       UpcomingTripModel(
+        id: trip.id,
         name: trip.name,
         countdown: countdownText(to: trip.date),
         items: itemsText(trip.items)

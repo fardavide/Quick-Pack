@@ -10,7 +10,7 @@ struct TripDatePicker: View {
   @State private var tripDate: TripDate?
   @State private var precision: TripDate.Precision
   
-  private let years = 2023...2100
+  private let years = 2024...2100
   
   init(
     _ titleKey: LocalizedStringKey,
@@ -130,7 +130,7 @@ struct TripDatePicker: View {
 }
 
 #Preview("Exact") {
-  @State var date: TripDate? = TripDate(year: 2024, month: .dec, day: 25)
+  @Previewable @State var date: TripDate? = TripDate(year: 2024, month: .dec, day: 25)
   return Form {
     TripDatePicker(
       "Date",
@@ -141,7 +141,7 @@ struct TripDatePicker: View {
 }
 
 #Preview("Month") {
-  @State var date: TripDate? = TripDate(year: 2024, month: .dec)
+  @Previewable @State var date: TripDate? = TripDate(year: 2024, month: .dec)
   return Form {
     TripDatePicker(
       "Date",
@@ -152,7 +152,7 @@ struct TripDatePicker: View {
 }
 
 #Preview("Year") {
-  @State var date: TripDate? = TripDate(year: 2024)
+  @Previewable @State var date: TripDate? = TripDate(year: 2024)
   return Form {
     TripDatePicker(
       "Date",
@@ -163,7 +163,7 @@ struct TripDatePicker: View {
 }
 
 #Preview("Empty") {
-  @State var date: TripDate?
+  @Previewable @State var date: TripDate?
   return Form {
     TripDatePicker(
       "Date",

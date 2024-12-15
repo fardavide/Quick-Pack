@@ -10,6 +10,7 @@ enum UpcomingTripWidgetModel: Sendable {
 }
 
 struct UpcomingTripModel: Sendable {
+  let id: TripId
   let name: String
   let countdown: String
   let items: String
@@ -18,6 +19,7 @@ struct UpcomingTripModel: Sendable {
 extension UpcomingTripWidgetModel {
   static let placeholder = UpcomingTripWidgetModel.some(
     UpcomingTripModel(
+      id: TripId("placeholder"),
       name: "My next trip",
       countdown: "3 days left",
       items: "No items"
@@ -36,6 +38,7 @@ extension UpcomingTripModel {
 
 struct UpcomingTripModelSamples {
   let monzaXmas2024 = UpcomingTripModel(
+    id: TripId("monzaXmas2024"),
     name: "Monza 🎄",
     countdown: "14 days left",
     items: "0 / 23 items packed"

@@ -186,7 +186,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       .filter { item in !tripItems.contains { tripItem in tripItem.item.id == item.id } }
     let result = nonUsedItems.partitioned { item in
       !item.name.localizedCaseInsensitiveContains(searchQuery)
-    }[..<min(3, nonUsedItems.endIndex)]
+    }[..<min(5, nonUsedItems.endIndex)]
     return Array(result)
   }
   

@@ -7,6 +7,7 @@ import TripDomain
   case addItem(_ item: Item)
   case addNewItem(name: String)
   case deleteItem(_ id: ItemId)
+  case handleRequest(_ request: EditTripRequest?)
   case removeItem(_ id: TripItemId)
   case reorderItems(for: CategoryId?, from: IndexSet, to: Int)
   case requestNotificationsAuthorization

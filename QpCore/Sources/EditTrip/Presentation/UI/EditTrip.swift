@@ -23,12 +23,20 @@ public struct EditTrip: View {
 private struct EditTripContent: View {
   let state: EditTripState
   let send: (EditTripAction) -> Void
+
+  private var renameBinding: Binding<EditTripRequestBindingValue> {
+    state.request.bindRename { send(.handleRequest(nil)) }
+  }
+  
+  private var setCategoryBinding: Binding<EditTripRequestBindingValue> {
+    state.request.bindSetCategory { send(.handleRequest(nil)) }
+  }
+  
+  private var setNotesBinding: Binding<EditTripRequestBindingValue> {
+    state.request.bindSetNotes { send(.handleRequest(nil)) }
+  }
   
   private let scrollTarget = "target"
-  @State private var editingTripItem: TripItem?
-  @State private var showRename = false
-  @State private var showSetCategory = false
-  @State private var showSetNotes = false
   @State private var showSetReminder = false
   @State private var newName = ""
   @State private var newNotes = ""
@@ -54,19 +62,6 @@ private struct EditTripContent: View {
       }
     }
     .buttonStyle(BorderedButtonStyle())
-  }
-
-  private var categorySheet: some View {
-    NavigationStack {
-      SetCategorySheetContent(
-        currentCategory: editingTripItem!.item.category,
-        allCategories: state.allCategories,
-        onCategoryChange: { newCategory in
-          send(.updateItemCategory(editingTripItem!, newCategory))
-        }
-      )
-      .navigationTitle("Set category for \(editingTripItem!.item.name)")
-    }
   }
 
   private var reminderSheet: some View {
@@ -151,24 +146,32 @@ private struct EditTripContent: View {
         TripItems(
           categories: state.categories,
           send: send,
-          request: handleRequest
+          request: { send(.handleRequest($0)) }
         )
       }
-      .alert("Rename", isPresented: $showRename, presenting: editingTripItem) { tripItem in
+      .alert(
+        "Rename",
+        isPresented: renameBinding.isPresented,
+        presenting: renameBinding.tripItemValue
+      ) { tripItem in
         TextField("New name", text: $newName)
-        Button("Cancel") { showRename = false }
+        Button("Cancel") { send(.handleRequest(nil)) }
         Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
       } message: { tripItem in
         Text("Rename \(tripItem.item.name)")
       }
-      .alert("Set notes", isPresented: $showSetNotes, presenting: editingTripItem) { tripItem in
+      .alert(
+        "Set notes",
+        isPresented: setNotesBinding.isPresented,
+        presenting: setNotesBinding.tripItemValue
+      ) { tripItem in
         TextField("Notes", text: $newNotes)
-        Button("Cancel") { showSetNotes = false }
+        Button("Cancel") { send(.handleRequest(nil)) }
         Button("OK") { send(.updateItemNotes(tripItem.id, newNotes)) }
       } message: { tripItem in
         Text("Set notes for \(tripItem.item.name)")
       }
-      .sheet(isPresented: $showSetCategory) { categorySheet }
+      .sheet(item: setCategoryBinding.tripItem) { tripItem in categorySheet(tripItem: tripItem)  }
       .sheet(isPresented: $showSetReminder) { reminderSheet }
 #if !os(macOS)
       .environment(\.editMode, .constant(.active))
@@ -184,21 +187,23 @@ private struct EditTripContent: View {
       }
     }
     .scrollDismissesKeyboard(.interactively)
+    .onChange(of: state.request) {
+      newName = state.request.tripItem?.item.name ?? ""
+      newNotes = state.request.tripItem?.notes ?? ""
+    }
   }
   
-  private func handleRequest(_ request: EditTripRequest) {
-    switch request {
-    case let .showRename(tripItem):
-      editingTripItem = tripItem
-      newName = tripItem.item.name
-      showRename = true
-    case let .showSetCategory(tripItem):
-      editingTripItem = tripItem
-      showSetCategory = true
-    case let .showSetNotes(tripItem):
-      editingTripItem = tripItem
-      newNotes = tripItem.notes
-      showSetNotes = true
+  private func categorySheet(tripItem: TripItem) -> some View {
+    NavigationStack {
+      SetCategorySheetContent(
+        currentCategory: tripItem.item.category,
+        allCategories: state.allCategories,
+        onCategoryChange: { newCategory in
+          send(.updateItemCategory(tripItem, newCategory))
+        }
+      )
+      .navigationTitle("Set category for \(tripItem.item.name)")
+      .toolbarTitleDisplayMode(.inline)
     }
   }
 }

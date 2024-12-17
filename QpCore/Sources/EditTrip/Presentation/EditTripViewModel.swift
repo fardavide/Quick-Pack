@@ -77,6 +77,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     case let .addItem(item): addItem(item)
     case let .addNewItem(name): addNewItem(name)
     case let .deleteItem(itemId): deleteItem(itemId)
+    case let .handleRequest(request): handleRequest(request)
     case let .removeItem(itemId): removeItem(itemId)
     case let .reorderItems(categoryId, from, to): reorderItems(categoryId, from, to)
     case .requestNotificationsAuthorization: requestNotificationsAuthorization()
@@ -100,13 +101,20 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   
   @MainActor private func addNewItem(_ name: String) {
     let tripItem = TripItem.new(item: .new(name: name))
-    state = state.insertItem(tripItem).withSearchQuery("")
+    state = state
+      .insertItem(tripItem)
+      .withSearchQuery("")
+      .withRequest(.showSetCategory(tripItem))
     Task { tripRepository.addItem(tripItem, to: state.id) }
   }
   
   @MainActor private func deleteItem(_ id: ItemId) {
     state = state.removeItem(itemId: id)
     Task { itemRepository.deleteItem(itemId: id) }
+  }
+  
+  @MainActor private func handleRequest(_ request: EditTripRequest?) {
+    state = state.withRequest(request)
   }
   
   @MainActor private func reorderItems(

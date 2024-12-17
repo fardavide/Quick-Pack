@@ -2,9 +2,10 @@ import CategoryDomain
 import Foundation
 import ItemDomain
 import Presentation
+import SwiftUI
 import TripDomain
 
-@frozen public struct EditTripState {
+@frozen public struct EditTripState: Sendable {
   let allCategories: DataLce<[ItemCategory]>
   let categories: [ItemCategoryUiModel]
   let date: TripDate?
@@ -12,6 +13,7 @@ import TripDomain
   let isCompleted: Bool
   let name: String
   let reminder: Date?
+  let request: EditTripRequest?
   let searchItems: [Item]
   let searchQuery: String
   
@@ -40,6 +42,7 @@ extension Trip {
       isCompleted: isCompleted,
       name: name,
       reminder: nil,
+      request: nil,
       searchItems: [],
       searchQuery: ""
     )
@@ -72,6 +75,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -86,6 +90,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -101,6 +106,7 @@ extension EditTripState {
       isCompleted: delta.isCompleted,
       name: delta.name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -120,6 +126,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -134,6 +141,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -148,6 +156,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -162,6 +171,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -176,6 +186,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -190,6 +201,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -204,6 +216,22 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
+      searchItems: searchItems,
+      searchQuery: searchQuery
+    )
+  }
+  
+  func withRequest(_ request: EditTripRequest?) -> EditTripState {
+    EditTripState(
+      allCategories: allCategories,
+      categories: categories,
+      date: date,
+      id: id,
+      isCompleted: isCompleted,
+      name: name,
+      reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -218,6 +246,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -232,6 +261,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )
@@ -275,6 +305,7 @@ extension EditTripState {
         isCompleted: isCompleted,
         name: name,
         reminder: reminder,
+        request: request,
         searchItems: searchItems,
         searchQuery: searchQuery
       )
@@ -295,6 +326,7 @@ extension EditTripState {
       isCompleted: isCompleted,
       name: name,
       reminder: reminder,
+      request: request,
       searchItems: searchItems,
       searchQuery: searchQuery
     )

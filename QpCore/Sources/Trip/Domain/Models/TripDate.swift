@@ -23,6 +23,8 @@ import Foundation
 
 public extension TripDate {
   
+  static let samples = TripDateSamples()
+  
   var day: Int? {
     switch precision {
     case .exact: value.day
@@ -104,4 +106,22 @@ public extension TripDate {
       precision: precision
     )
   }
+}
+
+public struct TripDateSamples: Sendable {
+  public let dec2024 = TripDate(year: 2024, month: .dec)
+  public let feb2025 = TripDate(year: 2025, month: .feb)
+  public let dec23rd2024 = TripDate(year: 2024, month: .dec, day: 23)
+  public let dec24th2024 = TripDate(year: 2024, month: .dec, day: 24)
+  public let dec26th2024 = TripDate(year: 2024, month: .dec, day: 26)
+  public let dec27th2024 = TripDate(year: 2024, month: .dec, day: 27)
+  public let jan2025 = TripDate(year: 2025, month: .jan)
+  public let nov2024 = TripDate(year: 2024, month: .nov)
+  public let oct2024 = TripDate(year: 2024, month: .oct)
+  public let xmas2024 = TripDate(year: 2024, month: .dec, day: 25)
+  public let year2022 = TripDate(year: 2022)
+  public let year2023 = TripDate(year: 2023)
+  public let year2024 = TripDate(year: 2024)
+  public let year2025 = TripDate(year: 2025)
+  public let year2026 = TripDate(year: 2026)
 }

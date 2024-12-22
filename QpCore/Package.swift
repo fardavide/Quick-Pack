@@ -84,6 +84,7 @@ let package = Package(
         // MARK: - Trip declarations
         Trip+Data,
         Trip+Domain,
+        Trip+Presentation,
         // MARK: - Trip List declarations
         TripList+Presentation
       ]
@@ -378,6 +379,17 @@ let package = Package(
       ]
     ),
     .testTarget(path: [Trip, Domain]),
+    
+    // MARK: Trip Presentation
+    .target(
+      path: [Trip, Presentation],
+      dependencies: [
+        DateUtils,
+        Provider,
+        Trip+Domain
+      ]
+    ),
+    .testTarget(path: [Trip, Presentation]),
     
     // MARK: - Trip List definitions
     // MARK: Trip List Presentation

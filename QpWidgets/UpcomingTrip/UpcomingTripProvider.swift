@@ -57,13 +57,13 @@ final class UpcomingTripProvider: AppIntentTimelineProvider {
   }
 }
 
-private extension Result<Trip?, DataError> {
+private extension Result<Trip, DataError> {
   func toModel(
     buildCountdownText: BuildCountdownText,
     buildItemsText: BuildItemsText
   ) -> UpcomingTripWidgetModel {
     switch self {
-    case .success(.some(let trip)): .some(
+    case .success(let trip): .some(
       UpcomingTripModel(
         id: trip.id,
         name: trip.name,
@@ -71,7 +71,7 @@ private extension Result<Trip?, DataError> {
         items: buildItemsText.run(trip.items)
       )
     )
-    case .success(.none): .none
+    case .failure(.noData): .none
     case .failure(let error): .error(error)
     }
   }

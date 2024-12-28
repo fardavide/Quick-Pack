@@ -37,7 +37,7 @@ final class RealTripRepository: AppStorage, TripRepository {
     )
   }
   
-  @MainActor func getNextTrip() -> Result<Trip?, DataError> {
+  @MainActor func getNextTrip() -> Result<Trip, DataError> {
     get(
       fetchDescriptor: FetchDescriptor<TripSwiftDataModel>(
         predicate: #Predicate { $0.isCompleted == false },

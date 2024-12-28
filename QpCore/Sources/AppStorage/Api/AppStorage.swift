@@ -27,7 +27,7 @@ public extension AppStorage {
   @MainActor func get<DataModel: IdentifiableModel, Model>(
     fetchDescriptor: FetchDescriptor<DataModel>,
     map: (DataModel) -> Model
-  ) -> Result<Model?, DataError> {
+  ) -> Result<Model, DataError> {
     context.fetchOne(
       map: map,
       fetchDescriptor

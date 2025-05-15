@@ -1,4 +1,5 @@
 import Design
+import ItemDomain
 import Provider
 import QpUtils
 import SFSafeSymbols
@@ -23,6 +24,10 @@ public struct EditTrip: View {
 private struct EditTripContent: View {
   let state: EditTripState
   let send: (EditTripAction) -> Void
+  
+  private var allItemsBinding: Binding<EditTripRequestBindingValue> {
+    state.request.bindAllItems { send(.handleRequest(nil)) }
+  }
 
   private var renameBinding: Binding<EditTripRequestBindingValue> {
     state.request.bindRename { send(.handleRequest(nil)) }
@@ -87,6 +92,7 @@ private struct EditTripContent: View {
       }
     }
     .presentationDetents([.medium])
+    .presentationDragIndicator(.visible)
   }
 
   var body: some View {
@@ -131,9 +137,14 @@ private struct EditTripContent: View {
           }
           if state.searchItems.isNotEmpty {
             SearchItemResult(
-              items: state.searchItems,
+              items: state.searchItems.filtered,
               send: send
             )
+            if state.searchItems.hasMore {
+              Button { send(.handleRequest(.showAllItems(state.searchItems.all))) } label: {
+                Text("See all")
+              }
+            }
           }
           if state.canCreateItem {
             Button { send(.addNewItem(name: state.searchQuery)) } label: {
@@ -171,6 +182,7 @@ private struct EditTripContent: View {
       } message: { tripItem in
         Text("Set notes for \(tripItem.item.name)")
       }
+      .sheet(isPresented: allItemsBinding.isPresented) { allItemsSheet(items: state.searchItems.all) }
       .sheet(item: setCategoryBinding.tripItem) { tripItem in categorySheet(tripItem: tripItem)  }
       .sheet(isPresented: $showSetReminder) { reminderSheet }
 #if !os(macOS)
@@ -193,6 +205,21 @@ private struct EditTripContent: View {
     }
   }
   
+  private func allItemsSheet(items: [Item]) -> some View {
+    NavigationStack {
+      List {
+        SearchItemResult(
+          items: items,
+          send: send
+        )
+      }
+      .navigationTitle("Add items")
+      .toolbarTitleDisplayMode(.inline)
+    }
+    .presentationDetents([.medium, .large])
+    .presentationDragIndicator(.visible)
+  }
+  
   private func categorySheet(tripItem: TripItem) -> some View {
     NavigationStack {
       SetCategorySheetContent(
@@ -205,6 +232,8 @@ private struct EditTripContent: View {
       .navigationTitle("Set category for \(tripItem.item.name)")
       .toolbarTitleDisplayMode(.inline)
     }
+    .presentationDetents([.medium, .large])
+    .presentationDragIndicator(.visible)
   }
 }
 

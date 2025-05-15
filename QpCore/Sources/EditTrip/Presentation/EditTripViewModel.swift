@@ -184,18 +184,22 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
       scheduleRemindersTask.run()
     }
   }
-
+  
   private func filterResult(
-    result: Result<[Item], DataError>,
+    allItemsResult: Result<[Item], DataError>,
     tripItems: [TripItem],
     searchQuery: String
-  ) -> [Item] {
-    let nonUsedItems = result.or(default: [])
+  ) -> SearchItemResultModel {
+    let nonUsedItems = allItemsResult.or(default: [])
       .filter { item in !tripItems.contains { tripItem in tripItem.item.id == item.id } }
     let result = nonUsedItems.partitioned { item in
       !item.name.localizedCaseInsensitiveContains(searchQuery)
     }
-    return Array(result[..<min(5, nonUsedItems.endIndex)])
+    let filteredItems = result[..<min(5, nonUsedItems.endIndex)]
+    return SearchItemResultModel(
+      all: nonUsedItems,
+      filtered: Array(filteredItems)
+    )
   }
   
   public protocol Factory: ProviderFactory<Trip, EditTripViewModel> {}

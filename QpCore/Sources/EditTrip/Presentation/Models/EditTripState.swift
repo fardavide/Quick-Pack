@@ -14,12 +14,12 @@ import TripDomain
   let name: String
   let reminder: Date?
   let request: EditTripRequest?
-  let searchItems: [Item]
+  let searchItems: SearchItemResultModel
   let searchQuery: String
   
   var canCreateItem: Bool {
     searchQuery.isNotBlank &&
-    searchItems.none { $0.name.localizedStandardCompare(searchQuery).rawValue == 0 } &&
+    searchItems.filtered.none { $0.name.localizedStandardCompare(searchQuery).rawValue == 0 } &&
     categories.allSatisfy { $0.items.none { $0.item.name.localizedCaseInsensitiveCompare(searchQuery).rawValue == 0 } }
   }
 }
@@ -43,7 +43,7 @@ extension Trip {
       name: name,
       reminder: nil,
       request: nil,
-      searchItems: [],
+      searchItems: .empty,
       searchQuery: ""
     )
   }
@@ -237,7 +237,7 @@ extension EditTripState {
     )
   }
   
-  func withSearchItems(_ searchItems: [Item]) -> EditTripState {
+  func withSearchItems(_ searchItems: SearchItemResultModel) -> EditTripState {
     EditTripState(
       allCategories: allCategories,
       categories: categories,
@@ -336,9 +336,10 @@ extension EditTripState {
 final class EditTripStateSamples: Sendable {
   let noSearch = Trip.samples.malaysia.toInitialEditTripState()
     .withReminder(Date.of(year: 2024, month: .oct, day: 10, hour: 19))
+    .withSearchItems(.samples.withMore)
   var withSearch: EditTripState {
     noSearch
-      .withSearchItems([.samples.camera])
+      .withSearchItems(.samples.cameraOnly)
       .withSearchQuery("Cam")
   }
 }

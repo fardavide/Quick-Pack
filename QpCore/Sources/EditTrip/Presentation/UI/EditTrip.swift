@@ -25,31 +25,41 @@ private struct EditTripContent: View {
   let state: EditTripState
   let send: (EditTripAction) -> Void
   
-  private var allItemsBinding: Binding<EditTripRequestBindingValue> {
-    state.request.bindAllItems { send(.handleRequest(nil)) }
+  private var nameBinding: Binding<String> {
+    Binding(
+      get: { state.name },
+      set: { newName in
+        if newName != state.name {
+          send(.updateName(newName))
+        }
+      }
+    )
   }
-
-  private var renameBinding: Binding<EditTripRequestBindingValue> {
-    state.request.bindRename { send(.handleRequest(nil)) }
+  private var searchBinding: Binding< String> {
+    Binding(
+      get: { state.searchQuery },
+      set: { newQuery in
+        if newQuery != state.searchQuery {
+          send(.searchItem(newQuery))
+        }
+      }
+    )
   }
-  
-  private var setCategoryBinding: Binding<EditTripRequestBindingValue> {
-    state.request.bindSetCategory { send(.handleRequest(nil)) }
-  }
-  
-  private var setNotesBinding: Binding<EditTripRequestBindingValue> {
-    state.request.bindSetNotes { send(.handleRequest(nil)) }
-  }
+  private var requestBinding: Binding<EditTripRequest?> {
+     Binding(
+       get: { state.request },
+       set: { new in send(.handleRequest(new)) }
+     )
+   }
   
   private let scrollTarget = "target"
-  @State private var showSetReminder = false
   @State private var newName = ""
   @State private var newNotes = ""
 
   private var reminderButton: some View {
     Button {
       send(.requestNotificationsAuthorization)
-      showSetReminder = true
+      send(.handleRequest(.showReminder))
     } label: {
       if let reminder = state.reminder {
         let text = reminder.formatted(
@@ -83,7 +93,7 @@ private struct EditTripContent: View {
         ToolbarItem(placement: .automatic) {
           Button {
             send(.updateReminder(nil))
-            showSetReminder = false
+            send(.handleRequest(nil))
           } label: {
             Label("Remove", systemSymbol: .trash)
           }
@@ -94,66 +104,25 @@ private struct EditTripContent: View {
     .presentationDetents([.medium])
     .presentationDragIndicator(.visible)
   }
+  
+  var headerSection: some View {
+    Section {
+      TextField(text: nameBinding, prompt: Text("Required")) {
+        Text("Name")
+      }
+      TripDatePicker(
+        "Date",
+        tripDate: state.date,
+        onChange: { send(.updateDate($0)) }
+      )
+    }
+  }
 
   var body: some View {
-    let nameBinding = Binding(
-      get: { state.name },
-      set: { newName in
-        if newName != state.name {
-          send(.updateName(newName))
-        }
-      }
-    )
-    let searchBinding = Binding(
-      get: { state.searchQuery },
-      set: { newQuery in
-        if newQuery != state.searchQuery {
-          send(.searchItem(newQuery))
-        }
-      }
-    )
     ScrollViewReader { reader in
       List {
-        
-        Section {
-          TextField(text: nameBinding, prompt: Text("Required")) {
-            Text("Name")
-          }
-          TripDatePicker(
-            "Date",
-            tripDate: state.date,
-            onChange: { send(.updateDate($0)) }
-          )
-        }
-        
-        Section("Add item") {
-          HStack {
-            Image(systemSymbol: .magnifyingglass)
-            TextField("Search Item", text: searchBinding)
-              .onChange(of: state.searchQuery) {
-                withAnimation { reader.scrollTo(scrollTarget) }
-              }
-              .onSubmit { send(.addNewItem(name: state.searchQuery)) }
-          }
-          if state.searchItems.isNotEmpty {
-            SearchItemResult(
-              items: state.searchItems.filtered,
-              send: send
-            )
-            if state.searchItems.hasMore {
-              Button { send(.handleRequest(.showAllItems(state.searchItems.all))) } label: {
-                Text("See all")
-              }
-            }
-          }
-          if state.canCreateItem {
-            Button { send(.addNewItem(name: state.searchQuery)) } label: {
-              Text("Create '\(state.searchQuery)'")
-            }
-            .id(scrollTarget)
-          }
-        }
-        
+        headerSection
+        addItemsSections(reader: reader)
         TripItems(
           categories: state.categories,
           send: send,
@@ -162,8 +131,8 @@ private struct EditTripContent: View {
       }
       .alert(
         "Rename",
-        isPresented: renameBinding.isPresented,
-        presenting: renameBinding.tripItemValue
+        isPresented: requestBinding.isRename,
+        presenting: requestBinding.renameItem
       ) { tripItem in
         TextField("New name", text: $newName)
         Button("Cancel") { send(.handleRequest(nil)) }
@@ -173,8 +142,8 @@ private struct EditTripContent: View {
       }
       .alert(
         "Set notes",
-        isPresented: setNotesBinding.isPresented,
-        presenting: setNotesBinding.tripItemValue
+        isPresented: requestBinding.isSetNotes,
+        presenting: requestBinding.setNotesItem
       ) { tripItem in
         TextField("Notes", text: $newNotes)
         Button("Cancel") { send(.handleRequest(nil)) }
@@ -182,9 +151,9 @@ private struct EditTripContent: View {
       } message: { tripItem in
         Text("Set notes for \(tripItem.item.name)")
       }
-      .sheet(isPresented: allItemsBinding.isPresented) { allItemsSheet(items: state.searchItems.all) }
-      .sheet(item: setCategoryBinding.tripItem) { tripItem in categorySheet(tripItem: tripItem)  }
-      .sheet(isPresented: $showSetReminder) { reminderSheet }
+      .sheet(isPresented: requestBinding.isShowAllItems) { allItemsSheet(items: state.searchItems.all) }
+      .sheet(item: requestBinding.setCategoryItem) { tripItem in categorySheet(tripItem: tripItem)  }
+      .sheet(isPresented: requestBinding.isReminder) { reminderSheet }
 #if !os(macOS)
       .environment(\.editMode, .constant(.active))
 #endif
@@ -199,9 +168,35 @@ private struct EditTripContent: View {
       }
     }
     .scrollDismissesKeyboard(.interactively)
-    .onChange(of: state.request) {
-      newName = state.request.tripItem?.item.name ?? ""
-      newNotes = state.request.tripItem?.notes ?? ""
+  }
+  
+  private func addItemsSections(reader: ScrollViewProxy) -> some View {
+    Section("Add item") {
+      HStack {
+        Image(systemSymbol: .magnifyingglass)
+        TextField("Search Item", text: searchBinding)
+          .onChange(of: state.searchQuery) {
+            withAnimation { reader.scrollTo(scrollTarget) }
+          }
+          .onSubmit { send(.addNewItem(name: state.searchQuery)) }
+      }
+      if state.searchItems.isNotEmpty {
+        SearchItemResult(
+          items: state.searchItems.filtered,
+          send: send
+        )
+        if state.searchItems.hasMore {
+          Button { send(.handleRequest(.showAllItems)) } label: {
+            Text("See all")
+          }
+        }
+      }
+      if state.canCreateItem {
+        Button { send(.addNewItem(name: state.searchQuery)) } label: {
+          Text("Create '\(state.searchQuery)'")
+        }
+        .id(scrollTarget)
+      }
     }
   }
   

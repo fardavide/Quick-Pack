@@ -104,7 +104,7 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
     state = state
       .insertItem(tripItem)
       .withSearchQuery("")
-      .withRequest(.showSetCategory(tripItem))
+      .withRequest(.showSetCategory(item: tripItem))
     Task { tripRepository.addItem(tripItem, to: state.id) }
   }
   

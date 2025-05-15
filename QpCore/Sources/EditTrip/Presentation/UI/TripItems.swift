@@ -84,7 +84,7 @@ private struct TripItemView: View {
       
       Section("Edit item for this trip") {
         
-        Button { request(.showSetNotes(tripItem)) } label: {
+        Button { request(.showSetNotes(item: tripItem, notes: tripItem.notes)) } label: {
           Label("Set notes", systemSymbol: .noteText)
         }
         
@@ -95,11 +95,11 @@ private struct TripItemView: View {
       
       Section("Edit item") {
         
-        Button { request(.showSetCategory(tripItem)) } label: {
+        Button { request(.showSetCategory(item: tripItem)) } label: {
           Label("Set category", systemSymbol: .rectangleAndPencilAndEllipsis)
         }
         
-        Button { request(.showRename(tripItem)) } label: {
+        Button { request(.showRename(item: tripItem, name: tripItem.item.name)) } label: {
           Label("Rename", systemSymbol: .pencil)
         }
        

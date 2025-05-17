@@ -67,7 +67,7 @@ final class RealTripRepositoryTests {
     // given
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
-    let tripItem = TripItem.samples.camera.withoutCategory()
+    let tripItem = TripItem.samples.camera.withoutCategory().withUsageCount(1)
     await scenario.sut.createTrip(trip.withoutItems())
     
     // when
@@ -82,7 +82,7 @@ final class RealTripRepositoryTests {
     // given
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
-    let preexistingTripItem = TripItem.samples.camera.withoutCategory()
+    let preexistingTripItem = TripItem.samples.camera.withoutCategory().withUsageCount(1)
     let newTripItem = TripItem.new(item: .new(name: preexistingTripItem.item.name))
     // craete trip
     await scenario.sut.createTrip(trip.withoutItems())
@@ -102,7 +102,7 @@ final class RealTripRepositoryTests {
     // given
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
-    let tripItem = TripItem.samples.camera.withoutCategory()
+    let tripItem = TripItem.samples.camera.withoutCategory().withUsageCount(1)
     
     await scenario.sut.createTrip(trip.withoutItems())
     await scenario.sut.addItem(tripItem, to: trip.id)
@@ -140,9 +140,9 @@ final class RealTripRepositoryTests {
     let scenario = Scenario()
     let trip = Trip.samples.malaysia
     let initialTripItems = [
-      TripItem.samples.camera.withOrder(0).withoutCategory(),
-      TripItem.samples.iPad.withOrder(1).withoutCategory(),
-      TripItem.samples.nintendoSwitch.withOrder(2).withoutCategory()
+      TripItem.samples.camera.withOrder(0).withoutCategory().withUsageCount(1),
+      TripItem.samples.iPad.withOrder(1).withoutCategory().withUsageCount(1),
+      TripItem.samples.nintendoSwitch.withOrder(2).withoutCategory().withUsageCount(1)
     ]
     let reorderedTripItems = [
       TripItem.samples.iPad.withOrder(1),
@@ -150,9 +150,9 @@ final class RealTripRepositoryTests {
       TripItem.samples.camera.withOrder(0)
     ]
     let expectedTripItems = [
-      TripItem.samples.iPad.withOrder(0).withoutCategory(),
-      TripItem.samples.nintendoSwitch.withOrder(1).withoutCategory(),
-      TripItem.samples.camera.withOrder(2).withoutCategory()
+      TripItem.samples.iPad.withOrder(0).withoutCategory().withUsageCount(1),
+      TripItem.samples.nintendoSwitch.withOrder(1).withoutCategory().withUsageCount(1),
+      TripItem.samples.camera.withOrder(2).withoutCategory().withUsageCount(1)
     ]
     await scenario.sut.createTrip(trip.withoutItems())
     for tripItem in initialTripItems.reversed() {

@@ -15,8 +15,8 @@ struct SearchItemResult: View {
         VStack(alignment: .leading) {
           Text(item.name)
           if showTimesUsed {
-            Text("Used \(item.timesUsed) times")
-              .font(.footnote)
+            Text("Used \(item.usageCount) times")
+              .font(.caption.weight(.light))
           }
         }
         Spacer()

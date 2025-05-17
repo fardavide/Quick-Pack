@@ -53,10 +53,12 @@ private struct ItemListItems: View {
   
   var body: some View {
     List(items) { item in
-      HStack {
+      VStack(alignment: .leading) {
         Text(item.name)
-        Text(item.category?.name ?? "")
-          .font(.caption2.weight(.light))
+        Text("Category \(item.category?.name ?? "")")
+          .font(.footnote)
+        Text("Used \(item.usageCount) times")
+          .font(.caption.weight(.light))
       }
       .swipeActions(edge: .trailing) {
         Button {

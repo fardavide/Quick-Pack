@@ -4,7 +4,7 @@ import CategoryDomain
   public let category: ItemCategory?
   public let id: ItemId
   public let name: String
-  public let timesUsed: Int
+  public let usageCount: Int
   
   public init(
     category: ItemCategory?,
@@ -15,7 +15,7 @@ import CategoryDomain
     self.category = category
     self.id = id
     self.name = name.trimmingCharacters(in: .whitespaces)
-    self.timesUsed = timesUsed
+    self.usageCount = timesUsed
   }
 }
 
@@ -36,7 +36,7 @@ public extension Item {
       category: category,
       id: id,
       name: name,
-      timesUsed: timesUsed
+      timesUsed: usageCount
     )
   }
   
@@ -45,7 +45,16 @@ public extension Item {
       category: nil,
       id: id,
       name: name,
-      timesUsed: timesUsed
+      timesUsed: usageCount
+    )
+  }
+  
+  func withUsageCount(_ usageCount: Int) -> Item {
+    Item(
+      category: category,
+      id: id,
+      name: name,
+      timesUsed: usageCount
     )
   }
 }

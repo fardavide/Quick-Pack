@@ -93,6 +93,16 @@ public extension TripItem {
       order: order
     )
   }
+  
+  func withUsageCount(_ usageCount: Int) -> TripItem {
+    TripItem(
+      id: id,
+      item: item.withUsageCount(usageCount),
+      isChecked: isChecked,
+      notes: notes,
+      order: order
+    )
+  }
 }
 
 public final class TripItemSamples: Sendable {

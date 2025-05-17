@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SearchItemResult: View {
   let items: [Item]
+  let showTimesUsed: Bool
   let send: (EditTripAction) -> Void
   
   @State var isEditingItem: Bool = false
@@ -11,7 +12,13 @@ struct SearchItemResult: View {
   var body: some View {
     ForEach(items) { item in
       HStack {
-        Text(item.name)
+        VStack(alignment: .leading) {
+          Text(item.name)
+          if showTimesUsed {
+            Text("Used \(item.timesUsed) times")
+              .font(.footnote)
+          }
+        }
         Spacer()
         Text("Add item")
           .font(.caption2)
@@ -54,6 +61,7 @@ struct SearchItemResult: View {
         .samples.iPad,
         .samples.nintendoSwitch
       ],
+      showTimesUsed: true,
       send: { _ in }
     )
   }

@@ -183,6 +183,7 @@ private struct EditTripContent: View {
       if state.searchItems.isNotEmpty {
         SearchItemResult(
           items: state.searchItems.filtered,
+          showTimesUsed: false,
           send: send
         )
         if state.searchItems.hasMore {
@@ -205,6 +206,7 @@ private struct EditTripContent: View {
       List {
         SearchItemResult(
           items: items,
+          showTimesUsed: true,
           send: send
         )
       }

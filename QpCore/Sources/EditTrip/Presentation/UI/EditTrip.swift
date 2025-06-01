@@ -130,24 +130,29 @@ private struct EditTripContent: View {
       }
       .sheet(
         isPresented: requestBinding.isShowAllItems,
-        onDismiss: { requestBinding.wrappedValue = nil }
-      ) { allItemsSheet(items: state.searchItems.all) }
+        onDismiss: { requestBinding.wrappedValue = nil },
+        content: { allItemsSheet(items: state.searchItems.all) }
+      )
       .sheet(
         item: requestBinding.setCategoryItem,
-        onDismiss: { requestBinding.wrappedValue = nil }
-      ) { tripItem in categorySheet(tripItem: tripItem)  }
+        onDismiss: { requestBinding.wrappedValue = nil },
+        content: { tripItem in categorySheet(tripItem: tripItem) }
+      )
       .sheet(
         isPresented: requestBinding.isReminder,
-        onDismiss: { requestBinding.wrappedValue = nil }
-      ) { reminderSheet }
+        onDismiss: { requestBinding.wrappedValue = nil },
+        content: { reminderSheet }
+      )
       .sheet(
         item: requestBinding.setNotesItem,
-        onDismiss: { requestBinding.wrappedValue = nil }
-      ) { tripItem in notesSheet(tripItem: tripItem) }
+        onDismiss: { requestBinding.wrappedValue = nil },
+        content: { tripItem in notesSheet(tripItem: tripItem) }
+      )
       .sheet(
         item: requestBinding.renameItem,
-        onDismiss: { requestBinding.wrappedValue = nil }
-      ) { tripItem in renameSheet(tripItem: tripItem) }
+        onDismiss: { requestBinding.wrappedValue = nil },
+        content: { tripItem in renameSheet(tripItem: tripItem) }
+      )
 #if !os(macOS)
       .environment(\.editMode, .constant(.active))
 #endif

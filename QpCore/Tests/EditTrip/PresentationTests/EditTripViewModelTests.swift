@@ -52,6 +52,20 @@ final class EditTripViewModelTests {
     #expect(last == (.samples.malaysia, reminder))
     #expect(scenario.scheduleReminders.didRun == true)
   }
+  
+  @Test func updateItemName() async {
+    // given
+    let scenario = Scenario()
+    let itemId = ItemId.samples.camera
+    let newName = "Updated Camera Name"
+    
+    // when
+    await scenario.sut.send(.updateItemName(itemId, newName))
+    
+    // then
+    let last = await scenario.itemRepository.waitLastUpdateItemName()
+    #expect(last == (itemId: itemId, name: newName))
+  }
 }
 
 private final class Scenario: @unchecked Sendable {
@@ -59,16 +73,18 @@ private final class Scenario: @unchecked Sendable {
   let sut: EditTripViewModel
   let scheduleReminders: FakeScheduleReminders
   let tripRepository: FakeTripRepository
+  let itemRepository: FakeItemRepository
   
   init(
     initialTrip: Trip = .samples.malaysia,
     categoryRepository: CategoryRepository = FakeCategoryRepository(),
-    itemRepository: ItemRepository = FakeItemRepository(),
+    itemRepository: FakeItemRepository = FakeItemRepository(),
     scheduleReminders: FakeScheduleReminders = FakeScheduleReminders(),
     tripRepository: FakeTripRepository = FakeTripRepository()
   ) {
     self.scheduleReminders = scheduleReminders
     self.tripRepository = tripRepository
+    self.itemRepository = itemRepository
     sut = EditTripViewModel(
       initialTrip: initialTrip,
       categoryRepository: categoryRepository,

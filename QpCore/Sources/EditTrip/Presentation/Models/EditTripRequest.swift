@@ -57,8 +57,15 @@ extension Binding where Value == EditTripRequest? {
     )
   }
   
-  var renameItem: TripItem? {
-    if case let .showRename(item, _) = wrappedValue { item } else { nil }
+  var renameItem: Binding<TripItem?> {
+    .init(
+      get: { if case let .showRename(item_, _) = wrappedValue { item_ } else { nil } },
+      set: { item in
+        if case let .showRename(item_, name) = wrappedValue {
+          wrappedValue = .showRename(item: item ?? item_, name: name)
+        }
+      }
+    )
   }
   
   var renameText: Binding<String> {
@@ -83,7 +90,14 @@ extension Binding where Value == EditTripRequest? {
     )
   }
   
-  var setNotesItem: TripItem? {
-    if case let .showSetNotes(item, _) = wrappedValue { item } else { nil }
+  var setNotesItem: Binding<TripItem?> {
+    .init(
+      get: { if case let .showSetNotes(item_, _) = wrappedValue { item_ } else { nil } },
+      set: { item in
+        if case let .showSetNotes(item_, notes) = wrappedValue {
+          wrappedValue = .showSetNotes(item: item ?? item_, notes: notes)
+        }
+      }
+    )
   }
 }

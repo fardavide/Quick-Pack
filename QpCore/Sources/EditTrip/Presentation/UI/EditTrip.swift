@@ -51,10 +51,9 @@ private struct EditTripContent: View {
        set: { new in send(.handleRequest(new)) }
      )
    }
-  
+  @FocusState private var isRenameFocused: Bool
+  @FocusState private var isNotesFocused: Bool
   private let scrollTarget = "target"
-  @State private var newName = ""
-  @State private var newNotes = ""
 
   private var reminderButton: some View {
     Button {
@@ -129,31 +128,26 @@ private struct EditTripContent: View {
           request: { send(.handleRequest($0)) }
         )
       }
-      .alert(
-        "Rename",
-        isPresented: requestBinding.isRename,
-        presenting: requestBinding.renameItem
-      ) { tripItem in
-        TextField("New name", text: $newName)
-        Button("Cancel") { send(.handleRequest(nil)) }
-        Button("OK") { send(.updateItemName(tripItem.item.id, newName)) }
-      } message: { tripItem in
-        Text("Rename \(tripItem.item.name)")
-      }
-      .alert(
-        "Set notes",
-        isPresented: requestBinding.isSetNotes,
-        presenting: requestBinding.setNotesItem
-      ) { tripItem in
-        TextField("Notes", text: $newNotes)
-        Button("Cancel") { send(.handleRequest(nil)) }
-        Button("OK") { send(.updateItemNotes(tripItem.id, newNotes)) }
-      } message: { tripItem in
-        Text("Set notes for \(tripItem.item.name)")
-      }
-      .sheet(isPresented: requestBinding.isShowAllItems) { allItemsSheet(items: state.searchItems.all) }
-      .sheet(item: requestBinding.setCategoryItem) { tripItem in categorySheet(tripItem: tripItem)  }
-      .sheet(isPresented: requestBinding.isReminder) { reminderSheet }
+      .sheet(
+        isPresented: requestBinding.isShowAllItems,
+        onDismiss: { requestBinding.wrappedValue = nil }
+      ) { allItemsSheet(items: state.searchItems.all) }
+      .sheet(
+        item: requestBinding.setCategoryItem,
+        onDismiss: { requestBinding.wrappedValue = nil }
+      ) { tripItem in categorySheet(tripItem: tripItem)  }
+      .sheet(
+        isPresented: requestBinding.isReminder,
+        onDismiss: { requestBinding.wrappedValue = nil }
+      ) { reminderSheet }
+      .sheet(
+        item: requestBinding.setNotesItem,
+        onDismiss: { requestBinding.wrappedValue = nil }
+      ) { tripItem in notesSheet(tripItem: tripItem) }
+      .sheet(
+        item: requestBinding.renameItem,
+        onDismiss: { requestBinding.wrappedValue = nil }
+      ) { tripItem in renameSheet(tripItem: tripItem) }
 #if !os(macOS)
       .environment(\.editMode, .constant(.active))
 #endif
@@ -224,6 +218,7 @@ private struct EditTripContent: View {
         allCategories: state.allCategories,
         onCategoryChange: { newCategory in
           send(.updateItemCategory(tripItem, newCategory))
+          send(.handleRequest(nil))
         }
       )
       .navigationTitle("Set category for \(tripItem.item.name)")
@@ -232,6 +227,53 @@ private struct EditTripContent: View {
     .presentationDetents([.medium, .large])
     .presentationDragIndicator(.visible)
   }
+  
+  private func notesSheet(tripItem: TripItem) -> some View {
+    NavigationStack {
+      Form {
+        TextField("Notes", text: requestBinding.notesText)
+          .focused($isNotesFocused)
+      }
+      .navigationTitle("Set notes for \(tripItem.item.name)")
+      .toolbar {
+        ToolbarItem(placement: .cancellationAction) {
+          Button("Cancel") { requestBinding.wrappedValue = nil }
+        }
+        ToolbarItem(placement: .confirmationAction) {
+          Button("Save") {
+            let notes = requestBinding.notesText.wrappedValue
+            requestBinding.wrappedValue = nil
+            send(.updateItemNotes(tripItem.id, notes))
+          }
+        }
+      }
+    }
+    .presentationDetents([.medium])
+  }
+  
+  private func renameSheet(tripItem: TripItem) -> some View {
+    NavigationStack {
+      Form {
+        TextField("Name", text: requestBinding.renameText)
+          .focused($isRenameFocused)
+      }
+      .navigationTitle("Rename \(tripItem.item.name)")
+      .toolbar {
+        ToolbarItem(placement: .cancellationAction) {
+          Button("Cancel") { requestBinding.wrappedValue = nil }
+        }
+        ToolbarItem(placement: .confirmationAction) {
+          Button("Save") {
+            let newName = requestBinding.renameText.wrappedValue
+            requestBinding.wrappedValue = nil
+            send(.updateItemName(tripItem.item.id, newName))
+          }
+        }
+      }
+    }
+    .presentationDetents([.medium])
+  }
+  
 }
 
 #Preview("No search") {

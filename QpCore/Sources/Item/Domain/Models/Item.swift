@@ -72,11 +72,23 @@ public final class ItemSamples: Sendable {
     name: "iPad",
     timesUsed: 7
   )
+  public let iPadKeyboard = Item(
+    category: .samples.tech,
+    id: .samples.iPadKeyboard,
+    name: "iPad Keyboard",
+    timesUsed: 1
+  )
   public let nintendoSwitch = Item(
     category: .samples.tech,
     id: .samples.nintendoSwitch,
     name: "Nintendo Switch",
     timesUsed: 5
+  )
+  public let powerBank = Item(
+    category: .samples.tech,
+    id: .samples.powerBank,
+    name: "Power Bank",
+    timesUsed: 4
   )
   public let shoes = Item(
     category: .samples.clothes,

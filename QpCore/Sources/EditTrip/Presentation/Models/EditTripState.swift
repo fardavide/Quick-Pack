@@ -334,8 +334,8 @@ extension EditTripState {
 }
 
 final class EditTripStateSamples: Sendable {
-  let noSearch = Trip.samples.malaysia.toInitialEditTripState()
-    .withReminder(Date.of(year: 2024, month: .oct, day: 10, hour: 19))
+  let noSearch = Trip.samples.kotlinConf.toInitialEditTripState()
+    .withReminder(Date.of(year: 2025, month: .may, day: 20, hour: 18))
     .withSearchItems(.samples.withMore)
   var withSearch: EditTripState {
     noSearch

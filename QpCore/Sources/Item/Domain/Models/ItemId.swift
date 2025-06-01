@@ -18,7 +18,9 @@ public extension ItemId {
 public final class ItemIdSamples: Sendable {
   public let camera = ItemId("camera")
   public let iPad = ItemId("iPad")
+  public let iPadKeyboard = ItemId("iPadKeyboard")
   public let nintendoSwitch = ItemId("Switch")
+  public let powerBank = ItemId("PowerBank")
   public let shoes = ItemId("Shoes")
   public let tShirt = ItemId("T-Shirt")
 }

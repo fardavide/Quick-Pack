@@ -106,6 +106,19 @@ public extension Trip {
 }
 
 public final class TripSamples: Sendable {
+  public let kotlinConf = Trip(
+    date: TripDate(year: 2025, month: .may, day: 21),
+    id: .samples.kotlinConf,
+    isCompleted: false,
+    items: [
+      .samples.camera,
+      .samples.iPad,
+      .samples.iPadKeyboard,
+      .samples.powerBank
+    ],
+    name: "KotlinConf 🇩🇰",
+    reminder: Date.of(year: 2025, month: .may, day: 20, hour: 10)
+  )
   public let malaysia = Trip(
     date: TripDate(year: 2024, month: .oct),
     id: .samples.malaysia,

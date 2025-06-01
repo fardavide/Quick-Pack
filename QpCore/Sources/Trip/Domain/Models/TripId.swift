@@ -16,6 +16,7 @@ public extension TripId {
 }
 
 public final class TripIdSamples: Sendable {
+  public let kotlinConf = TripId("kotlin-conf")
   public let malaysia = TripId("malaysia")
   public let tunisia = TripId("tunisia")
   public let tuscany = TripId("tuscany")

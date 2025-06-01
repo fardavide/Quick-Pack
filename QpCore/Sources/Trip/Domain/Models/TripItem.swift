@@ -120,9 +120,23 @@ public final class TripItemSamples: Sendable {
     notes: "",
     order: 0
   )
+  public let iPadKeyboard = TripItem(
+    id: .samples.iPadKeyboard,
+    item: .samples.iPadKeyboard,
+    isChecked: false,
+    notes: "",
+    order: 0
+  )
   public let nintendoSwitch = TripItem(
     id: .samples.nintendoSwitch,
     item: .samples.nintendoSwitch,
+    isChecked: false,
+    notes: "",
+    order: 0
+  )
+  public let powerBank = TripItem(
+    id: .samples.powerBank,
+    item: .samples.powerBank,
     isChecked: false,
     notes: "",
     order: 0

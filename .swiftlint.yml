@@ -1,5 +1,17 @@
 strict: true
 
+# Exclude external libraries and dependencies
+excluded:
+  - QpCore/.build
+  - QpCore/.swiftpm
+  - "*/.build"
+  - "*/checkouts"
+  - "*/DerivedData"
+  - "Pods"
+  - "Carthage"
+  - "*.generated.swift"
+  - "**/Package.swift"
+
 disabled_rules:
   - cyclomatic_complexity
   - file_length
@@ -11,3 +23,12 @@ nesting:
   type_level: 2
 
 function_parameter_count: 6
+
+# Only include our source code directories
+included:
+  - QpCore/Sources
+  - QpCore/Tests
+  - Quick Pack
+  - Quick PackTests
+  - Quick PackUITests
+  - QpWidgets

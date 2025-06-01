@@ -163,14 +163,12 @@ public final class EditTripViewModel: ViewModel, ObservableObject {
   }
   
   @MainActor private func updateItemName(_ itemId: ItemId, _ newName: String) {
-    state = state.updateItemName(itemId: itemId, newName)
+    state = state.updateItemName(itemId: itemId, newName).withRequest(nil)
     Task { itemRepository.updateItemName(itemId: itemId, name: newName) }
   }
   
   @MainActor private func updateItemNotes(_ itemId: TripItemId, _ newNotes: String) {
-    state = state
-      .withRequest(nil)
-      .updateItemNotes(tripItemId: itemId, newNotes)
+    state = state.updateItemNotes(tripItemId: itemId, newNotes).withRequest(nil)
     Task { tripRepository.updateItemNotes(tripItemId: itemId, notes: newNotes) }
   }
   

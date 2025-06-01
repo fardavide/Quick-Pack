@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
+        "revision" : "0dff260d3d1bb99c382d8dfcd6bb093e5e9cbd36",
+        "version" : "602.0.0-prerelease-2025-05-29"
       }
     },
     {
@@ -25,7 +25,7 @@
       "location" : "https://github.com/apple/swift-testing.git",
       "state" : {
         "branch" : "main",
-        "revision" : "12727e259c40d9151048f0f0e3751bc2b3632ef2"
+        "revision" : "d6111205ce07f173dbc2519ddaf4eec800a76b94"
       }
     }
   ],

@@ -66,6 +66,23 @@ final class EditTripViewModelTests {
     let last = await scenario.itemRepository.waitLastUpdateItemName()
     #expect(last == (itemId: itemId, name: newName))
   }
+  
+  @Test func updateItemNameClearsRequest() async {
+    // given
+    let scenario = Scenario()
+    let tripItem = TripItem.samples.camera
+    let newName = "Updated Camera Name"
+    
+    // Set a rename request first
+    await scenario.sut.send(.handleRequest(.showRename(item: tripItem, name: tripItem.item.name)))
+    #expect(scenario.sut.state.request != nil)
+    
+    // when
+    await scenario.sut.send(.updateItemName(tripItem.item.id, newName))
+    
+    // then
+    #expect(scenario.sut.state.request == nil)
+  }
 }
 
 private final class Scenario: @unchecked Sendable {

@@ -8,6 +8,7 @@ import XCTest
  * - Context menu interactions  
  * - Bottom sheet presentations
  * - UI state updates
+ * - Bottom sheet behavior validation (no reopening after save)
  * 
  * Manual Test Instructions:
  * 1. Launch the app
@@ -21,6 +22,18 @@ import XCTest
  * 4. Change the name and tap "Save"
  * 5. Verify the item shows the new name in the list
  * 6. Verify the rename sheet dismisses automatically
+ * 
+ * Manual Test Instructions for Bottom Sheet Fix Validation:
+ * 1. Follow steps 1-4 above for rename flow
+ * 2. After tapping "Save", watch carefully for 2-3 seconds
+ * 3. The sheet should close and STAY closed (not reopen)
+ * 4. If the sheet reopens after closing, the bug is still present
+ * 5. The testRenameSheetDoesNotReopen() test automates this validation
+ * 
+ * To run the specific bottom sheet test:
+ * - In Xcode: Navigate to EditTripUiTests.swift and run testRenameSheetDoesNotReopen()
+ * - This test specifically validates that the rename sheet doesn't exhibit
+ *   the "close → open → close" behavior that was the original bug
  */
 
 final class EditTripUiTests: XCTestCase {
@@ -183,7 +196,83 @@ final class EditTripUiTests: XCTestCase {
         
         // Verify the item still shows the original name
         let unchangedItem = itemsList.cells.containing(.staticText, identifier: originalName).firstMatch
-        XCTAssertTrue(unchangedItem.waitForExistence(timeout: 3), "Item should still show original name: \(originalName)")
+        XCTAssertTrue(
+            unchangedItem.waitForExistence(timeout: 3),
+            "Item should still show original name: \(originalName)"
+        )
+    }
+    
+    func testRenameSheetDoesNotReopen() throws {
+        // MARK: - Navigate to EditTrip screen
+        
+        let tripsList = app.collectionViews.firstMatch
+        XCTAssertTrue(tripsList.waitForExistence(timeout: 5), "Trips list should be visible")
+        
+        let tripCell = tripsList.cells.firstMatch
+        XCTAssertTrue(tripCell.waitForExistence(timeout: 3), "Trip cell should exist")
+        tripCell.tap()
+        
+        // MARK: - Open rename sheet
+        
+        let itemsList = app.collectionViews.firstMatch
+        let firstItem = itemsList.cells.firstMatch
+        XCTAssertTrue(firstItem.waitForExistence(timeout: 3), "Item should exist")
+        
+        // Long press to open context menu
+        firstItem.press(forDuration: 1.0)
+        
+        let renameButton = app.buttons["Rename"]
+        XCTAssertTrue(renameButton.waitForExistence(timeout: 3), "Rename button should appear")
+        renameButton.tap()
+        
+        // MARK: - Verify sheet opens
+        
+        let renameSheet = app.sheets.firstMatch
+        XCTAssertTrue(renameSheet.waitForExistence(timeout: 3), "Rename sheet should appear")
+        
+        // MARK: - Save and verify sheet behavior
+        
+        let textField = renameSheet.textFields.firstMatch
+        textField.tap()
+        textField.clearText()
+        textField.typeText("Test Sheet Behavior")
+        
+        let saveButton = renameSheet.buttons["Save"]
+        XCTAssertTrue(saveButton.exists, "Save button should exist")
+        saveButton.tap()
+        
+        // MARK: - Critical test: Verify sheet closes and stays closed
+        
+        // First, verify the sheet dismisses
+        XCTAssertFalse(
+            renameSheet.waitForNonExistence(timeout: 3),
+            "Rename sheet should dismiss after Save"
+        )
+        
+        // Wait a bit to ensure no reopening occurs (this is the key test)
+        // The bug we're testing for would cause the sheet to reopen within ~1-2 seconds
+        sleep(2)
+        
+        // Verify the sheet is still not present
+        XCTAssertFalse(
+            renameSheet.exists,
+            "Rename sheet should NOT reopen after being dismissed"
+        )
+        
+        // Double-check by looking for any sheet at all
+        let anySheet = app.sheets.firstMatch
+        XCTAssertFalse(
+            anySheet.exists,
+            "No sheets should be visible after successful save"
+        )
+        
+        // MARK: - Verify the rename actually worked
+        
+        let updatedItem = itemsList.cells.containing(.staticText, identifier: "Test Sheet Behavior").firstMatch
+        XCTAssertTrue(
+            updatedItem.waitForExistence(timeout: 3),
+            "Item should show updated name, confirming the save worked"
+        )
     }
 }
 

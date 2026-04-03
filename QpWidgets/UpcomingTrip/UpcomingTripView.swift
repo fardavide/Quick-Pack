@@ -19,7 +19,7 @@ struct UpcomingTripView: View {
         .foregroundColor(.secondary)
     }
     case .none: Text("No upcoming trips")
-    case .error(let error): Text("Error: \(error)")
+    case .error(let error): Text(verbatim: "Error: \(error)")
     }
   }
   

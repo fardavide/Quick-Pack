@@ -14,11 +14,11 @@ struct DateFormatTest {
       minute: 30,
       second: 10
     )
-    #expect(date.formatted() == "20/08/2024, 15:30")
+    #expect(date.formatted() == "20/8/2024, 15:30")
   }
   
   @Test func date_of_without_time() {
     let date = Date.of(year: 2024, month: .nov, day: 1)
-    #expect(date.formatted() == "01/11/2024, 0:00")
+    #expect(date.formatted() == "1/11/2024, 0:00")
   }
 }

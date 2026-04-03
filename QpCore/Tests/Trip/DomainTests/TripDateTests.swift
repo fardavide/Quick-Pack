@@ -38,7 +38,7 @@ final class TripDateTests {
   
   @Test func whenExactDate_shortFormatted() {
     let date = TripDate(year: 2024, month: .dec, day: 24)
-    #expect(date.shortFormatted == "24 Dec 2024")
+    #expect(date.shortFormatted == "Dec 24, 2024")
   }
   
   @Test func whenMonthPrecisionDate_shortFormatted() {

@@ -6,9 +6,9 @@ import TripPresentation
 import WidgetKit
 
 final class UpcomingTripProvider: AppIntentTimelineProvider {
-  private let buildCountdownText: BuildCountdownText
-  private let buildItemsText: BuildItemsText
-  private let tripRepository: TripRepository
+  private nonisolated(unsafe) let buildCountdownText: BuildCountdownText
+  private nonisolated(unsafe) let buildItemsText: BuildItemsText
+  private nonisolated(unsafe) let tripRepository: TripRepository
   
   @MainActor
   init() {
